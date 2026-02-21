@@ -1,74 +1,211 @@
 const axios = require("axios");
+const dns = require("dns").promises;
+const tls = require("tls");
 
-const tokens = [
-    "e4e2f8b34124eea2c0d2ff724d1704a8f6e85d87ca4a7caeba240fba1e83327d",
-    "1e51b47b5526318a1b091ce809351831c283ac3508c1cc058d19c7dc153a6b1f",
-    "56a630611abe6d81e2d92a361be12527b566095eb80e9b645b699b2da4e744a0",
-    "92c508311f91f557d67acd09ac3feaf9884c790cc69df2edbbe0432f9eb3a965",
-    "1268a2225806ec952aefe8eb950687c9b3d336de719e4b3245c2be3150003d09",
-    "abd44b8d6fe5f877a4d184e0df08e29370f2d49414853a75a5d6d46e758c84c7",
-    "84b6ed6ca89973bb531906f2cca7c1251424a8cac49604180cbf87977df8f62e",
-    "4c107ec4076a436a4de96a6d5c337896ba79c991685896d7cff242d8107343ad",
-    "6bcf8c2e12fe0f14c21a62801b4ccb2573e211ede930dcff1943eeb20cf663d8",
-    "04f74d31946dbab25f603e412686d25a50d6c2ceb4d7ee2d3c37bca1ee68f720",
-    "e83a0190933eb8e48429fec6d64cf4587c6d7fe50c932c8b837f9c2ef2b2d67c",
-    "9c0807ac50818cb10cb9c4d7d58f33e15285e7924b32aa2ab41129eb581b49ce",
-    "56ab13daaca55ddd1d23d283065999ef205df6a21b7590dd214306ae8ada1739",
-    "891bb0e6b6fdd0a218d15374898b230be150622c393aa40a35c44c76dfc2fb84",
-    "251471094f0f614c8112489a4c24140198438d235864c6fde6b0552e9e170993"
-];
+/* ======================
+UTILITY VALIDATION
+====================== */
+function isValidDomain(domain) {
+  const regex = /^(?!-)(?:[a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,}$/;
+  return regex.test(domain);
+}
 
-let currentTokenIndex = 0;
+function isValidIP(ip) {
+  const regex =
+    /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])$/;
+  return regex.test(ip);
+}
 
-/**
- * Execute reaction to WA channel post using rotating tokens
- */
-async function reactToChannel(postUrl, emojis) {
-    let attempts = 0;
-    const maxAttempts = tokens.length;
+function clean(v) {
+  if (!v) return "N/A";
+  return String(v);
+}
 
-    while (attempts < maxAttempts) {
-        const apiKey = tokens[currentTokenIndex];
+/* ======================
+SSL CHECKER
+====================== */
+function getSSLInfo(host) {
+  return new Promise((resolve) => {
+    const socket = tls.connect(443, host, { servername: host, timeout: 8000 }, () => {
+      const cert = socket.getPeerCertificate();
+      if (!cert || Object.keys(cert).length === 0) {
+        resolve(null);
+      } else {
+        resolve({
+          issuer: cert.issuer?.O || cert.issuer?.CN || "Unknown",
+          valid_from: cert.valid_from,
+          valid_to: cert.valid_to,
+        });
+      }
+      socket.end();
+    });
 
-        try {
-            const response = await axios.post(
-                "https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app/api/channel/react-to-post",
-                {
-                    post_link: postUrl,
-                    reacts: Array.isArray(emojis) ? emojis : [emojis]
-                },
-                {
-                    params: { apiKey },
-                    headers: {
-                        accept: "application/json",
-                        "content-type": "application/json"
-                    },
-                    timeout: 15000
-                }
-            );
+    socket.on("error", () => resolve(null));
+    socket.on("timeout", () => {
+      socket.destroy();
+      resolve(null);
+    });
+  });
+}
 
-            return {
-                success: true,
-                data: response.data
-            };
+/* ======================
+EXPORT ENDPOINT
+====================== */
+module.exports = [
+{
+  name: "Whois Pro Lookup",
+  desc: "Cek informasi lengkap domain/IP + DNS + SSL + Geo + ASN",
+  category: "Tools",
+  path: "/tools/whoispro?apikey=&target=",
 
-        } catch (err) {
-            const status = err.response?.status;
-            const errorData = err.response?.data;
-            const errorText =
-                typeof errorData === "string"
-                    ? errorData
-                    : JSON.stringify(errorData || err.message);
+  async run(req, res) {
+    const { apikey, target } = req.query;
 
-            console.log("Token failed:", apiKey);
-            console.log("Status:", status);
-            console.log("Error:", errorText);
+    /* APIKEY */
+    if (!apikey || !global.apikey.includes(apikey)) {
+      return res.json({ status: false, error: "Apikey invalid" });
+    }
 
-            // Jika limit atau token invalid → pindah token
-            if (
-                status === 402 ||
-                status === 429 ||
-                errorText.toLowerCase().includes("limit") ||
+    if (!target) {
+      return res.json({ status: false, error: "Masukkan parameter target" });
+    }
+
+    if (!isValidDomain(target) && !isValidIP(target)) {
+      return res.json({
+        status: false,
+        error: "Target harus domain atau IPv4 valid"
+      });
+    }
+
+    try {
+      let ip = target;
+      let domain = null;
+
+      /* ======================
+         DOMAIN → IP RESOLVE
+      ====================== */
+      if (isValidDomain(target)) {
+        domain = target;
+        const resolveIP = await dns.lookup(target);
+        ip = resolveIP.address;
+      }
+
+      /* ======================
+         WHOIS DATA
+      ====================== */
+      const whoisRes = await axios.get(
+        `https://api.whois.vu/?q=${encodeURIComponent(target)}`,
+        { timeout: 15000 }
+      ).catch(() => null);
+
+      const whoisData = whoisRes?.data || {};
+
+      /* ======================
+         GEO + ASN DATA
+      ====================== */
+      const geoRes = await axios.get(
+        `http://ip-api.com/json/${ip}?fields=status,message,continent,country,regionName,city,zip,lat,lon,isp,org,as`,
+        { timeout: 10000 }
+      ).catch(() => null);
+
+      const geoData = geoRes?.data || {};
+
+      /* ======================
+         DNS RECORD
+      ====================== */
+      let dnsRecords = {
+        A: [],
+        MX: [],
+        NS: [],
+        TXT: []
+      };
+
+      if (domain) {
+        try { dnsRecords.A = await dns.resolve4(domain); } catch {}
+        try { dnsRecords.MX = await dns.resolveMx(domain); } catch {}
+        try { dnsRecords.NS = await dns.resolveNs(domain); } catch {}
+        try { dnsRecords.TXT = await dns.resolveTxt(domain); } catch {}
+      }
+
+      /* ======================
+         REVERSE DNS
+      ====================== */
+      let reverseDNS = [];
+      try {
+        reverseDNS = await dns.reverse(ip);
+      } catch {}
+
+      /* ======================
+         SSL CHECK
+      ====================== */
+      let sslInfo = null;
+      if (domain) {
+        sslInfo = await getSSLInfo(domain);
+      }
+
+      /* ======================
+         FINAL RESULT
+      ====================== */
+      const result = {
+        target,
+        type: isValidIP(target) ? "IP Address" : "Domain",
+        ip_address: clean(ip),
+        reverse_dns: reverseDNS.length ? reverseDNS : [],
+        registrar: clean(whoisData.registrar),
+        organization: clean(whoisData.org),
+        created_date: clean(whoisData.created),
+        updated_date: clean(whoisData.updated),
+        expiration_date: clean(whoisData.expires),
+
+        geo_location: {
+          continent: clean(geoData.continent),
+          country: clean(geoData.country),
+          region: clean(geoData.regionName),
+          city: clean(geoData.city),
+          zipcode: clean(geoData.zip),
+          latitude: clean(geoData.lat),
+          longitude: clean(geoData.lon),
+        },
+
+        network: {
+          isp: clean(geoData.isp),
+          organization: clean(geoData.org),
+          asn: clean(geoData.as),
+        },
+
+        dns_records: dnsRecords,
+
+        ssl_certificate: sslInfo
+          ? {
+              issuer: sslInfo.issuer,
+              valid_from: sslInfo.valid_from,
+              valid_to: sslInfo.valid_to
+            }
+          : "No SSL / Not Available"
+      };
+
+      return res.json({
+        status: true,
+        result
+      });
+
+    } catch (err) {
+      if (err.code === "ECONNABORTED") {
+        return res.status(504).json({
+          status: false,
+          error: "Request timeout"
+        });
+      }
+
+      return res.status(500).json({
+        status: false,
+        error: "Internal Server Error",
+        message: err.message
+      });
+    }
+  }
+}
+];                errorText.toLowerCase().includes("limit") ||
                 errorText.toLowerCase().includes("rate")
             ) {
                 currentTokenIndex = (currentTokenIndex + 1) % tokens.length;
