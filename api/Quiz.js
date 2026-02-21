@@ -1,24 +1,33 @@
 const axios = require("axios");
 
 /* ======================
-HELPER FUNCTION
+SESSION STORAGE
+====================== */
+const quizSession = new Map();
+
+/* ======================
+HELPER
 ====================== */
 function shuffleArray(array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
+function generateId() {
+  return Math.random().toString(36).substring(2, 8);
+}
+
 /* ======================
-EXPORT ENDPOINT
+EXPORT
 ====================== */
 module.exports = [
 {
   name: "Quiz Game",
   desc: "Main quiz random dari internet",
   category: "Fun",
-  path: "/fun/quiz?apikey=&jawaban=",
+  path: "/fun/quiz?apikey=&id=&jawaban=",
 
   async run(req, res) {
-    const { apikey, jawaban } = req.query;
+    const { apikey, id, jawaban } = req.query;
 
     /* === APIKEY VALIDATION === */
     if (!apikey || !global.apikey.includes(apikey)) {
@@ -30,57 +39,84 @@ module.exports = [
 
     try {
 
-      /* === SCRAPE QUIZ API === */
-      const response = await axios.get(
-        "https://opentdb.com/api.php?amount=1&type=multiple"
-      );
-
-      const data = response.data;
-
-      if (!data.results || data.results.length === 0) {
-        return res.json({
-          status: false,
-          error: "Gagal mengambil soal"
-        });
-      }
-
-      const quiz = data.results[0];
-
-      const question = quiz.question
-        .replace(/&quot;/g, '"')
-        .replace(/&#039;/g, "'");
-
-      const correct = quiz.correct_answer;
-      const options = shuffleArray([
-        ...quiz.incorrect_answers,
-        correct
-      ]);
-
       /* =========================
-         JIKA USER BELUM JAWAB
+         JIKA BELUM ADA ID → AMBIL SOAL BARU
       ========================= */
-      if (!jawaban) {
+      if (!id) {
+
+        const response = await axios.get(
+          "https://opentdb.com/api.php?amount=1&type=multiple"
+        );
+
+        const data = response.data;
+
+        if (!data.results || data.results.length === 0) {
+          return res.json({
+            status: false,
+            error: "Gagal mengambil soal"
+          });
+        }
+
+        const quiz = data.results[0];
+
+        const question = quiz.question
+          .replace(/&quot;/g, '"')
+          .replace(/&#039;/g, "'");
+
+        const correct = quiz.correct_answer;
+
+        const options = shuffleArray([
+          ...quiz.incorrect_answers,
+          correct
+        ]);
+
+        const quizId = generateId();
+
+        // simpan session
+        quizSession.set(quizId, {
+          correct
+        });
+
         return res.json({
           status: true,
           result: {
+            id: quizId,
             soal: question,
             pilihan: options,
-            info: "Kirim parameter &jawaban= untuk menjawab"
+            cara_jawab: `Tambahkan &id=${quizId}&jawaban=ISI_JAWABAN`
           }
         });
       }
 
       /* =========================
-         CEK JAWABAN USER
+         CEK JAWABAN
       ========================= */
-      const benar = jawaban.toLowerCase() === correct.toLowerCase();
+      if (!quizSession.has(id)) {
+        return res.json({
+          status: false,
+          error: "Soal tidak ditemukan atau sudah expired"
+        });
+      }
+
+      if (!jawaban) {
+        return res.json({
+          status: false,
+          error: "Masukkan parameter jawaban"
+        });
+      }
+
+      const session = quizSession.get(id);
+      const benar =
+        jawaban.toLowerCase() === session.correct.toLowerCase();
+
+      // hapus setelah dijawab
+      quizSession.delete(id);
 
       return res.json({
         status: true,
         result: {
-          soal: question,
           jawaban_kamu: jawaban,
-          jawaban_benar: correct,
+          jawaban_benar: session.correct,
           hasil: benar ? "🎉 Jawaban Benar!" : "❌ Jawaban Salah!"
         }
       });
