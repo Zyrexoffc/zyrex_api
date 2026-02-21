@@ -23,30 +23,29 @@ let currentTokenIndex = 0;
 /**
  * Execute reaction to WA channel post using rotating tokens
  */
-async function reactToChannel(postUrl, emoji) {
+async function reactToChannel(postUrl, emojis) {
     let attempts = 0;
     const maxAttempts = tokens.length;
 
     while (attempts < maxAttempts) {
-
         const apiKey = tokens[currentTokenIndex];
 
         try {
-            const response = await axios({
-                method: "POST",
-                url: `https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app/api/channel/react-to-post?apiKey=${apiKey}`,
-                headers: {
-                    'accept': 'application/json, text/plain, */*',
-                    'content-type': 'application/json',
-                    'origin': 'https://asitha.top',
-                    'referer': 'https://asitha.top/',
-                    'user-agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139 Mobile Safari/537.36'
-                },
-                data: {
+            const response = await axios.post(
+                "https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app/api/channel/react-to-post",
+                {
                     post_link: postUrl,
-                    reacts: Array.isArray(emoji) ? emoji : [emoji]
+                    reacts: Array.isArray(emojis) ? emojis : [emojis]
+                },
+                {
+                    params: { apiKey },
+                    headers: {
+                        accept: "application/json",
+                        "content-type": "application/json"
+                    },
+                    timeout: 15000
                 }
-            });
+            );
 
             return {
                 success: true,
@@ -54,30 +53,48 @@ async function reactToChannel(postUrl, emoji) {
             };
 
         } catch (err) {
-            const e = err.response?.data || err.message;
+            const status = err.response?.status;
+            const errorData = err.response?.data;
+            const errorText =
+                typeof errorData === "string"
+                    ? errorData
+                    : JSON.stringify(errorData || err.message);
 
-            // Token limit → pindah
-            if (err.response?.status === 402 ||
-                e?.message?.includes("limit") ||
-                e?.message?.includes("Limit")) {
+            console.log("Token failed:", apiKey);
+            console.log("Status:", status);
+            console.log("Error:", errorText);
+
+            // Jika limit atau token invalid → pindah token
+            if (
+                status === 402 ||
+                status === 429 ||
+                errorText.toLowerCase().includes("limit") ||
+                errorText.toLowerCase().includes("rate")
+            ) {
                 currentTokenIndex = (currentTokenIndex + 1) % tokens.length;
                 attempts++;
                 continue;
             }
 
-            // Error fatal → keluar
+            // Network error → coba token berikutnya
+            if (!status) {
+                currentTokenIndex = (currentTokenIndex + 1) % tokens.length;
+                attempts++;
+                continue;
+            }
+
             return {
                 success: false,
-                error: e,
-                status: err.response?.status || 500
+                error: errorText,
+                status: status || 500
             };
         }
     }
 
     return {
         success: false,
-        error: "All tokens are limited",
-        status: 402
+        error: "All tokens exhausted or limited",
+        status: 429
     };
 }
 
