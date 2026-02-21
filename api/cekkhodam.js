@@ -1,48 +1,97 @@
-const axios = require("axios");
+const crypto = require("crypto");
 
 /* ======================
    KHODAM DATA SOURCE
 ====================== */
 const khodamList = [
-  '🐉 naga kentut sakti',
-  '🐊 buaya pensiun',
-  '🦖 t-rex kecapekan',
-  '🦍 gorila stress',
-  '🐧 pinguin nyasar',
-  '🦅 elang insomnia',
-  '🐌 keong turbo',
-  '🐒 monyet depresi',
-  '🦂 kalajengking pensiun',
-  '🐺 serigala introvert',
-  '🐟 lele sakti',
-  '🦄 unicorn batuk',
-  '🐲 kadal berotot',
-  '🐑 kambing terbang',
-  '🐫 unta gembel',
-  '🐍 ular gajebo',
-  '🦌 rusa gaming',
-  '🐸 kodok sakau',
-  '🐷 babi ngepet modern',
-  '🦀 kepiting nyolong',
-  '🦞 lobster sultan',
-  '🐭 tikus kosan',
-  '🦙 llama sange',
-  '🐔 ayam berdasi',
-  '🦐 udang emo',
-  '🦧 orang utan baper',
-  '🐒 kera sakti KW',
-  '🐕 anjing laptop',
-  '🐈 kucing hacker',
-  '🦦 berang-berang stress',
-  '🦑 cumi mabok',
-  '🐦 burung kepo'
+  "🐉 Naga Kentut Sakti",
+  "🐊 Buaya Pensiun",
+  "🦖 T-Rex Kecapekan",
+  "🦍 Gorila Overthinking",
+  "🐧 Pinguin Nyasar",
+  "🦅 Elang Insomnia",
+  "🐌 Keong Turbo",
+  "🐒 Monyet Depresi",
+  "🦂 Kalajengking Introvert",
+  "🐺 Serigala Alpha Gabut",
+  "🐟 Lele Overpower",
+  "🦄 Unicorn Batuk Darah",
+  "🐲 Kadal Berotot",
+  "🐑 Kambing Terbang",
+  "🐫 Unta Multiverse",
+  "🐍 Ular Gajebo Pro",
+  "🦌 Rusa Gaming RGB",
+  "🐸 Kodok Overheat",
+  "🐷 Babi Ngepet 5G",
+  "🦀 Kepiting Multitasking",
+  "🦞 Lobster Sultan",
+  "🐭 Tikus Kosan Hardcore",
+  "🦙 Llama Barbar",
+  "🐔 Ayam Berdasi Elite",
+  "🦐 Udang Emo",
+  "🦧 Orangutan Overpowered",
+  "🐕 Anjing Laptop",
+  "🐈 Kucing Hacker Pro",
+  "🦦 Berang-berang Santuy",
+  "🦑 Cumi Toxic",
+  "🐦 Burung Intel",
+  "🦈 Hiu Freelancer",
+  "🐗 Babi Hutan Sigma",
+  "🦓 Zebra Glitch",
+  "🐢 Kura-Kura Speedrun",
+  "🦅 Phoenix Reborn",
+  "🐉 Naga Hitam Abyss",
+  "🦁 Singa Dark Mode",
+  "🐲 Dragon Cyber",
+  "🦝 Rakun Maling Wifi",
+  "🐊 Buaya Influencer",
+  "🐸 Katak Quantum",
+  "🐍 Python Error 404",
+  "🦅 Garuda Multiverse",
+  "🦖 Dino Sad Boy",
+  "🐲 Dragon Plasma",
+  "🦄 Unicorn Dark",
+  "🐉 Naga API Gateway",
+  "🐱 Kucing Syntax Error",
+  "🐶 Anjing Debugger"
 ];
 
 /* ======================
-   RANDOM PICKER
+   RARITY SYSTEM
 ====================== */
-function pickRandom(list) {
-  return list[Math.floor(Math.random() * list.length)];
+const rarities = [
+  { name: "Common", icon: "⚪", chance: 40 },
+  { name: "Rare", icon: "🟢", chance: 30 },
+  { name: "Epic", icon: "🔵", chance: 15 },
+  { name: "Legendary", icon: "🟣", chance: 10 },
+  { name: "Mythic", icon: "🟡", chance: 5 }
+];
+
+/* ======================
+   UTILS
+====================== */
+
+// Hash dari nama biar hasil konsisten
+function hashNama(nama) {
+  return crypto.createHash("md5").update(nama).digest("hex");
+}
+
+// Ambil angka dari hash
+function hashToNumber(hash) {
+  return parseInt(hash.substring(0, 8), 16);
+}
+
+// Pick rarity berdasarkan chance
+function pickRarity(seed) {
+  let total = 0;
+  const roll = seed % 100;
+
+  for (let r of rarities) {
+    total += r.chance;
+    if (roll < total) return r;
+  }
+
+  return rarities[0];
 }
 
 /* ======================
@@ -51,14 +100,13 @@ function pickRandom(list) {
 module.exports = [
   {
     name: "Cek Khodam",
-    desc: "Cek khodam berdasarkan nama",
+    desc: "Cek khodam berdasarkan nama (Advanced System)",
     category: "Fun",
     path: "/fun/cekkhodam?apikey=&nama=",
 
     async run(req, res) {
       const { apikey, nama } = req.query;
 
-      /* === APIKEY VALIDATION === */
       if (!apikey || !global.apikey.includes(apikey)) {
         return res.json({
           status: false,
@@ -66,7 +114,6 @@ module.exports = [
         });
       }
 
-      /* === PARAM VALIDATION === */
       if (!nama) {
         return res.json({
           status: false,
@@ -75,14 +122,28 @@ module.exports = [
       }
 
       try {
-        const khodam = pickRandom(khodamList);
+        const hash = hashNama(nama.toLowerCase());
+        const seed = hashToNumber(hash);
+
+        const khodam = khodamList[seed % khodamList.length];
+        const rarity = pickRarity(seed);
+        const level = (seed % 100) + 1;
+        const power = (seed % 9000) + 1000;
 
         return res.json({
           status: true,
+          creator: "Riyan Gaming API",
           result: {
             nama: nama,
             khodam: khodam,
-            potensi: "Khodam ini ngeri bet 🔥"
+            rarity: `${rarity.icon} ${rarity.name}`,
+            level: level,
+            power: power,
+            deskripsi: `Khodam ini memiliki level ${level} dengan kekuatan ${power}. Termasuk kategori ${rarity.name}.`,
+            aura: power > 8000 ? "🔥 Aura Membara" :
+                  power > 5000 ? "⚡ Aura Petir" :
+                  power > 3000 ? "🌪️ Aura Angin" :
+                  "🌫️ Aura Tipis"
           }
         });
 
