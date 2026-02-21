@@ -23,7 +23,7 @@ let currentTokenIndex = 0;
 /**
  * Execute reaction to WA channel post using rotating tokens
  */
-async function reactToChannel(postUrl, emojis) {
+async function reactToChannel(postUrl, emoji) {
     let attempts = 0;
     const maxAttempts = tokens.length;
 
@@ -44,7 +44,7 @@ async function reactToChannel(postUrl, emojis) {
                 },
                 data: {
                     post_link: postUrl,
-                    reacts: Array.isArray(emojis) ? emojis : [emojis]
+                    reacts: Array.isArray(emoji) ? emoji : [emoji]
                 }
             });
 
