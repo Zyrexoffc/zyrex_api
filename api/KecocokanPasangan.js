@@ -50,7 +50,7 @@ async function scrape(nama1, nama2) {
 }
 
 /* ======================
-   ENDPOINT (GET ONLY)
+   ENDPOINT GET
 ====================== */
 module.exports = [
   {
@@ -59,29 +59,37 @@ module.exports = [
     category: "Fun",
     path: "/fun/primbon/kecocokan_nama_pasangan?apikey=",
 
+    /* METADATA PARAMETERS */
+    parameters: [
+      {
+        name: "nama1",
+        in: "query",
+        required: true,
+        description: "Nama pertama",
+        example: "putu",
+      },
+      {
+        name: "nama2",
+        in: "query",
+        required: true,
+        description: "Nama kedua",
+        example: "keyla",
+      },
+    ],
+
     async run(req, res) {
       const { apikey, nama1, nama2 } = req.query;
 
-      /* APIKEY VALIDATION */
       if (!apikey || !global.apikey.includes(apikey)) {
-        return res.json({
-          status: false,
-          error: "Apikey invalid",
-        });
+        return res.json({ status: false, error: "Apikey invalid" });
       }
 
       if (!nama1 || typeof nama1 !== "string" || nama1.trim().length === 0) {
-        return res.json({
-          status: false,
-          error: "Parameter 'nama1' required",
-        });
+        return res.json({ status: false, error: "Parameter 'nama1' required" });
       }
 
       if (!nama2 || typeof nama2 !== "string" || nama2.trim().length === 0) {
-        return res.json({
-          status: false,
-          error: "Parameter 'nama2' required",
-        });
+        return res.json({ status: false, error: "Parameter 'nama2' required" });
       }
 
       try {
@@ -93,10 +101,7 @@ module.exports = [
           timestamp: new Date().toISOString(),
         });
       } catch (e) {
-        return res.status(500).json({
-          status: false,
-          error: e.message,
-        });
+        return res.status(500).json({ status: false, error: e.message });
       }
     },
   },
