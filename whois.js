@@ -1,6 +1,4 @@
 const axios = require("axios");
-const dns = require("dns").promises;
-const tls = require("tls");
 
 /* ======================
 UTILITY VALIDATION
@@ -12,40 +10,16 @@ function isValidDomain(domain) {
 
 function isValidIP(ip) {
   const regex =
-    /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])$/;
+    /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])$/;
   return regex.test(ip);
 }
 
-function clean(v) {
-  if (!v) return "N/A";
-  return String(v);
-}
-
 /* ======================
-SSL CHECKER
+FORMATTER
 ====================== */
-function getSSLInfo(host) {
-  return new Promise((resolve) => {
-    const socket = tls.connect(443, host, { servername: host, timeout: 8000 }, () => {
-      const cert = socket.getPeerCertificate();
-      if (!cert || Object.keys(cert).length === 0) {
-        resolve(null);
-      } else {
-        resolve({
-          issuer: cert.issuer?.O || cert.issuer?.CN || "Unknown",
-          valid_from: cert.valid_from,
-          valid_to: cert.valid_to,
-        });
-      }
-      socket.end();
-    });
-
-    socket.on("error", () => resolve(null));
-    socket.on("timeout", () => {
-      socket.destroy();
-      resolve(null);
-    });
-  });
+function clean(value) {
+  if (!value) return "N/A";
+  return String(value);
 }
 
 /* ======================
@@ -53,22 +27,118 @@ EXPORT ENDPOINT
 ====================== */
 module.exports = [
 {
-  name: "Whois Pro Lookup",
-  desc: "Cek informasi lengkap domain/IP + DNS + SSL + Geo + ASN",
+  name: "Whois Lookup",
+  desc: "Cek informasi lengkap domain atau IP",
   category: "Tools",
-  path: "/tools/whoispro?apikey=&target=",
+  path: "/tools/whois?apikey=&target=",
 
   async run(req, res) {
     const { apikey, target } = req.query;
 
-    /* APIKEY */
+    /* ======================
+       APIKEY VALIDATION
+    ====================== */
     if (!apikey || !global.apikey.includes(apikey)) {
-      return res.json({ status: false, error: "Apikey invalid" });
+      return res.json({
+        status: false,
+        error: "Apikey invalid"
+      });
     }
 
+    /* ======================
+       PARAM VALIDATION
+    ====================== */
     if (!target) {
-      return res.json({ status: false, error: "Masukkan parameter target" });
+      return res.json({
+        status: false,
+        error: "Masukkan parameter target (domain/IP)"
+      });
     }
+
+    if (!isValidDomain(target) && !isValidIP(target)) {
+      return res.json({
+        status: false,
+        error: "Target tidak valid (harus domain atau IPv4)"
+      });
+    }
+
+    try {
+
+      /* ======================
+         REQUEST WHOIS API
+      ====================== */
+      const response = await axios.get(
+        `https://api.whois.vu/?q=${encodeURIComponent(target)}`,
+        {
+          timeout: 15000
+        }
+      );
+
+      if (!response.data || response.data.status === "error") {
+        return res.json({
+          status: false,
+          error: "Data tidak ditemukan"
+        });
+      }
+
+      const data = response.data;
+
+      /* ======================
+         PARSING RESULT
+      ====================== */
+      const result = {
+        target: target,
+        type: isValidIP(target) ? "IP Address" : "Domain",
+        registrar: clean(data.registrar),
+        organization: clean(data.org),
+        country: clean(data.country),
+        state: clean(data.state),
+        city: clean(data.city),
+        zipcode: clean(data.zip),
+        created_date: clean(data.created),
+        updated_date: clean(data.updated),
+        expiration_date: clean(data.expires),
+        name_servers: data.nameservers
+          ? Array.isArray(data.nameservers)
+            ? data.nameservers
+            : [data.nameservers]
+          : [],
+        status_domain: data.status
+          ? Array.isArray(data.status)
+            ? data.status
+            : [data.status]
+          : []
+      };
+
+      /* ======================
+         FINAL RESPONSE
+      ====================== */
+      return res.json({
+        status: true,
+        result: result
+      });
+
+    } catch (error) {
+
+      /* ======================
+         ERROR HANDLING
+      ====================== */
+      if (error.code === "ECONNABORTED") {
+        return res.status(504).json({
+          status: false,
+          error: "Request timeout"
+        });
+      }
+
+      return res.status(500).json({
+        status: false,
+        error: "Internal Server Error",
+        message: error.message
+      });
+    }
+  }
+}
+];    }
 
     if (!isValidDomain(target) && !isValidIP(target)) {
       return res.json({
