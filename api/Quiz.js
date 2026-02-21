@@ -1,123 +1,193 @@
 const axios = require("axios");
 
 /* ======================
-SESSION STORAGE
+IN MEMORY DATABASE
 ====================== */
-const quizSession = new Map();
+
+const playerDB = new Map();
 
 /* ======================
-HELPER
+GACHA CONFIG
 ====================== */
-function shuffleArray(array) {
-  return array.sort(() => Math.random() - 0.5);
+
+const GACHA_CONFIG = {
+  costSingle: 100,
+  costMulti: 900,
+  pityEpic: 30,
+  pityLegendary: 90,
+  cooldown: 5000
+};
+
+/* ======================
+GACHA DATA SOURCE
+====================== */
+
+const gachaPool = {
+  Common: [
+    { name: "🪨 Batu Biasa", type: "Material" },
+    { name: "🪵 Kayu Lapuk", type: "Material" },
+    { name: "🥄 Sendok Legendaris (palsu)", type: "Weapon" },
+    { name: "🩴 Sendal Putus", type: "Armor" }
+  ],
+  Rare: [
+    { name: "🗡️ Pedang Baja", type: "Weapon" },
+    { name: "🛡️ Shield Guardian", type: "Armor" },
+    { name: "🔥 Fire Scroll", type: "Magic" }
+  ],
+  Epic: [
+    { name: "⚔️ Shadow Blade", type: "Weapon" },
+    { name: "🧙 Staff Arcane", type: "Magic" },
+    { name: "🐉 Dragon Fang", type: "Material" }
+  ],
+  Legendary: [
+    { name: "👑 Crown of Kings", type: "Armor" },
+    { name: "🔥 Inferno Blade", type: "Weapon" },
+    { name: "🐲 Dragon Slayer EX", type: "Weapon" }
+  ]
+};
+
+/* ======================
+UTILITY
+====================== */
+
+function getPlayer(nama) {
+  if (!playerDB.has(nama)) {
+    playerDB.set(nama, {
+      gold: 5000,
+      pity: 0,
+      totalPull: 0,
+      inventory: [],
+      history: [],
+      lastPull: 0
+    });
+  }
+  return playerDB.get(nama);
 }
 
-function generateId() {
-  return Math.random().toString(36).substring(2, 8);
+function pickRandom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function generatePower(rarity) {
+  switch (rarity) {
+    case "Common": return Math.floor(Math.random() * 20) + 5;
+    case "Rare": return Math.floor(Math.random() * 40) + 20;
+    case "Epic": return Math.floor(Math.random() * 80) + 50;
+    case "Legendary": return Math.floor(Math.random() * 150) + 120;
+  }
+}
+
+function getRarity(player) {
+  player.pity++;
+
+  if (player.pity >= GACHA_CONFIG.pityLegendary) {
+    player.pity = 0;
+    return "Legendary";
+  }
+
+  if (player.pity >= GACHA_CONFIG.pityEpic) {
+    return "Epic";
+  }
+
+  const chance = Math.random() * 100;
+  if (chance < 60) return "Common";
+  if (chance < 85) return "Rare";
+  if (chance < 97) return "Epic";
+  return "Legendary";
 }
 
 /* ======================
-EXPORT
+GACHA EXECUTION
 ====================== */
+
+function executePull(player) {
+  const rarity = getRarity(player);
+  const itemData = pickRandom(gachaPool[rarity]);
+  const power = generatePower(rarity);
+
+  const item = {
+    name: itemData.name,
+    type: itemData.type,
+    rarity,
+    power
+  };
+
+  player.inventory.push(item);
+  player.history.unshift(item);
+  player.totalPull++;
+
+  if (rarity === "Legendary") {
+    player.gold += 500; // bonus reward
+  }
+
+  return item;
+}
+
+/* ======================
+EXPORT ENDPOINT
+====================== */
+
 module.exports = [
 {
-  name: "Quiz Game",
-  desc: "Main quiz random dari internet",
+  name: "Advanced Gacha",
+  desc: "Gacha RPG Advanced dengan pity & inventory",
   category: "Fun",
-  path: "/fun/quiz?apikey=&id=&jawaban=",
+  path: "/fun/gacha?apikey=&nama=&type=",
 
   async run(req, res) {
-    const { apikey, id, jawaban } = req.query;
+    const { apikey, nama, type } = req.query;
 
-    /* === APIKEY VALIDATION === */
     if (!apikey || !global.apikey.includes(apikey)) {
+      return res.json({ status: false, error: "Apikey invalid" });
+    }
+
+    if (!nama) {
+      return res.json({ status: false, error: "Masukkan parameter nama" });
+    }
+
+    const player = getPlayer(nama);
+
+    if (Date.now() - player.lastPull < GACHA_CONFIG.cooldown) {
       return res.json({
         status: false,
-        error: "Apikey invalid"
+        error: "Cooldown aktif, tunggu beberapa detik"
       });
     }
 
+    const isMulti = type === "multi";
+    const cost = isMulti ? GACHA_CONFIG.costMulti : GACHA_CONFIG.costSingle;
+
+    if (player.gold < cost) {
+      return res.json({
+        status: false,
+        error: "Gold tidak cukup"
+      });
+    }
+
+    player.gold -= cost;
+    player.lastPull = Date.now();
+
     try {
+      let results = [];
 
-      /* =========================
-         JIKA BELUM ADA ID → AMBIL SOAL BARU
-      ========================= */
-      if (!id) {
-
-        const response = await axios.get(
-          "https://opentdb.com/api.php?amount=1&type=multiple"
-        );
-
-        const data = response.data;
-
-        if (!data.results || data.results.length === 0) {
-          return res.json({
-            status: false,
-            error: "Gagal mengambil soal"
-          });
+      if (isMulti) {
+        for (let i = 0; i < 10; i++) {
+          results.push(executePull(player));
         }
-
-        const quiz = data.results[0];
-
-        const question = quiz.question
-          .replace(/&quot;/g, '"')
-          .replace(/&#039;/g, "'");
-
-        const correct = quiz.correct_answer;
-
-        const options = shuffleArray([
-          ...quiz.incorrect_answers,
-          correct
-        ]);
-
-        const quizId = generateId();
-
-        // simpan session
-        quizSession.set(quizId, {
-          correct
-        });
-
-        return res.json({
-          status: true,
-          result: {
-            id: quizId,
-            soal: question,
-            pilihan: options,
-            cara_jawab: `Tambahkan &id=${quizId}&jawaban=ISI_JAWABAN`
-          }
-        });
+      } else {
+        results.push(executePull(player));
       }
-
-      /* =========================
-         CEK JAWABAN
-      ========================= */
-      if (!quizSession.has(id)) {
-        return res.json({
-          status: false,
-          error: "Soal tidak ditemukan atau sudah expired"
-        });
-      }
-
-      if (!jawaban) {
-        return res.json({
-          status: false,
-          error: "Masukkan parameter jawaban"
-        });
-      }
-
-      const session = quizSession.get(id);
-      const benar =
-        jawaban.toLowerCase() === session.correct.toLowerCase();
-
-      // hapus setelah dijawab
-      quizSession.delete(id);
 
       return res.json({
         status: true,
         result: {
-          jawaban_kamu: jawaban,
-          jawaban_benar: session.correct,
-          hasil: benar ? "🎉 Jawaban Benar!" : "❌ Jawaban Salah!"
+          player: nama,
+          gold_remaining: player.gold,
+          total_pull: player.totalPull,
+          pity_counter: player.pity,
+          pull_type: isMulti ? "10x Multi Pull" : "Single Pull",
+          items: results,
+          inventory_size: player.inventory.length
         }
       });
 
