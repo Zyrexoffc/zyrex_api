@@ -164,7 +164,7 @@ module.exports = [
     name: "nik scrape",
     desc: "Scrape DPT + parse NIK untuk ambil data wilayah & usia",
     category: "Tools",
-    path: "/tools/nik-scrape?nik=&apikey=",
+    path: "/tools/dox-nik?nik=&apikey=",
 
     async run(req, res) {
       const { nik, apikey } = req.query
