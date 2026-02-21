@@ -132,7 +132,7 @@ module.exports = [
 
         return res.json({
           status: true,
-          creator: "Riyan Gaming API",
+          creator: "Zyrex Official",
           result: {
             nama: nama,
             khodam: khodam,
