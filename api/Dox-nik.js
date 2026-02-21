@@ -162,6 +162,7 @@ async function parseNIK(nik) {
 module.exports = [
   {
     name: "nik scrape",
+    desc: "Scrape DPT + parse NIK untuk ambil data wilayah & usia",
     category: "Tools",
     path: "/tools/nik-scrape?nik=&apikey=",
 
