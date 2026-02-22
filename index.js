@@ -158,8 +158,12 @@ app.get('/settings', (req, res) => {
   res.json(settings)
 })
 
-app.get('/docs', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/index.html'))
+app.get('/dosc', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'index.html'))
+})
+
+app.get('/donasi', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'donasi.html'))
 })
 
 app.listen(PORT, () => {
