@@ -162,8 +162,8 @@ app.get('/dosc', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'index.html'))
 })
 
-app.get('/donasi', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'donasi.html'))
+app.get('/stat', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'Stat.html'))
 })
 
 app.listen(PORT, () => {
