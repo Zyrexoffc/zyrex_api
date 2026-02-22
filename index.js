@@ -166,6 +166,10 @@ app.get('/stat', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'Stat.html'))
 })
 
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'src', '404.html'))
+})
+    
 app.listen(PORT, () => {
   console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Server is running on port ${PORT} `))
 })
