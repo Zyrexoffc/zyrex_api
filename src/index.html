@@ -3,220 +3,196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Browse through our collection of API endpoints.">
-<meta name="theme-color" content="#0A0F1F">
+<meta name="description" content="Browse through our collection of API endpoints. Find what you need or discover something new.">
+<meta name="theme-color" content="#0F172A">
 <title>Zyrex Api</title>
-<link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg">
+<link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <script>
 tailwind.config = {
-  darkMode: "class",
-  theme: {
-    extend: {
-      fontFamily: { sans: ["Inter","sans-serif"] },
-      boxShadow: {
-        pro: "0 40px 120px -40px rgba(0,0,0,.85)",
-        neon: "0 0 0 1px rgba(0,255,255,.15), 0 0 40px rgba(0,255,255,.25)"
-      }
-    }
-  }
+darkMode: 'class',
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter','system-ui','sans-serif']
+}
+}
+}
 }
 </script>
 
 <style>
 :root{
-  --bg1:#070C1A;
-  --bg2:#0F172A;
-  --primary:#00F5FF;
-  --secondary:#7C3AED;
-  --accent:#22D3EE;
-  --text:#E2E8F0;
-  --muted:#94A3B8;
+--bg0:#020617;
+--bg1:#0F172A;
+--card:rgba(255,255,255,.05);
+--stroke:rgba(255,255,255,.08);
+--text:#E2E8F0;
+--muted:#94A3B8;
+
+--brand1:#06B6D4;
+--brand2:#10B981;
+--brand3:#3B82F6;
+
+--ring:rgba(16,185,129,.35);
 }
 
-/* Animated Gradient Mesh */
 body{
-  font-family: Inter, sans-serif;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(0,255,255,.15), transparent 40%),
-    radial-gradient(circle at 80% 30%, rgba(124,58,237,.18), transparent 45%),
-    radial-gradient(circle at 50% 100%, rgba(34,211,238,.12), transparent 50%),
-    linear-gradient(160deg,var(--bg1),var(--bg2));
-  color: var(--text);
-  overflow-x:hidden;
+background:
+radial-gradient(800px 500px at 10% 10%, rgba(6,182,212,.15), transparent 60%),
+radial-gradient(800px 500px at 90% 20%, rgba(16,185,129,.15), transparent 60%),
+linear-gradient(180deg,var(--bg0),var(--bg1));
+color:var(--text);
 }
 
-/* Animated Grid */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-  background-size:60px 60px;
-  animation: moveGrid 30s linear infinite;
-  pointer-events:none;
-  z-index:-1;
-}
-@keyframes moveGrid{
-  from{background-position:0 0}
-  to{background-position:60px 60px}
+.glass{
+background:var(--card);
+border:1px solid var(--stroke);
+backdrop-filter:blur(18px);
+border-radius:20px;
 }
 
-/* Glass Professional */
-.panel{
-  background: rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  backdrop-filter: blur(25px);
-  border-radius:22px;
-  box-shadow: 0 40px 120px -40px rgba(0,0,0,.8);
-  transition:.4s;
-}
-.panel:hover{
-  transform:translateY(-3px);
-  box-shadow:0 60px 140px -50px rgba(0,255,255,.2);
-}
-
-/* Gradient Title */
 .gradient-text{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+background:linear-gradient(135deg,var(--brand2),var(--brand3));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
-/* Button */
-.btn-pro{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  padding:10px 18px;
-  border-radius:14px;
-  font-weight:600;
-  transition:.3s;
+.btn-main{
+background:linear-gradient(135deg,var(--brand2),var(--brand3));
+border-radius:14px;
+transition:.3s;
 }
-.btn-pro:hover{
-  transform:translateY(-2px) scale(1.03);
-  box-shadow:0 0 40px rgba(0,255,255,.35);
+.btn-main:hover{
+transform:translateY(-2px);
+box-shadow:0 20px 40px -20px rgba(16,185,129,.6);
 }
 
-/* Floating Animation */
-@keyframes float{
-  0%{transform:translateY(0)}
-  50%{transform:translateY(-15px)}
-  100%{transform:translateY(0)}
+.input-modern{
+background:rgba(255,255,255,.05);
+border:1px solid var(--stroke);
+border-radius:14px;
+padding:12px 16px;
+outline:none;
+transition:.2s;
 }
-.avatar-hero{
-  animation:float 6s ease-in-out infinite;
-  border-radius:24px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.1);
-  box-shadow:0 40px 120px -60px rgba(0,255,255,.3);
-}
-
-/* Input */
-input{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-  padding:14px;
-  border-radius:14px;
-  transition:.3s;
-}
-input:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(0,255,255,.25);
-  outline:none;
+.input-modern:focus{
+border-color:var(--brand2);
+box-shadow:0 0 0 4px var(--ring);
 }
 
-/* Contact Button */
-.contact-customer{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  animation:float 4s ease-in-out infinite;
-  box-shadow:0 0 50px rgba(0,255,255,.3);
-}
-
-/* Smooth Reveal */
-.fade-in{
-  opacity:0;
-  transform:translateY(25px);
-  animation:fadeUp 1s ease forwards;
-}
-@keyframes fadeUp{
-  to{opacity:1;transform:none}
-}
-
-/* Loader */
 .loader{
-  border:3px solid rgba(255,255,255,.15);
-  border-top:3px solid var(--primary);
-  border-radius:50%;
-  width:30px;height:30px;
-  animation:spin 1s linear infinite;
+width:28px;height:28px;
+border:3px solid rgba(255,255,255,.2);
+border-top:3px solid var(--brand2);
+border-radius:50%;
+animation:spin 1s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+
+.contact-customer{
+position:fixed;
+bottom:25px;
+right:25px;
+width:55px;height:55px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--brand2),var(--brand3));
+display:flex;align-items:center;justify-content:center;
+box-shadow:0 20px 50px -20px rgba(16,185,129,.7);
+transition:.3s;
+}
+.contact-customer:hover{
+transform:translateY(-6px) scale(1.05);
+}
+
+.avatar-hero{
+border-radius:20px;
+overflow:hidden;
+border:1px solid var(--stroke);
+box-shadow:0 25px 70px -40px rgba(0,0,0,.9);
+}
+.avatar-hero img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.divider{
+height:1px;
+background:linear-gradient(90deg,transparent,var(--stroke),transparent);
+}
 </style>
 </head>
 
-<body class="min-h-screen antialiased">
+<body class="min-h-screen font-sans antialiased">
 
-<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50 bg-black">
-  <div class="panel p-8 text-center">
-    <div class="loader mx-auto mb-4"></div>
-    <p class="text-sm text-slate-400">Initializing Professional Interface...</p>
-  </div>
+<!-- LOADING -->
+<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50" style="background:var(--bg1);">
+<div class="glass px-8 py-6 text-center">
+<div class="loader mx-auto mb-3"></div>
+<p class="text-sm" style="color:var(--muted)">Loading API Interface...</p>
+</div>
 </div>
 
-<main class="max-w-5xl mx-auto px-6 py-14 space-y-10 fade-in">
+<main class="max-w-5xl mx-auto px-6 py-12">
 
-<div class="panel p-8">
-  <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+<!-- HERO -->
+<div class="glass p-8 grid md:grid-cols-2 gap-10 items-center">
 
-    <div class="space-y-4 max-w-xl">
-      <h1 class="text-4xl font-bold gradient-text">Zyrex API</h1>
-      <p class="text-slate-400">
-        Enterprise-grade real-time API endpoint explorer with interactive testing environment.
-      </p>
+<div>
+<h1 id="titleApi" class="text-4xl font-bold gradient-text">Zyrex API</h1>
+<p id="descApi" class="mt-4 text-sm leading-relaxed" style="color:var(--muted)">
+Explore and test all Zyrex API endpoints in real time. Fast, responsive, and modern interface.
+</p>
 
-      <div class="flex gap-3">
-        <button class="btn-pro">Explore API</button>
-        <button class="btn-pro">Documentation</button>
-      </div>
-    </div>
-
-    <div class="w-full md:w-96 avatar-hero">
-      <img src="https://file.idnet.my.id/api/preview.php?file=atjolkf4.png">
-    </div>
-
-  </div>
+<div class="mt-6 flex gap-3 flex-wrap">
+<span class="px-4 py-2 rounded-full text-xs" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);">APIKEY Ready</span>
+<span class="px-4 py-2 rounded-full text-xs" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);">JSON Response</span>
 </div>
 
-<div class="panel p-6">
-  <input type="text" placeholder="Search endpoints, categories, methods...">
+<div class="mt-6 flex gap-4 text-xl">
+<a id="telegramLink" target="_blank"><i class="fab fa-telegram"></i></a>
+<a id="whatsappLink" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a id="youtubeLink" target="_blank"><i class="fab fa-youtube"></i></a>
+</div>
 </div>
 
-<div class="panel p-6 text-center">
-  <h2 class="text-xl font-semibold mb-3 gradient-text">System Status</h2>
-  <p class="text-slate-400">All API services running optimally.</p>
+<div class="avatar-hero h-72">
+<img id="apiAvatar" src="https://file.idnet.my.id/api/preview.php?file=atjolkf4.png">
 </div>
 
-<footer class="text-center text-slate-500 pt-6">
-  © 2026 ZYREX API • Professional Edition
+</div>
+
+<!-- SEARCH -->
+<div class="mt-10 glass p-6">
+<input type="text" id="searchInput" placeholder="Search endpoints..."
+class="w-full input-modern text-sm">
+</div>
+
+<!-- CONTENT -->
+<div id="content" class="mt-10 space-y-6">
+<div id="noResults" class="hidden text-center py-10">
+<p class="text-sm" style="color:var(--muted)">No matching endpoint found.</p>
+</div>
+
+<div id="apiList" class="space-y-4"></div>
+</div>
+
+<footer class="mt-16 text-center">
+<div class="divider mb-6"></div>
+<p id="footer" class="text-sm" style="color:var(--muted)">© 2026 ZYREX API • v1.0.0</p>
 </footer>
 
 </main>
 
-<a href="#" class="contact-customer fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-white text-xl">
-✉
+<a id="contactCustomerBtn" href="#" target="_blank" class="contact-customer">
+<i class="fas fa-comment text-white"></i>
 </a>
 
-<script>
-window.addEventListener("load",()=>{
-  setTimeout(()=>{
-    document.getElementById("loadingScreen").style.display="none";
-  },800);
-});
-</script>
-
+<script src="/script.js"></script>
 </body>
-  </html>
+</html>
