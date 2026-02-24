@@ -1,198 +1,246 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Browse through our collection of API endpoints. Find what you need or discover something new.">
-<meta name="theme-color" content="#0E1628">
-<title>Zyrex Api</title>
-<link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
+<!DOCTYPE html>  
+<html lang="en" class="dark">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width,initial-scale=1.0">  
+<meta name="description" content="Browse through our collection of API endpoints. Find what you need or discover something new.">  
+<meta name="theme-color" content="#1A2338">  
+<title>Zyrex Api</title>  
+<link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">  
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>  
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">  
 
-<script>
-tailwind.config = {
-darkMode: 'class',
-theme: {
-extend: {
-fontFamily: {
-sans: ['Sora','system-ui','sans-serif']
-}
-}
-}
-}
-</script>
+<script>  
+tailwind.config = {  
+darkMode: 'class',  
+theme: {  
+extend: {  
+fontFamily: {  
+sans: ['Sora','system-ui','sans-serif']  
+}  
+}  
+}  
+}  
+</script>  
 
 <style>
+
+/* ===== NEW COLOR SYSTEM ===== */
 :root{
---bg0:#0B1220;
---bg1:#111B2E;
---bg2:#16233A;
+--bg0:#151E30;
+--bg1:#1E293F;
+--bg2:#263451;
 
---card:rgba(255,255,255,.05);
---stroke:rgba(255,255,255,.09);
+--card:#202C45;
+--stroke:rgba(255,255,255,.08);
 
---text:#E6EDFF;
---muted:#94A3C4;
+--text:#EAF2FF;
+--muted:#9FB3D9;
 
---accent1:#00E0FF;
---accent2:#7C3AED;
---accent3:#22D3EE;
+--accent1:#4ADEDE;
+--accent2:#6366F1;
+--accent3:#8B5CF6;
 
---glow:rgba(0,224,255,.45);
+--glow:rgba(99,102,241,.35);
 }
 
 body{
 background:
-radial-gradient(900px 600px at 10% 20%, rgba(0,224,255,.18), transparent 60%),
-radial-gradient(900px 600px at 90% 10%, rgba(124,58,237,.18), transparent 60%),
+radial-gradient(800px 500px at 15% 20%, rgba(99,102,241,.18), transparent 60%),
+radial-gradient(900px 600px at 85% 10%, rgba(74,222,222,.15), transparent 60%),
 linear-gradient(180deg,var(--bg0),var(--bg1));
 color:var(--text);
 }
 
-/* ===== Modern Glass ===== */
-.glass{
-background:var(--card);
-border:1px solid var(--stroke);
-backdrop-filter:blur(60px);
-border-radius:32px;
-box-shadow:0 40px 120px -50px rgba(0,0,0,.6);
+/* ================= LOADING MODERN DOUBLE RING ================= */
+#loadingScreen{
+background:linear-gradient(180deg,#192339,#1F2B44);
 }
 
-/* ===== Hero Layout ===== */
-.hero-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:60px;
+.loader-wrapper{
+display:flex;
+flex-direction:column;
 align-items:center;
+gap:30px;
 }
 
-.gradient-text{
-background:linear-gradient(135deg,var(--accent1),var(--accent2));
+.double-loader{
+position:relative;
+width:120px;
+height:120px;
+}
+
+.ring-large,
+.ring-small{
+position:absolute;
+border-radius:50%;
+border:6px solid transparent;
+animation:spin 1.8s linear infinite;
+}
+
+.ring-large{
+width:120px;
+height:120px;
+border-top:6px solid var(--accent2);
+border-left:6px solid var(--accent2);
+animation-duration:2.4s;
+}
+
+.ring-small{
+width:70px;
+height:70px;
+top:25px;
+left:25px;
+border-top:6px solid var(--accent1);
+border-right:6px solid var(--accent1);
+animation-duration:1.6s;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg);}
+}
+
+/* ================= NEW HERO STYLE ================= */
+
+.hero-wrapper{
+display:flex;
+flex-direction:column;
+gap:60px;
+}
+
+.hero-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:60px;
+}
+
+.hero-title{
+font-size:64px;
+font-weight:900;
+background:linear-gradient(135deg,var(--accent1),var(--accent3));
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
-.metric-card{
-background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+.hero-panel{
+background:linear-gradient(145deg,#1F2A44,#192338);
 border:1px solid var(--stroke);
-border-radius:24px;
-padding:24px;
+border-radius:30px;
+padding:40px;
+box-shadow:0 30px 80px -40px var(--glow);
+}
+
+/* ================= METRIC GRID ================= */
+
+.metric-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:30px;
+}
+
+.metric-box{
+padding:28px;
+border-radius:22px;
+background:linear-gradient(145deg,#222F4B,#1A243B);
+border:1px solid var(--stroke);
 transition:.4s;
 }
-.metric-card:hover{
-transform:translateY(-6px);
-box-shadow:0 20px 60px -30px var(--glow);
+
+.metric-box:hover{
+transform:translateY(-8px);
+box-shadow:0 25px 80px -40px var(--glow);
 }
 
-/* ===== Search Dock ===== */
+/* ================= SEARCH ================= */
+
 .search-dock{
-position:relative;
-background:rgba(255,255,255,.06);
+background:#1F2C47;
+border-radius:30px;
+padding:26px;
 border:1px solid var(--stroke);
-border-radius:28px;
-padding:20px;
-box-shadow:0 20px 70px -40px var(--glow);
+box-shadow:0 20px 60px -40px var(--glow);
 }
 
-.input-modern{
-background:transparent;
-outline:none;
-width:100%;
-color:var(--text);
-}
+/* ================= API CARD PROFESSIONAL ================= */
 
-/* ===== API Cards Advanced ===== */
 .api-card{
-position:relative;
-padding:30px;
-border-radius:28px;
-background:linear-gradient(145deg,#14233B,#101A2C);
-border:1px solid rgba(255,255,255,.08);
-overflow:hidden;
+background:linear-gradient(145deg,#1E2A45,#192238);
+border:1px solid var(--stroke);
+border-radius:30px;
+padding:36px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
 transition:.5s;
+position:relative;
+overflow:hidden;
 }
 
-.api-card::before{
+.api-card::after{
 content:"";
 position:absolute;
-top:-2px;
-left:-2px;
-right:-2px;
-bottom:-2px;
-border-radius:30px;
-background:linear-gradient(120deg,var(--accent1),transparent,var(--accent2));
-z-index:-1;
-opacity:.2;
+top:0;
+left:0;
+right:0;
+height:5px;
+background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));
+opacity:.7;
 }
 
 .api-card:hover{
-transform:translateY(-12px);
-box-shadow:0 40px 120px -40px var(--glow);
+transform:translateY(-14px);
+box-shadow:0 40px 120px -50px var(--glow);
 }
 
 .endpoint-path{
+background:#243353;
+padding:12px 16px;
+border-radius:16px;
 font-family:monospace;
-background:rgba(0,224,255,.1);
-padding:10px 14px;
+font-size:13px;
+color:var(--accent1);
+}
+
+.execute-btn{
+padding:12px 20px;
 border-radius:14px;
 font-size:12px;
+background:linear-gradient(135deg,var(--accent1),var(--accent2));
+transition:.3s;
 }
 
-/* ===== Modern Loading ===== */
-#loadingScreen{
-background:linear-gradient(180deg,#0B1220,#0F1B2E);
+.execute-btn:hover{
+transform:scale(1.05);
 }
 
-.loading-container{
-display:flex;
-flex-direction:column;
-align-items:center;
+/* ================= FOOTER ================= */
+
+footer{
+opacity:.8;
 }
 
-.progress-bar{
-width:240px;
-height:6px;
-border-radius:20px;
-background:rgba(255,255,255,.1);
-overflow:hidden;
-margin-top:20px;
-}
-
-.progress-bar span{
-display:block;
-height:100%;
-width:0%;
-background:linear-gradient(90deg,var(--accent1),var(--accent2));
-animation:load 2s ease forwards;
-}
-
-@keyframes load{
-to{width:100%}
-}
-
-/* Floating Contact */
+/* Floating */
 .contact-customer{
 position:fixed;
 bottom:40px;
 right:40px;
-width:75px;height:75px;
-border-radius:30px;
-background:linear-gradient(135deg,var(--accent1),var(--accent2));
-display:flex;align-items:center;justify-content:center;
-box-shadow:0 30px 100px -30px var(--glow);
+width:75px;
+height:75px;
+border-radius:28px;
+background:linear-gradient(135deg,var(--accent2),var(--accent3));
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 30px 90px -40px var(--glow);
 transition:.4s;
 }
 .contact-customer:hover{
-transform:scale(1.2) rotate(10deg);
+transform:scale(1.15);
 }
 
-.divider{
-height:1px;
-background:linear-gradient(90deg,transparent,var(--stroke),transparent);
-}
 </style>
 </head>
 
@@ -200,32 +248,35 @@ background:linear-gradient(90deg,transparent,var(--stroke),transparent);
 
 <!-- MODERN LOADING -->
 <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50">
-<div class="loading-container">
-<h2 class="text-xl font-bold tracking-widest gradient-text">Booting Zyrex Engine</h2>
-<div class="progress-bar"><span></span></div>
-<p class="mt-6 text-xs" style="color:var(--muted)">Initializing modules • Securing environment • Syncing nodes</p>
+<div class="loader-wrapper">
+<div class="double-loader">
+<div class="ring-large"></div>
+<div class="ring-small"></div>
+</div>
+<h2 class="text-lg font-bold tracking-widest">Initializing Zyrex Engine</h2>
+<p class="text-xs" style="color:var(--muted)">Loading modules • Syncing endpoints • Securing API Layer</p>
 </div>
 </div>
 
 <main class="max-w-7xl mx-auto px-8 py-24">
 
-<!-- HERO SPLIT LAYOUT -->
-<div class="hero-grid">
+<div class="hero-wrapper">
+
+<div class="hero-top">
 
 <div>
 <div class="text-xs tracking-widest mb-6 px-4 py-2 inline-block rounded-full"
-style="background:rgba(0,224,255,.15);border:1px solid rgba(0,224,255,.4);">
-ENTERPRISE API SYSTEM
+style="background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.4);">
+NEXT GEN API INFRASTRUCTURE
 </div>
 
-<h1 id="titleApi" class="text-6xl font-black leading-tight gradient-text">
+<h1 id="titleApi" class="hero-title">
 Zyrex API Platform
 </h1>
 
-<p id="descApi" class="mt-8 text-sm leading-relaxed max-w-xl" style="color:var(--muted)">
-Advanced endpoint management system built for developers.
-Scalable architecture. High-performance routing.
-Fully protected APIKEY security layer.
+<p id="descApi" class="mt-8 text-sm max-w-xl" style="color:var(--muted)">
+Enterprise-grade endpoint orchestration system with high-speed routing,
+intelligent load balancing, and advanced APIKEY authentication engine.
 </p>
 
 <div class="mt-10 flex gap-6 text-2xl">
@@ -235,70 +286,76 @@ Fully protected APIKEY security layer.
 </div>
 </div>
 
-<div class="grid grid-cols-2 gap-6">
-<div class="metric-card text-center">
-<p class="text-3xl font-bold gradient-text">99.99%</p>
+<div class="hero-panel">
+<div class="metric-grid">
+
+<div class="metric-box text-center">
+<p class="text-3xl font-bold">99.99%</p>
 <p class="text-xs mt-2" style="color:var(--muted)">Uptime SLA</p>
 </div>
 
-<div class="metric-card text-center">
-<p class="text-3xl font-bold gradient-text">120ms</p>
-<p class="text-xs mt-2" style="color:var(--muted)">Avg Response</p>
+<div class="metric-box text-center">
+<p class="text-3xl font-bold">118ms</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Latency</p>
 </div>
 
-<div class="metric-card text-center">
-<p class="text-3xl font-bold gradient-text">AES-256</p>
-<p class="text-xs mt-2" style="color:var(--muted)">Encrypted</p>
+<div class="metric-box text-center">
+<p class="text-3xl font-bold">AES-256</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Encryption</p>
 </div>
 
-<div class="metric-card text-center">
-<p class="text-3xl font-bold gradient-text">v3.0</p>
-<p class="text-xs mt-2" style="color:var(--muted)">Engine Core</p>
+<div class="metric-box text-center">
+<p class="text-3xl font-bold">v4.2</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Core Engine</p>
+</div>
+
 </div>
 </div>
 
+</div>
 </div>
 
 <!-- SEARCH -->
-<div class="mt-24 max-w-3xl mx-auto">
+<div class="mt-28 max-w-4xl mx-auto">
 <div class="search-dock">
 <input type="text" id="searchInput" placeholder="Search endpoints, routes, keywords..."
-class="input-modern text-sm">
+class="w-full bg-transparent outline-none text-sm">
 </div>
 </div>
 
 <!-- API SECTION -->
-<div id="content" class="mt-24">
+<div id="content" class="mt-28">
 
 <div id="noResults" class="hidden text-center py-20">
 <p class="text-sm" style="color:var(--muted)">No matching endpoint found.</p>
 </div>
 
-<div id="apiList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+<div id="apiList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
 
 <div class="api-card">
 
+<div>
 <div class="flex justify-between items-center mb-6">
 <h3 class="font-bold text-xl">Example Endpoint</h3>
 <span class="text-xs px-4 py-2 rounded-full"
-style="background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);">
+style="background:rgba(139,92,246,.2);border:1px solid rgba(139,92,246,.4);">
 GET METHOD
 </span>
 </div>
 
 <p class="text-xs leading-relaxed mb-6" style="color:var(--muted)">
-Retrieve structured JSON payload with optimized routing engine,
-automatic compression, and secured authentication validation.
+Retrieve structured JSON payload via optimized distributed routing system,
+secured using token-based authentication and encrypted traffic pipeline.
 </p>
 
 <div class="endpoint-path mb-6">
 /api/example?apikey=YOUR_KEY
 </div>
+</div>
 
 <div class="flex justify-between items-center">
-<span class="text-xs" style="color:var(--accent1)">Production Ready</span>
-<button class="px-5 py-3 rounded-xl text-xs"
-style="background:linear-gradient(135deg,var(--accent1),var(--accent2));">
+<span class="text-xs" style="color:var(--accent1)">Production Stable</span>
+<button class="execute-btn">
 Execute Test
 </button>
 </div>
@@ -308,10 +365,9 @@ Execute Test
 </div>
 </div>
 
-<footer class="mt-32 text-center">
-<div class="divider mb-8"></div>
+<footer class="mt-36 text-center">
 <p id="footer" class="text-sm tracking-wide" style="color:var(--muted)">
-© 2026 ZYREX API • Professional Enterprise System
+© 2026 ZYREX API • Advanced Enterprise Infrastructure
 </p>
 </footer>
 
