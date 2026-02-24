@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="Browse through our collection of API endpoints. Find what you need or discover something new.">
-<meta name="theme-color" content="#06121C">
+<meta name="theme-color" content="#0A0A16">
 <title>Zyrex Api</title>
 <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <script>
@@ -18,7 +18,7 @@ darkMode: 'class',
 theme: {
 extend: {
 fontFamily: {
-sans: ['Inter','system-ui','sans-serif']
+sans: ['Sora','system-ui','sans-serif']
 }
 }
 }
@@ -27,26 +27,27 @@ sans: ['Inter','system-ui','sans-serif']
 
 <style>
 :root{
---bg0:#020617;
---bg1:#071422;
---bg2:#0B1E2D;
+--bg0:#070712;
+--bg1:#0F0F1E;
+--bg2:#151530;
 
---card:rgba(255,255,255,.03);
---stroke:rgba(255,255,255,.06);
---text:#E6F1FF;
---muted:#7DA2C3;
+--card:rgba(255,255,255,.04);
+--stroke:rgba(255,255,255,.08);
 
---brand1:#06B6D4;
---brand2:#10B981;
---brand3:#22D3EE;
+--text:#F2F4FF;
+--muted:#8E9ABF;
 
---ring:rgba(16,185,129,.35);
+--accent1:#8B5CF6;
+--accent2:#3B82F6;
+--accent3:#06B6D4;
+
+--glow:rgba(139,92,246,.5);
 }
 
 body{
 background:
-radial-gradient(800px 500px at 15% 10%, rgba(16,185,129,.25), transparent 60%),
-radial-gradient(800px 500px at 85% 20%, rgba(6,182,212,.25), transparent 60%),
+radial-gradient(900px 600px at 20% 10%, rgba(139,92,246,.25), transparent 60%),
+radial-gradient(900px 600px at 80% 20%, rgba(59,130,246,.25), transparent 60%),
 linear-gradient(180deg,var(--bg0),var(--bg1));
 color:var(--text);
 }
@@ -54,74 +55,88 @@ color:var(--text);
 .glass{
 background:var(--card);
 border:1px solid var(--stroke);
-backdrop-filter:blur(30px);
-border-radius:28px;
+backdrop-filter:blur(40px);
+border-radius:30px;
+box-shadow:0 30px 80px -40px rgba(0,0,0,.7);
 }
 
 .gradient-text{
-background:linear-gradient(135deg,var(--brand1),var(--brand3));
+background:linear-gradient(135deg,var(--accent1),var(--accent3));
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
-.btn-main{
-background:linear-gradient(135deg,var(--brand1),var(--brand2));
-border-radius:18px;
-transition:.3s;
-}
-.btn-main:hover{
-transform:translateY(-4px);
-box-shadow:0 30px 80px -30px rgba(16,185,129,.6);
-}
-
 .input-modern{
-background:rgba(255,255,255,.04);
+background:rgba(255,255,255,.06);
 border:1px solid var(--stroke);
-border-radius:18px;
-padding:16px 20px;
+border-radius:20px;
+padding:18px 22px;
 outline:none;
-transition:.3s;
+transition:.4s;
 }
 .input-modern:focus{
-border-color:var(--brand2);
-box-shadow:0 0 0 4px var(--ring);
+border-color:var(--accent1);
+box-shadow:0 0 0 4px rgba(139,92,246,.2);
 }
 
-.loader{
-width:36px;height:36px;
-border:3px solid rgba(255,255,255,.15);
-border-top:3px solid var(--brand1);
+.loader-ring{
+width:80px;height:80px;
 border-radius:50%;
-animation:spin 1s linear infinite;
+border:3px solid rgba(255,255,255,.08);
+border-top:3px solid var(--accent1);
+animation:spin 1.2s linear infinite;
+position:relative;
+}
+.loader-ring::after{
+content:"";
+position:absolute;
+inset:15px;
+border-radius:50%;
+border:3px solid rgba(255,255,255,.08);
+border-top:3px solid var(--accent3);
+animation:spinReverse 1.6s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinReverse{to{transform:rotate(-360deg)}}
+
+.api-card{
+position:relative;
+overflow:hidden;
+padding:26px;
+border-radius:24px;
+background:linear-gradient(145deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+border:1px solid var(--stroke);
+transition:.4s;
+}
+.api-card:hover{
+transform:translateY(-8px);
+box-shadow:0 40px 100px -40px var(--glow);
+border-color:rgba(139,92,246,.4);
+}
+.api-card::before{
+content:"";
+position:absolute;
+top:-60%;
+left:-60%;
+width:200%;
+height:200%;
+background:radial-gradient(circle at center, rgba(139,92,246,.15), transparent 60%);
+transform:rotate(25deg);
+}
 
 .contact-customer{
 position:fixed;
 bottom:35px;
 right:35px;
-width:65px;height:65px;
-border-radius:20px;
-background:linear-gradient(135deg,var(--brand1),var(--brand2));
+width:70px;height:70px;
+border-radius:25px;
+background:linear-gradient(135deg,var(--accent1),var(--accent2));
 display:flex;align-items:center;justify-content:center;
-box-shadow:0 30px 80px -30px rgba(16,185,129,.8);
-transition:.3s;
+box-shadow:0 30px 90px -30px var(--glow);
+transition:.4s;
 }
 .contact-customer:hover{
-transform:translateY(-6px) scale(1.1);
-}
-
-.avatar-hero{
-border-radius:40px;
-overflow:hidden;
-border:1px solid var(--stroke);
-box-shadow:0 50px 120px -40px rgba(0,0,0,.8);
-}
-
-.avatar-hero img{
-width:100%;
-height:100%;
-object-fit:cover;
+transform:translateY(-8px) scale(1.15);
 }
 
 .divider{
@@ -133,70 +148,107 @@ background:linear-gradient(90deg,transparent,var(--stroke),transparent);
 
 <body class="min-h-screen font-sans antialiased">
 
-<!-- LOADING -->
-<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50" style="background:var(--bg1);">
-<div class="glass px-12 py-10 text-center">
-<div class="loader mx-auto mb-5"></div>
-<p class="text-sm tracking-wide" style="color:var(--muted)">Launching Professional Interface...</p>
+<!-- NEW LOADING SCREEN -->
+<div id="loadingScreen" class="fixed inset-0 flex flex-col items-center justify-center z-50" style="background:var(--bg1);">
+<div class="loader-ring mb-10"></div>
+<h2 class="text-xl font-bold tracking-wider gradient-text">Initializing Zyrex Interface</h2>
+<p class="mt-4 text-xs" style="color:var(--muted)">Securing channels • Syncing endpoints • Preparing engine</p>
 </div>
+
+<main class="max-w-7xl mx-auto px-6 py-24">
+
+<!-- NEW HERO CENTERED STYLE -->
+<div class="text-center relative">
+
+<div class="inline-block px-6 py-2 mb-6 text-xs tracking-widest rounded-full"
+style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);">
+PROFESSIONAL API PLATFORM
 </div>
 
-<main class="max-w-7xl mx-auto px-6 py-20">
-
-<!-- HERO (NEW SPLIT LAYOUT) -->
-<div class="glass p-14 grid md:grid-cols-2 gap-14 items-center">
-
-<div>
-<h1 id="titleApi" class="text-6xl font-black gradient-text leading-tight">
+<h1 id="titleApi" class="text-7xl font-black gradient-text">
 Zyrex API
 </h1>
 
-<p id="descApi" class="mt-6 text-sm leading-relaxed max-w-lg" style="color:var(--muted)">
+<p id="descApi" class="mt-8 max-w-2xl mx-auto text-sm leading-relaxed"
+style="color:var(--muted)">
 Explore and test all Zyrex API endpoints in real time.
-Structured architecture. Lightning performance.
-Premium modern interface experience.
+Enterprise architecture. Premium interface. Advanced performance engine.
 </p>
 
-<div class="mt-8 flex flex-wrap gap-3">
-<span class="px-5 py-2 rounded-full text-xs font-medium" style="background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.4);">Secure APIKEY</span>
-<span class="px-5 py-2 rounded-full text-xs font-medium" style="background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.4);">Fast JSON</span>
-</div>
-
-<div class="mt-8 flex gap-6 text-xl">
+<div class="mt-10 flex justify-center gap-6 text-2xl">
 <a id="telegramLink" target="_blank"><i class="fab fa-telegram"></i></a>
 <a id="whatsappLink" target="_blank"><i class="fab fa-whatsapp"></i></a>
 <a id="youtubeLink" target="_blank"><i class="fab fa-youtube"></i></a>
 </div>
+
+<div class="mt-16 glass p-10 max-w-5xl mx-auto">
+<div class="grid md:grid-cols-3 gap-6 text-center">
+
+<div>
+<p class="text-3xl font-bold gradient-text">99.9%</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Uptime Reliability</p>
 </div>
 
-<div class="flex justify-center">
-<div class="w-64 h-64 avatar-hero">
-<img id="apiAvatar" src="https://file.idnet.my.id/api/preview.php?file=atjolkf4.png">
+<div>
+<p class="text-3xl font-bold gradient-text">Ultra</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Performance Engine</p>
+</div>
+
+<div>
+<p class="text-3xl font-bold gradient-text">Secure</p>
+<p class="text-xs mt-2" style="color:var(--muted)">APIKEY Protection</p>
+</div>
+
 </div>
 </div>
 
 </div>
 
-<!-- SEARCH (FLOAT STYLE) -->
-<div class="mt-16 max-w-3xl mx-auto">
-<div class="glass p-6">
-<input type="text" id="searchInput" placeholder="Search API endpoints..."
+<!-- FLOAT SEARCH BAR -->
+<div class="mt-20 max-w-4xl mx-auto">
+<div class="glass p-8">
+<input type="text" id="searchInput"
+placeholder="Search API endpoints..."
 class="w-full input-modern text-sm">
 </div>
 </div>
 
-<!-- CONTENT GRID -->
-<div id="content" class="mt-16">
+<!-- API CONTENT -->
+<div id="content" class="mt-20">
 
 <div id="noResults" class="hidden text-center py-20">
 <p class="text-sm" style="color:var(--muted)">No matching endpoint found.</p>
 </div>
 
-<div id="apiList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+<div id="apiList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
+<!-- SAMPLE COMPLEX CARD STRUCTURE -->
+<div class="api-card">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-bold text-lg">Example Endpoint</h3>
+<span class="text-xs px-3 py-1 rounded-full"
+style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.4);">
+GET
+</span>
 </div>
 
-<footer class="mt-24 text-center">
+<p class="text-xs leading-relaxed mb-6" style="color:var(--muted)">
+Retrieve structured JSON data with high-speed response and optimized routing layer.
+</p>
+
+<div class="flex justify-between items-center text-xs">
+<span style="color:var(--accent3)">/api/example</span>
+<button class="px-4 py-2 rounded-xl text-xs"
+style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);">
+Test Endpoint
+</button>
+</div>
+</div>
+
+</div>
+</div>
+
+<footer class="mt-32 text-center">
 <div class="divider mb-8"></div>
 <p id="footer" class="text-sm tracking-wide" style="color:var(--muted)">
 © 2026 ZYREX API • v3.0.0 Professional Edition
