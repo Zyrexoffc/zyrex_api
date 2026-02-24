@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="Browse through our collection of API endpoints. Find what you need or discover something new.">
-<meta name="theme-color" content="#111827">
+<meta name="theme-color" content="#0E1628">
 <title>Zyrex Api</title>
 <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
@@ -17,7 +17,9 @@ tailwind.config = {
 darkMode: 'class',
 theme: {
 extend: {
-fontFamily: { sans: ['Sora','system-ui','sans-serif'] }
+fontFamily: {
+sans: ['Sora','system-ui','sans-serif']
+}
 }
 }
 }
@@ -25,37 +27,46 @@ fontFamily: { sans: ['Sora','system-ui','sans-serif'] }
 
 <style>
 :root{
---bg0:#0E1424;
---bg1:#141B34;
---bg2:#1C2547;
+--bg0:#0B1220;
+--bg1:#111B2E;
+--bg2:#16233A;
 
 --card:rgba(255,255,255,.05);
---stroke:rgba(255,255,255,.10);
+--stroke:rgba(255,255,255,.09);
 
---text:#E6ECFF;
---muted:#AAB6E3;
+--text:#E6EDFF;
+--muted:#94A3C4;
 
---accent1:#6366F1;
---accent2:#0EA5E9;
---accent3:#14B8A6;
+--accent1:#00E0FF;
+--accent2:#7C3AED;
+--accent3:#22D3EE;
 
---glow:rgba(99,102,241,.5);
+--glow:rgba(0,224,255,.45);
 }
 
 body{
 background:
-radial-gradient(800px 500px at 10% 10%, rgba(99,102,241,.25), transparent 60%),
-radial-gradient(900px 600px at 90% 20%, rgba(20,184,166,.25), transparent 60%),
+radial-gradient(900px 600px at 10% 20%, rgba(0,224,255,.18), transparent 60%),
+radial-gradient(900px 600px at 90% 10%, rgba(124,58,237,.18), transparent 60%),
 linear-gradient(180deg,var(--bg0),var(--bg1));
 color:var(--text);
 }
 
+/* ===== Modern Glass ===== */
 .glass{
 background:var(--card);
 border:1px solid var(--stroke);
-backdrop-filter:blur(40px);
+backdrop-filter:blur(60px);
 border-radius:32px;
-box-shadow:0 30px 80px -40px rgba(0,0,0,.7);
+box-shadow:0 40px 120px -50px rgba(0,0,0,.6);
+}
+
+/* ===== Hero Layout ===== */
+.hero-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:60px;
+align-items:center;
 }
 
 .gradient-text{
@@ -64,58 +75,118 @@ background:linear-gradient(135deg,var(--accent1),var(--accent2));
 -webkit-text-fill-color:transparent;
 }
 
-.input-modern{
-background:rgba(255,255,255,.08);
+.metric-card{
+background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
 border:1px solid var(--stroke);
-border-radius:18px;
-padding:20px 24px;
-outline:none;
+border-radius:24px;
+padding:24px;
 transition:.4s;
 }
-.input-modern:focus{
-border-color:var(--accent2);
-box-shadow:0 0 0 4px rgba(14,165,233,.25);
+.metric-card:hover{
+transform:translateY(-6px);
+box-shadow:0 20px 60px -30px var(--glow);
 }
 
+/* ===== Search Dock ===== */
+.search-dock{
+position:relative;
+background:rgba(255,255,255,.06);
+border:1px solid var(--stroke);
+border-radius:28px;
+padding:20px;
+box-shadow:0 20px 70px -40px var(--glow);
+}
+
+.input-modern{
+background:transparent;
+outline:none;
+width:100%;
+color:var(--text);
+}
+
+/* ===== API Cards Advanced ===== */
 .api-card{
 position:relative;
-overflow:hidden;
-padding:28px;
+padding:30px;
 border-radius:28px;
-background:linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-border:1px solid var(--stroke);
-transition:.4s;
-}
-.api-card:hover{
-transform:translateY(-10px);
-box-shadow:0 40px 100px -40px var(--glow);
-border-color:rgba(99,102,241,.6);
+background:linear-gradient(145deg,#14233B,#101A2C);
+border:1px solid rgba(255,255,255,.08);
+overflow:hidden;
+transition:.5s;
 }
 
-.api-card::after{
+.api-card::before{
 content:"";
 position:absolute;
-top:-40%;
-right:-40%;
-width:250px;
-height:250px;
-background:radial-gradient(circle, rgba(99,102,241,.25), transparent 70%);
-border-radius:50%;
+top:-2px;
+left:-2px;
+right:-2px;
+bottom:-2px;
+border-radius:30px;
+background:linear-gradient(120deg,var(--accent1),transparent,var(--accent2));
+z-index:-1;
+opacity:.2;
 }
 
+.api-card:hover{
+transform:translateY(-12px);
+box-shadow:0 40px 120px -40px var(--glow);
+}
+
+.endpoint-path{
+font-family:monospace;
+background:rgba(0,224,255,.1);
+padding:10px 14px;
+border-radius:14px;
+font-size:12px;
+}
+
+/* ===== Modern Loading ===== */
+#loadingScreen{
+background:linear-gradient(180deg,#0B1220,#0F1B2E);
+}
+
+.loading-container{
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.progress-bar{
+width:240px;
+height:6px;
+border-radius:20px;
+background:rgba(255,255,255,.1);
+overflow:hidden;
+margin-top:20px;
+}
+
+.progress-bar span{
+display:block;
+height:100%;
+width:0%;
+background:linear-gradient(90deg,var(--accent1),var(--accent2));
+animation:load 2s ease forwards;
+}
+
+@keyframes load{
+to{width:100%}
+}
+
+/* Floating Contact */
 .contact-customer{
 position:fixed;
-bottom:35px;
-right:35px;
-width:70px;height:70px;
-border-radius:22px;
-background:linear-gradient(135deg,var(--accent1),var(--accent3));
+bottom:40px;
+right:40px;
+width:75px;height:75px;
+border-radius:30px;
+background:linear-gradient(135deg,var(--accent1),var(--accent2));
 display:flex;align-items:center;justify-content:center;
-box-shadow:0 30px 90px -30px var(--glow);
+box-shadow:0 30px 100px -30px var(--glow);
 transition:.4s;
 }
 .contact-customer:hover{
-transform:translateY(-8px) scale(1.15);
+transform:scale(1.2) rotate(10deg);
 }
 
 .divider{
@@ -127,81 +198,72 @@ background:linear-gradient(90deg,transparent,var(--stroke),transparent);
 
 <body class="min-h-screen font-sans antialiased">
 
-<!-- LOADING SCREEN (TIDAK DIUBAH) -->
-<div id="loadingScreen" class="fixed inset-0 flex flex-col items-center justify-center z-50" style="background:#141B34;">
-<div class="loader-ring mb-10"></div>
-<h2 class="text-xl font-bold tracking-wider gradient-text">Initializing Zyrex Interface</h2>
-<p class="mt-4 text-xs" style="color:var(--muted)">Securing channels • Syncing endpoints • Preparing engine</p>
+<!-- MODERN LOADING -->
+<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50">
+<div class="loading-container">
+<h2 class="text-xl font-bold tracking-widest gradient-text">Booting Zyrex Engine</h2>
+<div class="progress-bar"><span></span></div>
+<p class="mt-6 text-xs" style="color:var(--muted)">Initializing modules • Securing environment • Syncing nodes</p>
+</div>
 </div>
 
-<main class="max-w-7xl mx-auto px-6 py-20">
+<main class="max-w-7xl mx-auto px-8 py-24">
 
-<!-- HERO SECTION BARU (GRID SIDE STYLE) -->
-<div class="grid lg:grid-cols-2 gap-16 items-center">
+<!-- HERO SPLIT LAYOUT -->
+<div class="hero-grid">
 
 <div>
-<div class="inline-block px-5 py-2 mb-6 text-xs tracking-widest rounded-full"
-style="background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.5);">
-NEXT GENERATION API PLATFORM
+<div class="text-xs tracking-widest mb-6 px-4 py-2 inline-block rounded-full"
+style="background:rgba(0,224,255,.15);border:1px solid rgba(0,224,255,.4);">
+ENTERPRISE API SYSTEM
 </div>
 
 <h1 id="titleApi" class="text-6xl font-black leading-tight gradient-text">
-Zyrex API
+Zyrex API Platform
 </h1>
 
-<p id="descApi" class="mt-8 text-sm leading-relaxed max-w-md" style="color:var(--muted)">
-Enterprise-grade API infrastructure engineered for speed, stability, and security.
-Designed for developers who demand reliability and performance.
+<p id="descApi" class="mt-8 text-sm leading-relaxed max-w-xl" style="color:var(--muted)">
+Advanced endpoint management system built for developers.
+Scalable architecture. High-performance routing.
+Fully protected APIKEY security layer.
 </p>
 
-<div class="mt-10 flex gap-6 text-xl">
+<div class="mt-10 flex gap-6 text-2xl">
 <a id="telegramLink" target="_blank"><i class="fab fa-telegram"></i></a>
 <a id="whatsappLink" target="_blank"><i class="fab fa-whatsapp"></i></a>
 <a id="youtubeLink" target="_blank"><i class="fab fa-youtube"></i></a>
 </div>
 </div>
 
-<div class="glass p-10">
-<div class="grid grid-cols-2 gap-8 text-center">
-
-<div>
-<p class="text-4xl font-bold gradient-text">99.9%</p>
-<p class="text-xs mt-2" style="color:var(--muted)">Global Uptime</p>
+<div class="grid grid-cols-2 gap-6">
+<div class="metric-card text-center">
+<p class="text-3xl font-bold gradient-text">99.99%</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Uptime SLA</p>
 </div>
 
-<div>
-<p class="text-4xl font-bold gradient-text">2ms</p>
-<p class="text-xs mt-2" style="color:var(--muted)">Average Latency</p>
+<div class="metric-card text-center">
+<p class="text-3xl font-bold gradient-text">120ms</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Avg Response</p>
 </div>
 
-<div>
-<p class="text-4xl font-bold gradient-text">Layer 7</p>
-<p class="text-xs mt-2" style="color:var(--muted)">Security Protection</p>
+<div class="metric-card text-center">
+<p class="text-3xl font-bold gradient-text">AES-256</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Encrypted</p>
 </div>
 
-<div>
-<p class="text-4xl font-bold gradient-text">AES</p>
-<p class="text-xs mt-2" style="color:var(--muted)">Encrypted Channel</p>
-</div>
-
+<div class="metric-card text-center">
+<p class="text-3xl font-bold gradient-text">v3.0</p>
+<p class="text-xs mt-2" style="color:var(--muted)">Engine Core</p>
 </div>
 </div>
 
 </div>
 
-<!-- SEARCH SECTION BARU -->
-<div class="mt-24">
-<div class="glass p-10">
-<div class="flex flex-col md:flex-row gap-6 items-center">
-<div class="flex-1 w-full">
-<input type="text" id="searchInput"
-placeholder="Search, filter, discover endpoints..."
-class="w-full input-modern text-sm">
-</div>
-<div class="text-xs" style="color:var(--muted)">
-Instant search • Real-time filtering • Smart endpoint detection
-</div>
-</div>
+<!-- SEARCH -->
+<div class="mt-24 max-w-3xl mx-auto">
+<div class="search-dock">
+<input type="text" id="searchInput" placeholder="Search endpoints, routes, keywords..."
+class="input-modern text-sm">
 </div>
 </div>
 
@@ -214,31 +276,33 @@ Instant search • Real-time filtering • Smart endpoint detection
 
 <div id="apiList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
 
-<!-- ADVANCED API CARD -->
 <div class="api-card">
+
 <div class="flex justify-between items-center mb-6">
-<h3 class="font-bold text-lg tracking-wide">Example Endpoint</h3>
-<span class="text-xs px-4 py-1 rounded-full"
-style="background:rgba(14,165,233,.2);border:1px solid rgba(14,165,233,.5);">
-GET
+<h3 class="font-bold text-xl">Example Endpoint</h3>
+<span class="text-xs px-4 py-2 rounded-full"
+style="background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);">
+GET METHOD
 </span>
 </div>
 
 <p class="text-xs leading-relaxed mb-6" style="color:var(--muted)">
-High-performance endpoint returning structured JSON payload optimized with intelligent routing, compression, and secure API key validation.
+Retrieve structured JSON payload with optimized routing engine,
+automatic compression, and secured authentication validation.
 </p>
 
-<div class="divider mb-6"></div>
-
-<div class="flex justify-between items-center text-xs mb-6">
-<span style="color:var(--accent3)">/api/example</span>
-<span style="color:var(--muted)">Response: 200ms</span>
+<div class="endpoint-path mb-6">
+/api/example?apikey=YOUR_KEY
 </div>
 
-<button class="w-full py-3 rounded-xl text-xs font-semibold tracking-wide"
+<div class="flex justify-between items-center">
+<span class="text-xs" style="color:var(--accent1)">Production Ready</span>
+<button class="px-5 py-3 rounded-xl text-xs"
 style="background:linear-gradient(135deg,var(--accent1),var(--accent2));">
-Test Endpoint
+Execute Test
 </button>
+</div>
+
 </div>
 
 </div>
@@ -247,7 +311,7 @@ Test Endpoint
 <footer class="mt-32 text-center">
 <div class="divider mb-8"></div>
 <p id="footer" class="text-sm tracking-wide" style="color:var(--muted)">
-© 2026 ZYREX API • v4.0 Professional Interface
+© 2026 ZYREX API • Professional Enterprise System
 </p>
 </footer>
 
