@@ -6,31 +6,39 @@ SCRAPE SOURCE
 ====================== */
 async function scrapeJapanImage() {
   try {
-    const { data } = await axios.get("https://www.pexels.com/search/japanese%20girl/", {
+    {
+    const GIST_URL = "https://raw.githubusercontent.com/siputzx/Databasee/refs/heads/main/cecan/japan.json";
+
+    const { data: imageUrls } = await axios.get(GIST_URL, {
+      timeout: 30000,
       headers: {
-        "User-Agent": "Mozilla/5.0"
-      }
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
     });
 
-    const $ = cheerio.load(data);
-    const images = [];
-
-    $("img").each((i, el) => {
-      const src = $(el).attr("src");
-      if (src && src.includes("images.pexels.com")) {
-        images.push(src);
-      }
-    });
-
-    if (images.length === 0) {
-      throw new Error("Gambar tidak ditemukan");
+    if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
+      throw new Error("No image URLs found in the GIST.");
     }
 
-    return images[Math.floor(Math.random() * images.length)];
+    const randomImageUrl =
+      imageUrls[Math.floor(Math.random() * imageUrls.length)];
 
-  } catch (err) {
-    throw new Error("Gagal scrape gambar");
-  }
+    const imageResponse = await axios.get(randomImageUrl, {
+      responseType: "arraybuffer",
+      timeout: 30000,
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
+    });
+
+    return Buffer.from(imageResponse.data, "binary");
+
+  } catch (error) {
+    console.error("API Error:", error.message);
+    throw new Error("Failed to get random Japanese cecan image from API");
+    }
 }
 
 /* ======================
