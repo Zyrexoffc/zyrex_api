@@ -1,14 +1,13 @@
 const axios = require("axios");
-const cheerio = require("cheerio");
 
 /* ======================
-SCRAPE SOURCE
+GET RANDOM JAPAN IMAGE
 ====================== */
-async function scrapeJapanImage() {
+async function getRandomCecanJapanImage() {
   try {
-    {
     const GIST_URL = "https://raw.githubusercontent.com/siputzx/Databasee/refs/heads/main/cecan/japan.json";
 
+    // === Ambil JSON list gambar ===
     const { data: imageUrls } = await axios.get(GIST_URL, {
       timeout: 30000,
       headers: {
@@ -21,9 +20,11 @@ async function scrapeJapanImage() {
       throw new Error("No image URLs found in the GIST.");
     }
 
+    // === Ambil random URL ===
     const randomImageUrl =
       imageUrls[Math.floor(Math.random() * imageUrls.length)];
 
+    // === Download image sebagai buffer ===
     const imageResponse = await axios.get(randomImageUrl, {
       responseType: "arraybuffer",
       timeout: 30000,
@@ -33,12 +34,12 @@ async function scrapeJapanImage() {
       },
     });
 
-    return Buffer.from(imageResponse.data, "binary");
+    return Buffer.from(imageResponse.data);
 
   } catch (error) {
     console.error("API Error:", error.message);
     throw new Error("Failed to get random Japanese cecan image from API");
-    }
+  }
 }
 
 /* ======================
@@ -47,37 +48,32 @@ EXPORT ENDPOINT
 module.exports = [
   {
     name: "Random Cecan Japan",
-    desc: "Scrape random Japanese girl image",
+    desc: "Random Japanese girl image from database",
     category: "Random",
     path: "/random/cecanjapan?apikey=",
 
     async run(req, res) {
       const { apikey } = req.query;
 
-      /* === APIKEY VALIDATION === */
       if (!apikey || !global.apikey.includes(apikey)) {
         return res.json({
           status: false,
-          error: "Apikey invalid"
+          error: "Apikey invalid",
         });
       }
 
       try {
-        const imageUrl = await scrapeJapanImage();
+        const imageBuffer = await getRandomCecanJapanImage();
 
-        return res.json({
-          status: true,
-          result: {
-            image: imageUrl
-          }
-        });
+        res.setHeader("Content-Type", "image/jpeg");
+        return res.send(imageBuffer);
 
       } catch (e) {
         return res.status(500).json({
           status: false,
-          error: e.message
+          error: e.message,
         });
       }
-    }
-  }
+    },
+  },
 ];
