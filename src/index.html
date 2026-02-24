@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="Browse through our collection of API endpoints. Find what you need or discover something new.">
-<meta name="theme-color" content="#0B0F1A">
+<meta name="theme-color" content="#06121C">
 <title>Zyrex Api</title>
 <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <script>
@@ -27,24 +27,26 @@ sans: ['Inter','system-ui','sans-serif']
 
 <style>
 :root{
---bg0:#050816;
---bg1:#0D1025;
---card:rgba(255,255,255,.04);
---stroke:rgba(255,255,255,.07);
---text:#F1F5F9;
---muted:#94A3B8;
+--bg0:#020617;
+--bg1:#071422;
+--bg2:#0B1E2D;
 
---brand1:#8B5CF6;
---brand2:#EC4899;
---brand3:#6366F1;
+--card:rgba(255,255,255,.03);
+--stroke:rgba(255,255,255,.06);
+--text:#E6F1FF;
+--muted:#7DA2C3;
 
---ring:rgba(139,92,246,.35);
+--brand1:#06B6D4;
+--brand2:#10B981;
+--brand3:#22D3EE;
+
+--ring:rgba(16,185,129,.35);
 }
 
 body{
 background:
-radial-gradient(900px 600px at 20% 20%, rgba(139,92,246,.25), transparent 60%),
-radial-gradient(900px 600px at 80% 30%, rgba(236,72,153,.25), transparent 60%),
+radial-gradient(800px 500px at 15% 10%, rgba(16,185,129,.25), transparent 60%),
+radial-gradient(800px 500px at 85% 20%, rgba(6,182,212,.25), transparent 60%),
 linear-gradient(180deg,var(--bg0),var(--bg1));
 color:var(--text);
 }
@@ -52,43 +54,43 @@ color:var(--text);
 .glass{
 background:var(--card);
 border:1px solid var(--stroke);
-backdrop-filter:blur(25px);
-border-radius:24px;
+backdrop-filter:blur(30px);
+border-radius:28px;
 }
 
 .gradient-text{
-background:linear-gradient(135deg,var(--brand1),var(--brand2));
+background:linear-gradient(135deg,var(--brand1),var(--brand3));
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
 .btn-main{
 background:linear-gradient(135deg,var(--brand1),var(--brand2));
-border-radius:16px;
+border-radius:18px;
 transition:.3s;
 }
 .btn-main:hover{
-transform:translateY(-3px);
-box-shadow:0 25px 60px -25px rgba(236,72,153,.6);
+transform:translateY(-4px);
+box-shadow:0 30px 80px -30px rgba(16,185,129,.6);
 }
 
 .input-modern{
-background:rgba(255,255,255,.05);
+background:rgba(255,255,255,.04);
 border:1px solid var(--stroke);
-border-radius:16px;
-padding:14px 18px;
+border-radius:18px;
+padding:16px 20px;
 outline:none;
 transition:.3s;
 }
 .input-modern:focus{
-border-color:var(--brand1);
+border-color:var(--brand2);
 box-shadow:0 0 0 4px var(--ring);
 }
 
 .loader{
-width:32px;height:32px;
+width:36px;height:36px;
 border:3px solid rgba(255,255,255,.15);
-border-top:3px solid var(--brand2);
+border-top:3px solid var(--brand1);
 border-radius:50%;
 animation:spin 1s linear infinite;
 }
@@ -96,13 +98,13 @@ animation:spin 1s linear infinite;
 
 .contact-customer{
 position:fixed;
-bottom:30px;
-right:30px;
-width:60px;height:60px;
-border-radius:50%;
+bottom:35px;
+right:35px;
+width:65px;height:65px;
+border-radius:20px;
 background:linear-gradient(135deg,var(--brand1),var(--brand2));
 display:flex;align-items:center;justify-content:center;
-box-shadow:0 25px 70px -25px rgba(139,92,246,.8);
+box-shadow:0 30px 80px -30px rgba(16,185,129,.8);
 transition:.3s;
 }
 .contact-customer:hover{
@@ -110,10 +112,10 @@ transform:translateY(-6px) scale(1.1);
 }
 
 .avatar-hero{
-border-radius:30px;
+border-radius:40px;
 overflow:hidden;
 border:1px solid var(--stroke);
-box-shadow:0 40px 100px -40px rgba(0,0,0,.9);
+box-shadow:0 50px 120px -40px rgba(0,0,0,.8);
 }
 
 .avatar-hero img{
@@ -133,61 +135,72 @@ background:linear-gradient(90deg,transparent,var(--stroke),transparent);
 
 <!-- LOADING -->
 <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50" style="background:var(--bg1);">
-<div class="glass px-10 py-8 text-center">
-<div class="loader mx-auto mb-4"></div>
-<p class="text-sm" style="color:var(--muted)">Preparing Modern Interface...</p>
+<div class="glass px-12 py-10 text-center">
+<div class="loader mx-auto mb-5"></div>
+<p class="text-sm tracking-wide" style="color:var(--muted)">Launching Professional Interface...</p>
 </div>
 </div>
 
-<main class="max-w-6xl mx-auto px-6 py-16">
+<main class="max-w-7xl mx-auto px-6 py-20">
 
-<!-- HERO -->
-<div class="glass p-12 text-center relative overflow-hidden">
+<!-- HERO (NEW SPLIT LAYOUT) -->
+<div class="glass p-14 grid md:grid-cols-2 gap-14 items-center">
 
-<div class="mx-auto w-40 h-40 avatar-hero mb-8">
-<img id="apiAvatar" src="https://file.idnet.my.id/api/preview.php?file=atjolkf4.png">
-</div>
-
-<h1 id="titleApi" class="text-5xl font-extrabold gradient-text tracking-tight">
+<div>
+<h1 id="titleApi" class="text-6xl font-black gradient-text leading-tight">
 Zyrex API
 </h1>
 
-<p id="descApi" class="mt-6 max-w-2xl mx-auto text-sm leading-relaxed" style="color:var(--muted)">
+<p id="descApi" class="mt-6 text-sm leading-relaxed max-w-lg" style="color:var(--muted)">
 Explore and test all Zyrex API endpoints in real time.
-High performance. Clean structure. Modern aesthetic.
+Structured architecture. Lightning performance.
+Premium modern interface experience.
 </p>
 
-<div class="mt-8 flex justify-center gap-3 flex-wrap">
-<span class="px-4 py-2 rounded-full text-xs" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);">APIKEY Ready</span>
-<span class="px-4 py-2 rounded-full text-xs" style="background:rgba(236,72,153,.15);border:1px solid rgba(236,72,153,.4);">JSON Response</span>
+<div class="mt-8 flex flex-wrap gap-3">
+<span class="px-5 py-2 rounded-full text-xs font-medium" style="background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.4);">Secure APIKEY</span>
+<span class="px-5 py-2 rounded-full text-xs font-medium" style="background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.4);">Fast JSON</span>
 </div>
 
-<div class="mt-8 flex justify-center gap-6 text-2xl">
+<div class="mt-8 flex gap-6 text-xl">
 <a id="telegramLink" target="_blank"><i class="fab fa-telegram"></i></a>
 <a id="whatsappLink" target="_blank"><i class="fab fa-whatsapp"></i></a>
 <a id="youtubeLink" target="_blank"><i class="fab fa-youtube"></i></a>
 </div>
+</div>
+
+<div class="flex justify-center">
+<div class="w-64 h-64 avatar-hero">
+<img id="apiAvatar" src="https://file.idnet.my.id/api/preview.php?file=atjolkf4.png">
+</div>
+</div>
 
 </div>
 
-<!-- SEARCH -->
-<div class="mt-14 glass p-8">
-<input type="text" id="searchInput" placeholder="Search endpoints..."
+<!-- SEARCH (FLOAT STYLE) -->
+<div class="mt-16 max-w-3xl mx-auto">
+<div class="glass p-6">
+<input type="text" id="searchInput" placeholder="Search API endpoints..."
 class="w-full input-modern text-sm">
 </div>
+</div>
 
-<!-- CONTENT -->
-<div id="content" class="mt-14 space-y-6">
-<div id="noResults" class="hidden text-center py-14">
+<!-- CONTENT GRID -->
+<div id="content" class="mt-16">
+
+<div id="noResults" class="hidden text-center py-20">
 <p class="text-sm" style="color:var(--muted)">No matching endpoint found.</p>
 </div>
 
-<div id="apiList" class="space-y-5"></div>
+<div id="apiList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
 </div>
 
-<footer class="mt-20 text-center">
-<div class="divider mb-6"></div>
-<p id="footer" class="text-sm" style="color:var(--muted)">© 2026 ZYREX API • v2.0.0</p>
+<footer class="mt-24 text-center">
+<div class="divider mb-8"></div>
+<p id="footer" class="text-sm tracking-wide" style="color:var(--muted)">
+© 2026 ZYREX API • v3.0.0 Professional Edition
+</p>
 </footer>
 
 </main>
