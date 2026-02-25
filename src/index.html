@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B1020">
+<meta name="description" content="Kurokami REST API Platform">
+<title>Kurokami API</title>
+
+<link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script>
+tailwind.config = {
+darkMode: 'class',
+theme: {
+extend: {
+fontFamily: {
+sans: ['Sora','system-ui','sans-serif']
+}
+}
+}
+}
+</script>
+
+<style>
+:root{
+--bg-main:#0B1020;
+--bg-soft:#121A2F;
+--card:#161F36;
+--card-light:#1C2745;
+--stroke:rgba(255,255,255,.07);
+--text:#F1F5FF;
+--muted:#9CAACF;
+--accent:#6C63FF;
+--accent2:#9F7AEA;
+--glow:rgba(108,99,255,.35);
+}
+
+body{
+background:
+radial-gradient(800px 500px at 0% 0%, rgba(159,122,234,.15), transparent 60%),
+radial-gradient(800px 500px at 100% 0%, rgba(108,99,255,.12), transparent 60%),
+linear-gradient(180deg,var(--bg-main),var(--bg-soft));
+color:var(--text);
+}
+
+.window-card{
+background:linear-gradient(160deg,var(--card),var(--card-light));
+border:1px solid var(--stroke);
+border-radius:28px;
+box-shadow:0 40px 120px -40px var(--glow);
+overflow:hidden;
+opacity:0;
+transform:translateY(30px);
+transition:all .8s ease;
+}
+
+.window-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 20px;
+border-bottom:1px solid var(--stroke);
+}
+
+.dot{width:12px;height:12px;border-radius:50%;}
+.dot.red{background:#ff5f56}
+.dot.yellow{background:#ffbd2e}
+.dot.green{background:#27c93f}
+
+.status-online{
+font-size:12px;
+padding:6px 14px;
+border-radius:20px;
+background:rgba(39,201,63,.15);
+color:#27c93f;
+font-weight:600;
+letter-spacing:1px;
+}
+
+.hero-img{
+border-radius:20px;
+overflow:hidden;
+border:1px solid var(--stroke);
+}
+
+.version-badge{
+position:absolute;
+bottom:14px;
+left:14px;
+background:#0f172a;
+padding:6px 12px;
+border-radius:10px;
+font-size:12px;
+border:1px solid var(--stroke);
+}
+
+.title-main{
+font-size:40px;
+font-weight:800;
+letter-spacing:2px;
+margin-top:25px;
+}
+
+.subtitle{
+margin-top:20px;
+max-width:600px;
+font-size:14px;
+color:var(--muted);
+line-height:1.7;
+}
+
+.btn-primary{
+background:linear-gradient(135deg,var(--accent),var(--accent2));
+padding:18px;
+border-radius:20px;
+font-weight:700;
+transition:.3s;
+box-shadow:0 20px 60px -25px var(--glow);
+position:relative;
+overflow:hidden;
+}
+
+.btn-dark, .icon-box{
+background:#0f172a;
+padding:18px;
+border-radius:20px;
+border:1px solid var(--stroke);
+font-weight:700;
+transition:.3s;
+position:relative;
+overflow:hidden;
+}
+
+.btn-primary:hover,
+.btn-dark:hover,
+.icon-box:hover{
+transform:translateY(-5px);
+}
+
+/* Ripple animation */
+@keyframes ripple {
+to {
+transform: scale(4);
+opacity: 0;
+}
+}
+</style>
+</head>
+
+<body class="min-h-screen font-sans antialiased flex items-center justify-center px-6 py-16">
+
+<div class="max-w-2xl w-full">
+<div class="window-card">
+
+<div class="window-top">
+<div class="flex gap-2">
+<div class="dot red"></div>
+<div class="dot yellow"></div>
+<div class="dot green"></div>
+</div>
+<div class="status-online">● ONLINE</div>
+</div>
+
+<div class="p-8 text-center">
+
+<div class="relative hero-img">
+<img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e" 
+class="w-full h-64 object-cover">
+<div class="version-badge">v1.0</div>
+</div>
+
+<h1 class="title-main">KUROKAMI</h1>
+
+<p class="subtitle mx-auto">
+A free and reliable REST API platform built for modern application development. 
+Powered by Node.js and TypeScript, it delivers high performance, stable endpoints, 
+and seamless integration for developers worldwide.
+</p>
+
+<div class="grid grid-cols-2 gap-6 mt-10">
+
+<a href="docs.html" class="btn-primary flex items-center justify-center gap-3">
+<i class="fas fa-book"></i> DOCS
+</a>
+
+<a href="#" class="btn-dark flex items-center justify-center gap-3">
+<i class="fas fa-chart-pie text-purple-400"></i> STATS
+</a>
+
+<div class="icon-box flex items-center justify-center">
+<i class="fab fa-whatsapp text-green-400 text-2xl"></i>
+</div>
+
+<div class="icon-box flex items-center justify-center">
+<i class="fas fa-share-alt text-blue-400 text-2xl"></i>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// Fade-in effect
+document.addEventListener("DOMContentLoaded", () => {
+  const card = document.querySelector(".window-card");
+  setTimeout(() => {
+    card.style.opacity = "1";
+    card.style.transform = "translateY(0)";
+  }, 200);
+});
+
+// Simulated online status
+const status = document.querySelector(".status-online");
+function updateStatus(){
+  const sec = new Date().getSeconds();
+  if(sec % 59 === 0){
+    status.textContent = "● MAINTENANCE";
+    status.style.color = "#ffbd2e";
+  } else {
+    status.textContent = "● ONLINE";
+    status.style.color = "#27c93f";
+  }
+}
+updateStatus();
+setInterval(updateStatus,10000);
+
+// Ripple click effect
+document.querySelectorAll(".btn-primary, .btn-dark, .icon-box")
+.forEach(btn=>{
+  btn.addEventListener("click",function(e){
+    const circle=document.createElement("span");
+    circle.style.position="absolute";
+    circle.style.width="100px";
+    circle.style.height="100px";
+    circle.style.background="rgba(255,255,255,.15)";
+    circle.style.borderRadius="50%";
+    circle.style.transform="scale(0)";
+    circle.style.animation="ripple .6s linear";
+    circle.style.left=e.offsetX-50+"px";
+    circle.style.top=e.offsetY-50+"px";
+    this.appendChild(circle);
+    setTimeout(()=>circle.remove(),600);
+  });
+});
+</script>
+
+</body>
+</html>
