@@ -13,6 +13,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+<!-- ✅ AnimeJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/animejs@4.0.0/lib/anime.iife.min.js"></script>
+
 <script>
 tailwind.config = {
 darkMode: 'class',
@@ -149,6 +152,13 @@ transform: scale(4);
 opacity: 0;
 }
 }
+
+/* ✅ TAMBAHAN CSS ANIMASI */
+#animation .text-xl {
+  font-size: 1.5rem;
+  color: currentColor;
+  letter-spacing: 0.06em;
+}
 </style>
 </head>
 
@@ -167,6 +177,11 @@ opacity: 0;
 </div>
 
 <div class="p-8 text-center">
+
+<!-- ✅ TAMBAHAN ANIMASI TEXT DI ATAS -->
+<div id="animation" class="large grid centered square-grid mb-6">
+  <h2 class="text-xl font-bold">HELLO WORLD</h2>
+</div>
 
 <div class="relative hero-img">
 <img src="https://files.catbox.moe/185i1y.jpg" 
@@ -188,7 +203,7 @@ and seamless integration for developers worldwide.
 <i class="fas fa-book"></i> DOCS
 </a>
 
-<a href= "Stat.html" class="btn-dark flex items-center justify-center gap-3">
+<a href="Stat.html" class="btn-dark flex items-center justify-center gap-3">
 <i class="fas fa-chart-pie text-purple-400"></i> STATS
 </a>
 
@@ -247,6 +262,36 @@ document.querySelectorAll(".btn-primary, .btn-dark, .icon-box")
     this.appendChild(circle);
     setTimeout(()=>circle.remove(),600);
   });
+});
+
+
+// ✅ TAMBAHAN ANIMASI TEXT (tanpa import, pakai const)
+document.addEventListener("DOMContentLoaded", () => {
+
+  const textWrapper = document.querySelector("#animation h2");
+  const text = textWrapper.textContent;
+  textWrapper.innerHTML = text.split("")
+    .map(char => `<span class="char inline-block">${char}</span>`)
+    .join("");
+
+  const chars = document.querySelectorAll("#animation .char");
+
+  anime({
+    targets: chars,
+    translateY: [
+      { value: '-2.75rem', duration: 600, easing: 'easeOutExpo' },
+      { value: 0, duration: 800, easing: 'easeOutBounce', delay: 100 }
+    ],
+    rotate: {
+      value: '-1turn',
+      delay: 0
+    },
+    delay: anime.stagger(50),
+    easing: 'easeInOutCirc',
+    loop: true,
+    loopDelay: 1000
+  });
+
 });
 </script>
 
