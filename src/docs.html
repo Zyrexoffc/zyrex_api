@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta name="description" content="Browse through our collection of API endpoints.">
+    <meta name="description" content="Zyrex API - Enterprise-grade REST infrastructure engineered for high-performance distributed systems.">
     <meta name="theme-color" content="#1A2238">
-    <title>Zyrex Api | Enterprise Infrastructure</title>
+    <title>Zyrex API • Advanced Cloud Ecosystem</title>
     <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <script>
         tailwind.config = {
@@ -19,7 +20,11 @@
                 extend: {
                     fontFamily: {
                         sans: ['Sora', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
+                        mono: ['Space Grotesk', 'monospace']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'floating 3s ease-in-out infinite',
                     }
                 }
             }
@@ -29,433 +34,495 @@
     <style>
         :root {
             --bg-main: #0B0F1A;
-            --bg-soft: #161B2C;
-            --bg-card: rgba(31, 41, 55, 0.4);
-            --bg-elev: rgba(55, 65, 81, 0.5);
-            
-            --text: #F1F5FF;
+            --bg-soft: #131B2D;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --bg-elev: rgba(51, 65, 85, 0.8);
+            --text: #F8FAFC;
             --muted: #94A3B8;
-            
-            --accent1: #FF7A18; /* Electric Orange */
-            --accent2: #32D2FF; /* Cyber Blue */
-            --accent3: #A855F7; /* Royal Purple */
-            
+            --accent1: #FF7A18;
+            --accent2: #32D2FF;
+            --accent3: #A855F7;
             --stroke: rgba(255, 255, 255, 0.08);
-            --glow: rgba(50, 210, 255, 0.15);
+            --glow: rgba(50, 210, 255, 0.3);
         }
 
         body {
             background-color: var(--bg-main);
-            color: var(--text);
-            overflow-x: hidden;
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(50, 210, 255, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(11, 15, 26, 1) 0%, rgba(22, 27, 44, 1) 100%);
-            background-attachment: fixed;
+                radial-gradient(circle at 90% 80%, rgba(50, 210, 255, 0.15) 0%, transparent 40%),
+                url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+            color: var(--text);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* Ambient Background Movement */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            opacity: 0.03;
-            z-index: -1;
-            pointer-events: none;
-        }
+        /* custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-elev); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
 
-        /* ================= MODERN LOADING ================= */
+        /* ================= MODERN LOADING REDESIGN ================= */
         #loadingScreen {
-            background: var(--bg-main);
-            backdrop-filter: blur(20px);
+            background: #0B1120;
+            backdrop-filter: blur(10px);
         }
 
         .loader-wrapper {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 200px;
+            height: 200px;
+            perspective: 1000px;
         }
 
         .outer-ring {
             position: absolute;
-            inset: 0;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             border: 2px solid transparent;
             border-top-color: var(--accent2);
-            border-bottom-color: var(--accent3);
-            animation: spinOuter 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            border-left-color: var(--accent3);
+            animation: spin 1.5s linear infinite;
         }
 
         .inner-ring {
             position: absolute;
-            inset: 20px;
+            top: 15%; left: 15%;
+            width: 70%; height: 70%;
             border-radius: 50%;
             border: 2px solid transparent;
-            border-left-color: var(--accent1);
-            border-right-color: var(--accent1);
-            animation: spinInner 1s linear infinite;
+            border-bottom-color: var(--accent1);
+            border-right-color: var(--accent2);
+            animation: spin-reverse 2s linear infinite;
         }
 
-        @keyframes spinOuter { to { transform: rotate(360deg); } }
-        @keyframes spinInner { to { transform: rotate(-360deg); } }
+        .loader-logo {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, var(--accent2), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        /* ================= HERO SECTION ================= */
-        .hero-container {
-            padding: 120px 20px 80px;
-            perspective: 1000px;
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes spin-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* ================= HERO SECTION MEGA UPGRADE ================= */
+        .hero-section {
+            position: relative;
+            padding-top: 120px;
+            padding-bottom: 80px;
+            z-index: 10;
         }
 
         .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--stroke);
-            backdrop-filter: blur(10px);
             padding: 10px 24px;
             border-radius: 100px;
             font-size: 12px;
-            letter-spacing: 3px;
             font-weight: 700;
-            margin-bottom: 30px;
-            display: inline-block;
-            text-transform: uppercase;
-            animation: fadeInUp 0.8s ease-out;
             color: var(--accent2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .hero-badge span {
+            width: 8px;
+            height: 8px;
+            background: var(--accent2);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent2);
+            display: inline-block;
         }
 
         .hero-title {
-            font-size: clamp(40px, 8vw, 84px);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 0.95;
             font-weight: 900;
-            line-height: 1.1;
-            background: linear-gradient(to right, #fff, var(--accent2), var(--accent3));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: titleReveal 1.2s cubic-bezier(0.77, 0, 0.175, 1);
-            filter: drop-shadow(0 0 30px rgba(50, 210, 255, 0.2));
+            letter-spacing: -0.05em;
+            margin-bottom: 30px;
         }
 
-        @keyframes titleReveal {
-            0% { opacity: 0; transform: translateY(30px) skewY(2deg); }
-            100% { opacity: 1; transform: translateY(0) skewY(0); }
+        .hero-title span {
+            background: linear-gradient(to bottom right, #fff 30%, var(--accent2), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
         }
 
         .hero-description {
-            margin-top: 30px;
-            max-width: 800px;
-            font-size: 18px;
+            max-width: 750px;
+            margin: 0 auto;
+            font-size: 1.1rem;
             color: var(--muted);
             line-height: 1.8;
-            font-weight: 300;
-            animation: fadeInUp 1s ease-out 0.3s both;
+            font-family: 'Space Grotesk', sans-serif;
         }
 
-        .hero-social {
-            margin-top: 45px;
-            display: flex;
-            gap: 25px;
-            animation: fadeInUp 1s ease-out 0.6s both;
+        /* Floating Code Elements */
+        .code-ghost {
+            position: absolute;
+            font-family: monospace;
+            color: rgba(50, 210, 255, 0.1);
+            font-size: 14px;
+            pointer-events: none;
+            z-index: -1;
         }
 
-        .hero-social a {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-card);
-            border: 1px solid var(--stroke);
-            border-radius: 16px;
-            font-size: 20px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hero-social a:hover {
-            background: var(--accent2);
-            color: #000;
-            transform: translateY(-8px) rotate(8deg);
-            box-shadow: 0 15px 30px rgba(50, 210, 255, 0.3);
-        }
-
-        /* ================= SEARCH SYSTEM ================= */
-        .search-dock {
+        /* ================= SEARCH & DOCK ================= */
+        .search-container {
+            position: sticky;
+            top: 20px;
+            z-index: 50;
             margin-top: 60px;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 10px 10px 10px 30px;
+        }
+
+        .search-dock {
+            background: rgba(19, 27, 45, 0.8);
+            backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid var(--stroke);
+            border-radius: 30px;
+            padding: 12px 25px;
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
-            transition: 0.4s;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .search-dock:focus-within {
             border-color: var(--accent2);
-            box-shadow: 0 0 0 4px rgba(50, 210, 255, 0.1);
+            box-shadow: 0 0 40px -10px rgba(50, 210, 255, 0.3);
             transform: scale(1.02);
         }
 
         .input-modern {
             background: transparent;
-            width: 100%;
+            border: none;
+            flex: 1;
+            padding: 12px;
+            color: #fff;
+            font-size: 1rem;
             outline: none;
-            color: var(--text);
-            font-size: 16px;
-            height: 50px;
         }
 
         /* ================= API CARD EVOLUTION ================= */
-        #apiList {
-            display: grid;
-            gap: 32px;
-            margin-top: 80px;
-        }
-
         .api-card {
-            padding: 40px;
-            border-radius: 32px;
             background: var(--bg-card);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 1px solid var(--stroke);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            border-radius: 32px;
+            padding: 40px;
+            transition: all 0.5s ease;
             position: relative;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
 
         .api-card::before {
-            content: "";
+            content: '';
             position: absolute;
-            inset: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             border-radius: 32px;
-            padding: 1px;
-            background: linear-gradient(135deg, var(--stroke), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s;
         }
 
         .api-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(50, 210, 255, 0.3);
-            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.5);
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--accent2);
+            background: var(--bg-elev);
+        }
+
+        .api-card:hover::before { opacity: 1; }
+
+        .method-badge {
+            font-weight: 800;
+            font-size: 11px;
+            padding: 6px 14px;
+            border-radius: 10px;
+            letter-spacing: 1px;
+            background: rgba(50, 210, 255, 0.1);
+            color: var(--accent2);
+            border: 1px solid rgba(50, 210, 255, 0.2);
         }
 
         .endpoint-path {
-            font-family: 'JetBrains Mono', monospace;
             background: #000;
-            color: var(--accent2);
-            padding: 16px 20px;
-            border-radius: 16px;
-            font-size: 13px;
-            margin-top: 25px;
-            border: 1px solid rgba(50, 210, 255, 0.2);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid var(--stroke);
+            padding: 18px;
+            border-radius: 20px;
+            color: #10B981;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.4);
         }
 
-        .endpoint-path::after {
-            content: "COPY";
-            position: absolute;
-            right: 15px; top: 50%;
-            transform: translateY(-50%);
-            font-size: 10px;
-            background: var(--accent2);
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 4px;
-            opacity: 0;
-            transition: 0.3s;
+        .endpoint-path::before {
+            content: '➜';
+            color: var(--muted);
         }
-
-        .endpoint-path:hover::after { opacity: 1; }
 
         .api-btn {
             width: 100%;
             padding: 16px;
-            border-radius: 18px;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             background: linear-gradient(135deg, var(--accent2), var(--accent3));
-            color: #fff;
+            color: #000;
+            font-weight: 800;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             transition: 0.4s;
-            position: relative;
-            z-index: 1;
+            box-shadow: 0 10px 20px -5px rgba(50, 210, 255, 0.3);
         }
 
         .api-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px -5px rgba(50, 210, 255, 0.5);
         }
 
-        /* ================= UTILS ================= */
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--stroke), transparent);
+        /* ================= DECORATIVE COMPONENTS ================= */
+        .glass-stat {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--stroke);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
         }
 
         .contact-customer {
             position: fixed;
             bottom: 40px;
             right: 40px;
-            width: 65px;
-            height: 65px;
-            border-radius: 22px;
-            background: #fff;
-            color: #000;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 100;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4), inset 0 0 15px rgba(255,255,255,0.3);
+            animation: floating 4s ease-in-out infinite;
         }
 
-        .contact-customer:hover {
-            transform: scale(1.1) rotate(-10deg);
-            background: var(--accent2);
+        /* Text Animation */
+        .text-glow-anim {
+            animation: textGlow 3s ease-in-out infinite alternate;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(50, 210, 255, 0); }
+            to { text-shadow: 0 0 20px rgba(50, 210, 255, 0.5); }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { 
-            background: var(--bg-elev); 
-            border-radius: 10px;
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .hero-section { padding-top: 80px; }
+            .api-card { padding: 25px; }
         }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
-
     </style>
 </head>
 
-<body class="min-h-screen font-sans antialiased">
+<body class="min-h-screen antialiased">
 
-    <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-[999]">
+    <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-[9999]">
         <div class="text-center">
             <div class="loader-wrapper mx-auto">
                 <div class="outer-ring"></div>
                 <div class="inner-ring"></div>
+                <div class="loader-logo">ZYREX</div>
             </div>
-            <h2 class="mt-10 text-xl font-bold tracking-[0.3em] uppercase animate-pulse">Initializing Zyrex</h2>
-            <p class="mt-2 text-xs opacity-50 font-mono">Securing Connection...</p>
+            <div class="mt-10 space-y-2">
+                <h2 class="text-2xl font-black tracking-widest text-glow-anim">INITIALIZING CORE</h2>
+                <p class="text-xs uppercase tracking-[0.3em] font-semibold" style="color:var(--muted)">
+                    Syncing Distributed Nodes • Layer 7 Protocol
+                </p>
+            </div>
         </div>
     </div>
 
-    <main class="max-w-7xl mx-auto px-6 py-10">
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="code-ghost top-20 left-10 animate-pulse-slow">const engine = new ZyrexRuntime();</div>
+        <div class="code-ghost top-1/2 right-10 animate-float">await api.connect({secure: true});</div>
+        <div class="code-ghost bottom-20 left-1/4 opacity-20">System.inject(DistributionLayer);</div>
+    </div>
 
-        <div class="hero-container flex flex-col items-center text-center">
-            <div class="hero-badge">Next-Gen API Architecture</div>
-            <h1 id="titleApi" class="hero-title">Zyrex API<br>Platform</h1>
-            
-            <p id="descApi" class="hero-description">
-                Experience the peak of REST infrastructure. Engineered with 
-                <span class="text-white font-semibold">adaptive routing</span>, 
-                high-speed <span class="text-white font-semibold">compression pipelines</span>, 
-                and world-class <span class="text-white font-semibold">security protocols</span> for modern developers.
+    <main class="relative z-10 max-w-7xl mx-auto px-6">
+        
+        <section class="hero-section flex flex-col items-center text-center">
+            <div class="animate__animated animate__fadeInDown">
+                <div class="hero-badge">
+                    <span></span> 
+                    ADVANCED CLOUD API ECOSYSTEM
+                </div>
+            </div>
+
+            <h1 id="titleApi" class="hero-title animate__animated animate__zoomIn">
+                <span>Zyrex Next-Gen</span>
+                <span>API Platform</span>
+            </h1>
+
+            <p id="descApi" class="hero-description animate__animated animate__fadeIn animate__delay-1s">
+                Architecting the future of data transmission. Our enterprise REST infrastructure 
+                is engineered with **adaptive routing**, **military-grade encryption**, 
+                and a **low-latency distributed runtime** for the modern web.
             </p>
 
-            <div class="hero-social">
-                <a id="telegramLink" title="Telegram" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-                <a id="whatsappLink" title="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                <a id="youtubeLink" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
-            </div>
-
-            <div class="w-full max-w-2xl mx-auto">
-                <div class="search-dock">
-                    <i class="fas fa-search mr-4 text-slate-500"></i>
-                    <input type="text" id="searchInput" placeholder="Search system endpoints..." class="input-modern">
-                    <div class="hidden md:flex gap-2 mr-2">
-                        <span class="px-3 py-1 bg-white/5 rounded-lg text-[10px] border border-white/10">CTRL + K</span>
+            <div class="hero-social animate__animated animate__fadeInUp animate__delay-1s mt-10 flex gap-8">
+                <a id="telegramLink" target="_blank" class="group flex flex-col items-center gap-2">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-800/50 border border-white/5 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:border-blue-500/50 transition-all duration-300">
+                        <i class="fab fa-telegram text-2xl"></i>
                     </div>
+                    <span class="text-[10px] font-bold tracking-widest text-muted group-hover:text-blue-400">NETWORK</span>
+                </a>
+                <a id="whatsappLink" target="_blank" class="group flex flex-col items-center gap-2">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-800/50 border border-white/5 flex items-center justify-center group-hover:bg-green-500/20 group-hover:border-green-500/50 transition-all duration-300">
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                    </div>
+                    <span class="text-[10px] font-bold tracking-widest text-muted group-hover:text-green-400">SUPPORT</span>
+                </a>
+                <a id="youtubeLink" target="_blank" class="group flex flex-col items-center gap-2">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-800/50 border border-white/5 flex items-center justify-center group-hover:bg-red-500/20 group-hover:border-red-500/50 transition-all duration-300">
+                        <i class="fab fa-youtube text-2xl"></i>
+                    </div>
+                    <span class="text-[10px] font-bold tracking-widest text-muted group-hover:text-red-400">TUTORIALS</span>
+                </a>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20 animate__animated animate__fadeIn">
+            <div class="glass-stat">
+                <div class="text-2xl font-black text-white">99.9%</div>
+                <div class="text-[10px] uppercase tracking-widest text-muted">Uptime</div>
+            </div>
+            <div class="glass-stat">
+                <div class="text-2xl font-black text-white">&lt;15ms</div>
+                <div class="text-[10px] uppercase tracking-widest text-muted">Latency</div>
+            </div>
+            <div class="glass-stat">
+                <div class="text-2xl font-black text-white">256-bit</div>
+                <div class="text-[10px] uppercase tracking-widest text-muted">Security</div>
+            </div>
+            <div class="glass-stat">
+                <div class="text-2xl font-black text-white">Multi-Region</div>
+                <div class="text-[10px] uppercase tracking-widest text-muted">Cluster</div>
+            </div>
+        </div>
+
+        <div class="max-w-3xl mx-auto search-container">
+            <div class="search-dock">
+                <i class="fas fa-search text-muted mr-2"></i>
+                <input type="text" id="searchInput" placeholder="Search by service name, utility or endpoint..." class="input-modern">
+                <div class="hidden md:flex gap-2">
+                    <kbd class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] text-muted">CTRL</kbd>
+                    <kbd class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] text-muted">K</kbd>
                 </div>
             </div>
         </div>
 
-        <div id="content" class="pb-20">
-            <div id="noResults" class="hidden text-center py-40">
-                <div class="text-6xl mb-6 opacity-20"><i class="fas fa-database"></i></div>
-                <p class="text-xl font-light text-slate-400">No matching endpoint found in our database.</p>
+        <div id="content" class="mt-32">
+            <div id="noResults" class="hidden text-center py-40 bg-slate-900/50 rounded-[40px] border border-dashed border-white/10">
+                <i class="fas fa-satellite-dish text-4xl mb-6 text-muted animate-pulse"></i>
+                <h3 class="text-xl font-bold">No Neural Connections Found</h3>
+                <p class="text-sm mt-2" style="color:var(--muted)">Adjust your search parameters to find the endpoint.</p>
             </div>
 
-            <div id="apiList" class="grid md:grid-cols-2 lg:grid-cols-3">
-                <div class="api-card">
-                    <div>
+            <div id="apiList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="api-card group">
+                    <div class="relative z-10 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-6">
-                            <h3 class="font-bold text-2xl tracking-tight">Example Node</h3>
-                            <span class="text-[10px] font-bold px-3 py-1 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                                GET
-                            </span>
+                            <div class="p-4 bg-slate-800/50 rounded-2xl border border-white/10 group-hover:border-cyan-500/50 transition-colors">
+                                <i class="fas fa-cube text-2xl text-cyan-400"></i>
+                            </div>
+                            <span class="method-badge">GET</span>
                         </div>
 
-                        <p class="text-sm leading-relaxed text-slate-400">
-                            Proprietary endpoint with multi-layered caching, providing sub-100ms response times for distributed global requests.
+                        <h3 class="font-black text-2xl mb-4 group-hover:text-cyan-400 transition-colors">Core Example Endpoint</h3>
+                        
+                        <p class="text-sm leading-relaxed mb-8 flex-grow" style="color:var(--muted)">
+                            Integrated with secure token validation, smart compression engine, and 
+                            optimized response lifecycle handling for mission-critical applications.
                         </p>
 
-                        <div class="endpoint-path">
-                            /api/v2/example?key=ZYREX_PRO
-                        </div>
-
-                        <div class="flex items-center gap-4 mt-8 pt-6 border-t border-white/5">
-                            <div class="flex -space-x-2">
-                                <div class="w-6 h-6 rounded-full bg-orange-500 border-2 border-slate-900"></div>
-                                <div class="w-6 h-6 rounded-full bg-blue-500 border-2 border-slate-900"></div>
+                        <div class="space-y-6">
+                            <div class="endpoint-path">
+                                /api/v2/system/health?key=ZYREX_SECURE
                             </div>
-                            <span class="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Stable v2.4</span>
-                        </div>
-                    </div>
 
-                    <div class="api-action mt-8">
-                        <button class="api-btn">
-                            Launch Request <i class="fas fa-bolt ml-2 text-xs"></i>
-                        </button>
+                            <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider">
+                                <span class="flex items-center gap-2 text-green-400">
+                                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                                    Operational
+                                </span>
+                                <span class="text-muted">Rate Limit: 60/min</span>
+                            </div>
+
+                            <div class="pt-6 border-t border-white/5">
+                                <button class="api-btn">
+                                    <span>RUN DOCUMENTATION</span>
+                                    <i class="fas fa-chevron-right text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 </div>
         </div>
 
-        <footer class="mt-20 py-10 border-t border-white/5">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <p id="footer" class="text-xs font-medium tracking-[0.2em] uppercase text-slate-500">
-                    © 2026 ZYREX CORE • Distributed Systems Division
+        <footer class="mt-48 pb-20">
+            <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12"></div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="text-left">
+                    <h2 class="text-2xl font-black tracking-tighter">ZYREX<span class="text-cyan-400">API</span></h2>
+                    <p class="text-[10px] uppercase tracking-[0.4em] text-muted mt-1">Global Infrastructure</p>
+                </div>
+                
+                <p id="footer" class="text-xs font-medium tracking-wide" style="color:var(--muted)">
+                    © 2026 ZYREX CORE • REWRITING THE DIGITAL FABRIC
                 </p>
-                <div class="flex gap-8 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                    <a href="#" class="hover:text-white transition">Status</a>
-                    <a href="#" class="hover:text-white transition">Terms</a>
-                    <a href="#" class="hover:text-white transition">Docs</a>
+
+                <div class="flex gap-6 text-sm">
+                    <a href="#" class="hover:text-cyan-400 transition-colors">Terms</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors">Status</a>
                 </div>
             </div>
         </footer>
-
     </main>
 
-    <a id="contactCustomerBtn" href="#" target="_blank" class="contact-customer">
-        <i class="fas fa-headset"></i>
+    <a id="contactCustomerBtn" href="#" target="_blank" class="contact-customer group">
+        <div class="relative">
+            <i class="fas fa-bolt text-2xl text-black animate__animated animate__pulse animate__infinite"></i>
+            <div class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full border-2 border-orange-500"></div>
+        </div>
+        <span class="absolute right-24 bg-white text-black text-xs font-black py-2 px-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-2xl">
+            DIRECT ENGINEER SUPPORT
+        </span>
     </a>
 
     <script src="/script.js"></script>
-
-    <script>
-        // Smooth Loader FadeOut
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loadingScreen');
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-            }, 1000);
-        });
-    </script>
 </body>
 </html>
