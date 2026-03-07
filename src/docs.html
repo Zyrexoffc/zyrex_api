@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta name="description" content="Zyrex API - Enterprise-grade REST infrastructure engineered for high-performance distributed systems.">
-    <meta name="theme-color" content="#1A2238">
-    <title>Zyrex API • Advanced Cloud Ecosystem</title>
+    <meta name="description" content="Zyrex API - The gold standard of high-performance distributed REST infrastructure.">
+    <meta name="theme-color" content="#0B0F1A">
+    <title>Zyrex API • Quantum Cloud Architecture</title>
     <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
@@ -19,12 +19,28 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Sora', 'system-ui', 'sans-serif'],
-                        mono: ['Space Grotesk', 'monospace']
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        zyrex: {
+                            base: '#0B0F1A',
+                            soft: '#161C2E',
+                            accent: '#32D2FF',
+                            neon: '#A855F7',
+                            warn: '#FF7A18'
+                        }
                     },
                     animation: {
-                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'floating 3s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'float-alt': 'floatAlt 4s ease-in-out infinite',
+                        'border-flow': 'borderFlow 4s linear infinite',
+                    },
+                    keyframes: {
+                        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+                        floatAlt: { '0%, 100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-20px) rotate(2deg)' } },
+                        borderFlow: { '0%': { backgroundPosition: '0% 50%' }, '100%': { backgroundPosition: '200% 50%' } }
                     }
                 }
             }
@@ -33,496 +49,427 @@
 
     <style>
         :root {
-            --bg-main: #0B0F1A;
-            --bg-soft: #131B2D;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --bg-elev: rgba(51, 65, 85, 0.8);
-            --text: #F8FAFC;
-            --muted: #94A3B8;
-            --accent1: #FF7A18;
-            --accent2: #32D2FF;
-            --accent3: #A855F7;
-            --stroke: rgba(255, 255, 255, 0.08);
-            --glow: rgba(50, 210, 255, 0.3);
+            --primary: #32D2FF;
+            --secondary: #A855F7;
+            --tertiary: #FF7A18;
+            --bg: #030712;
+            --card-glass: rgba(15, 23, 42, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.05);
         }
 
         body {
-            background-color: var(--bg-main);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(50, 210, 255, 0.15) 0%, transparent 40%),
-                url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
-            color: var(--text);
+            background-color: var(--bg);
+            color: #F8FAFC;
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            background-attachment: fixed;
         }
 
-        /* custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-elev); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+        /* -- MESH GRADIENT BACKGOUND -- */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(50, 210, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, rgba(3, 7, 18, 1) 100%);
+        }
 
-        /* ================= MODERN LOADING REDESIGN ================= */
+        /* -- CUSTOM SCROLLBAR -- */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--secondary), var(--primary)); border-radius: 5px; }
+
+        /* -- NOISE OVERLAY -- */
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05; pointer-events: none; z-index: 9998;
+        }
+
+        /* -- MEGA LOADING SCREEN -- */
         #loadingScreen {
-            background: #0B1120;
-            backdrop-filter: blur(10px);
+            background: #030712;
+            z-index: 10000;
         }
-
-        .loader-wrapper {
+        
+        .loader-visual {
             position: relative;
-            width: 200px;
-            height: 200px;
-            perspective: 1000px;
+            width: 120px; height: 120px;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        .outer-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top-color: var(--accent2);
-            border-left-color: var(--accent3);
-            animation: spin 1.5s linear infinite;
+        .loader-square {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid var(--primary);
+            animation: morphing 4s ease-in-out infinite;
         }
 
-        .inner-ring {
-            position: absolute;
-            top: 15%; left: 15%;
-            width: 70%; height: 70%;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-bottom-color: var(--accent1);
-            border-right-color: var(--accent2);
-            animation: spin-reverse 2s linear infinite;
+        @keyframes morphing {
+            0% { border-radius: 0%; transform: rotate(0deg); border-color: var(--primary); }
+            25% { border-radius: 50%; transform: rotate(90deg); border-color: var(--secondary); }
+            50% { border-radius: 20%; transform: rotate(180deg); border-color: var(--tertiary); }
+            75% { border-radius: 50%; transform: rotate(270deg); border-color: var(--primary); }
+            100% { border-radius: 0%; transform: rotate(360deg); border-color: var(--primary); }
         }
 
-        .loader-logo {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
-            background: linear-gradient(to right, var(--accent2), var(--accent3));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes spin-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        /* ================= HERO SECTION MEGA UPGRADE ================= */
-        .hero-section {
+        /* -- GLITCH TEXT EFFECT -- */
+        .glitch-text {
             position: relative;
-            padding-top: 120px;
-            padding-bottom: 80px;
-            z-index: 10;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--stroke);
-            padding: 10px 24px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent2);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            backdrop-filter: blur(10px);
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-        }
-
-        .hero-badge span {
-            width: 8px;
-            height: 8px;
-            background: var(--accent2);
-            border-radius: 50%;
-            box-shadow: 0 0 15px var(--accent2);
             display: inline-block;
         }
-
-        .hero-title {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            line-height: 0.95;
-            font-weight: 900;
-            letter-spacing: -0.05em;
-            margin-bottom: 30px;
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute; left: 2px; text-shadow: -1px 0 red;
+            top: 0; color: white; background: var(--bg);
+            overflow: hidden; clip: rect(0,900px,0,0);
+            animation: noise-anim 2s infinite linear alternate-reverse;
         }
 
-        .hero-title span {
-            background: linear-gradient(to bottom right, #fff 30%, var(--accent2), var(--accent3));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: block;
+        @keyframes noise-anim {
+            0% { clip: rect(10px, 9999px, 50px, 0); }
+            100% { clip: rect(80px, 9999px, 100px, 0); }
         }
 
-        .hero-description {
-            max-width: 750px;
-            margin: 0 auto;
-            font-size: 1.1rem;
-            color: var(--muted);
-            line-height: 1.8;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        /* Floating Code Elements */
-        .code-ghost {
-            position: absolute;
-            font-family: monospace;
-            color: rgba(50, 210, 255, 0.1);
-            font-size: 14px;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* ================= SEARCH & DOCK ================= */
-        .search-container {
-            position: sticky;
-            top: 20px;
-            z-index: 50;
-            margin-top: 60px;
-        }
-
-        .search-dock {
-            background: rgba(19, 27, 45, 0.8);
-            backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid var(--stroke);
-            border-radius: 30px;
-            padding: 12px 25px;
-            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .search-dock:focus-within {
-            border-color: var(--accent2);
-            box-shadow: 0 0 40px -10px rgba(50, 210, 255, 0.3);
-            transform: scale(1.02);
-        }
-
-        .input-modern {
-            background: transparent;
-            border: none;
-            flex: 1;
-            padding: 12px;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        /* ================= API CARD EVOLUTION ================= */
+        /* -- CARD BENTO DESIGN -- */
         .api-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--stroke);
-            border-radius: 32px;
-            padding: 40px;
-            transition: all 0.5s ease;
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
             position: relative;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .api-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 32px;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 0.5s;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .api-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            border-color: var(--accent2);
-            background: var(--bg-elev);
+            transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
+            border-color: rgba(50, 210, 255, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .api-card:hover::before { opacity: 1; }
+        .api-card::before {
+            content: "";
+            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(50, 210, 255, 0.1) 0%, transparent 70%);
+            opacity: 0; transition: 0.5s;
+        }
+        .api-card:hover::before { opacity: 1; transform: translate(25%, 25%); }
 
-        .method-badge {
-            font-weight: 800;
-            font-size: 11px;
-            padding: 6px 14px;
-            border-radius: 10px;
-            letter-spacing: 1px;
-            background: rgba(50, 210, 255, 0.1);
-            color: var(--accent2);
-            border: 1px solid rgba(50, 210, 255, 0.2);
+        /* -- SEARCH DOCK REINVENTED -- */
+        .search-wrapper {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 8px;
+            transition: 0.3s;
+        }
+        .search-wrapper:focus-within {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(50, 210, 255, 0.2);
         }
 
-        .endpoint-path {
-            background: #000;
-            border: 1px solid var(--stroke);
-            padding: 18px;
-            border-radius: 20px;
-            color: #10B981;
-            font-family: 'Space Grotesk', monospace;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.4);
-        }
-
-        .endpoint-path::before {
-            content: '➜';
-            color: var(--muted);
-        }
-
+        /* -- BUTTON NEUMORPHISM DARK -- */
         .api-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--accent2), var(--accent3));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: #000;
             font-weight: 800;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 16px;
+            position: relative;
+            z-index: 1;
             transition: 0.4s;
-            box-shadow: 0 10px 20px -5px rgba(50, 210, 255, 0.3);
+            overflow: hidden;
         }
-
-        .api-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 15px 30px -5px rgba(50, 210, 255, 0.5);
+        .api-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s; z-index: -1;
         }
+        .api-btn:hover::before { left: 100%; }
+        .api-btn:hover { letter-spacing: 1px; transform: scale(1.02); box-shadow: 0 0 20px rgba(50, 210, 255, 0.6); }
 
-        /* ================= DECORATIVE COMPONENTS ================= */
-        .glass-stat {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--stroke);
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
-        }
-
+        /* -- FLOATING ACTION -- */
         .contact-customer {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent1), var(--accent2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4), inset 0 0 15px rgba(255,255,255,0.3);
-            animation: floating 4s ease-in-out infinite;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--primary);
+            backdrop-filter: blur(10px);
+            width: 70px; height: 70px;
+            border-radius: 22px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transition: 0.4s;
+        }
+        .contact-customer:hover {
+            border-color: var(--secondary);
+            transform: scale(1.1) rotate(10deg);
         }
 
-        /* Text Animation */
-        .text-glow-anim {
-            animation: textGlow 3s ease-in-out infinite alternate;
+        /* -- TYPOGRAPHY ENHANCEMENT -- */
+        .hero-title {
+            background: linear-gradient(to bottom, #fff 40%, #64748b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
         }
 
-        @keyframes textGlow {
-            from { text-shadow: 0 0 10px rgba(50, 210, 255, 0); }
-            to { text-shadow: 0 0 20px rgba(50, 210, 255, 0.5); }
+        /* -- DATA LINE ANIMATION -- */
+        .data-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            width: 100%;
+            position: absolute;
+            left: 0;
+            animation: scan 3s linear infinite;
         }
+        @keyframes scan { 0% { top: -10%; opacity: 0; } 50% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
 
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            .hero-title { font-size: 3rem; }
-            .hero-section { padding-top: 80px; }
-            .api-card { padding: 25px; }
-        }
     </style>
 </head>
+<body class="selection:bg-zyrex-accent selection:text-black">
 
-<body class="min-h-screen antialiased">
+    <div class="mesh-bg"></div>
+    <div class="noise"></div>
 
-    <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-[9999]">
-        <div class="text-center">
-            <div class="loader-wrapper mx-auto">
-                <div class="outer-ring"></div>
-                <div class="inner-ring"></div>
-                <div class="loader-logo">ZYREX</div>
+    <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center">
+        <div class="flex flex-col items-center">
+            <div class="loader-visual">
+                <div class="loader-square"></div>
+                <span class="font-mono text-[10px] tracking-[0.5em] text-zyrex-accent animate-pulse">BOOTING</span>
             </div>
-            <div class="mt-10 space-y-2">
-                <h2 class="text-2xl font-black tracking-widest text-glow-anim">INITIALIZING CORE</h2>
-                <p class="text-xs uppercase tracking-[0.3em] font-semibold" style="color:var(--muted)">
-                    Syncing Distributed Nodes • Layer 7 Protocol
-                </p>
+            <div class="mt-12 text-center overflow-hidden">
+                <h2 class="text-3xl font-black italic tracking-tighter animate__animated animate__slideInUp">ZYREX PROTOCOL</h2>
+                <div class="w-48 h-[2px] bg-white/10 mt-2 mx-auto overflow-hidden">
+                    <div class="w-full h-full bg-zyrex-accent animate-shimmer" style="background-size: 200% 100%"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="code-ghost top-20 left-10 animate-pulse-slow">const engine = new ZyrexRuntime();</div>
-        <div class="code-ghost top-1/2 right-10 animate-float">await api.connect({secure: true});</div>
-        <div class="code-ghost bottom-20 left-1/4 opacity-20">System.inject(DistributionLayer);</div>
-    </div>
+    <nav class="fixed top-0 left-0 w-full z-[100] px-8 py-6 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-zyrex-accent to-zyrex-neon rounded-xl flex items-center justify-center shadow-lg shadow-zyrex-accent/20">
+                <i class="fas fa-terminal text-black text-sm"></i>
+            </div>
+            <span class="text-xl font-black tracking-tighter">ZYREX<span class="text-zyrex-accent">.</span></span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] text-muted">
+            <a href="#" class="hover:text-zyrex-accent transition-colors">ENDPOINTS</a>
+            <a href="#" class="hover:text-zyrex-accent transition-colors">SECURITY</a>
+            <a href="#" class="hover:text-zyrex-accent transition-colors">PRICING</a>
+            <a href="#" class="hover:text-zyrex-accent transition-colors">DOCS</a>
+        </div>
+        <button class="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black hover:bg-white/10 transition-all uppercase tracking-widest">
+            Console Login
+        </button>
+    </nav>
 
-    <main class="relative z-10 max-w-7xl mx-auto px-6">
+    <main class="relative z-10">
         
-        <section class="hero-section flex flex-col items-center text-center">
-            <div class="animate__animated animate__fadeInDown">
-                <div class="hero-badge">
-                    <span></span> 
-                    ADVANCED CLOUD API ECOSYSTEM
-                </div>
+        <section class="min-h-screen flex flex-col items-center justify-center pt-20 px-6">
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-zyrex-accent/10 blur-[120px] rounded-full -z-10 animate-pulse-slow"></div>
+            
+            <div class="hero-badge group cursor-default mb-8">
+                <span class="animate-ping"></span>
+                <p class="relative z-10 flex items-center gap-2">
+                    <i class="fas fa-shield-halved text-[10px]"></i>
+                    CORE ENGINE V4.0.2 - STABLE DEPLOYMENT
+                </p>
             </div>
 
-            <h1 id="titleApi" class="hero-title animate__animated animate__zoomIn">
-                <span>Zyrex Next-Gen</span>
-                <span>API Platform</span>
+            <h1 id="titleApi" class="hero-title text-6xl md:text-9xl font-black tracking-tighter leading-none text-center mb-8">
+                Build The <br/> <span class="glitch-text" data-text="Invisible">Invisible</span>
             </h1>
 
-            <p id="descApi" class="hero-description animate__animated animate__fadeIn animate__delay-1s">
-                Architecting the future of data transmission. Our enterprise REST infrastructure 
-                is engineered with **adaptive routing**, **military-grade encryption**, 
-                and a **low-latency distributed runtime** for the modern web.
+            <p id="descApi" class="max-w-2xl text-center text-lg md:text-xl text-slate-400 font-medium leading-relaxed mb-12 animate__animated animate__fadeIn">
+                Empowering world-class developers with a <span class="text-white">highly-distributed API cluster</span>. 
+                Experience <span class="text-zyrex-accent">sub-10ms response cycles</span> and hardware-level security protocols out of the box.
             </p>
 
-            <div class="hero-social animate__animated animate__fadeInUp animate__delay-1s mt-10 flex gap-8">
-                <a id="telegramLink" target="_blank" class="group flex flex-col items-center gap-2">
-                    <div class="w-14 h-14 rounded-2xl bg-slate-800/50 border border-white/5 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:border-blue-500/50 transition-all duration-300">
-                        <i class="fab fa-telegram text-2xl"></i>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-widest text-muted group-hover:text-blue-400">NETWORK</span>
+            <div class="flex flex-wrap justify-center gap-4 mb-20">
+                <button class="api-btn flex items-center gap-3">
+                    <i class="fas fa-rocket"></i>
+                    GET STARTED NOW
+                </button>
+                <button class="px-8 py-4 bg-slate-900/50 border border-white/10 rounded-2xl font-bold hover:bg-slate-800 transition-all">
+                    View Documentation
+                </button>
+            </div>
+
+            <div class="hero-social flex items-center gap-6 p-4 bg-white/5 rounded-3xl border border-white/5 backdrop-blur-xl">
+                <a id="telegramLink" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-blue-500/20 hover:text-blue-400 transition-all duration-500">
+                    <i class="fab fa-telegram-plane text-xl"></i>
                 </a>
-                <a id="whatsappLink" target="_blank" class="group flex flex-col items-center gap-2">
-                    <div class="w-14 h-14 rounded-2xl bg-slate-800/50 border border-white/5 flex items-center justify-center group-hover:bg-green-500/20 group-hover:border-green-500/50 transition-all duration-300">
-                        <i class="fab fa-whatsapp text-2xl"></i>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-widest text-muted group-hover:text-green-400">SUPPORT</span>
+                <div class="w-px h-6 bg-white/10"></div>
+                <a id="whatsappLink" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-green-500/20 hover:text-green-400 transition-all duration-500">
+                    <i class="fab fa-whatsapp text-xl"></i>
                 </a>
-                <a id="youtubeLink" target="_blank" class="group flex flex-col items-center gap-2">
-                    <div class="w-14 h-14 rounded-2xl bg-slate-800/50 border border-white/5 flex items-center justify-center group-hover:bg-red-500/20 group-hover:border-red-500/50 transition-all duration-300">
-                        <i class="fab fa-youtube text-2xl"></i>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-widest text-muted group-hover:text-red-400">TUTORIALS</span>
+                <div class="w-px h-6 bg-white/10"></div>
+                <a id="youtubeLink" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-red-500/20 hover:text-red-400 transition-all duration-500">
+                    <i class="fab fa-youtube text-xl"></i>
                 </a>
             </div>
         </section>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20 animate__animated animate__fadeIn">
-            <div class="glass-stat">
-                <div class="text-2xl font-black text-white">99.9%</div>
-                <div class="text-[10px] uppercase tracking-widest text-muted">Uptime</div>
-            </div>
-            <div class="glass-stat">
-                <div class="text-2xl font-black text-white">&lt;15ms</div>
-                <div class="text-[10px] uppercase tracking-widest text-muted">Latency</div>
-            </div>
-            <div class="glass-stat">
-                <div class="text-2xl font-black text-white">256-bit</div>
-                <div class="text-[10px] uppercase tracking-widest text-muted">Security</div>
-            </div>
-            <div class="glass-stat">
-                <div class="text-2xl font-black text-white">Multi-Region</div>
-                <div class="text-[10px] uppercase tracking-widest text-muted">Cluster</div>
-            </div>
-        </div>
-
-        <div class="max-w-3xl mx-auto search-container">
-            <div class="search-dock">
-                <i class="fas fa-search text-muted mr-2"></i>
-                <input type="text" id="searchInput" placeholder="Search by service name, utility or endpoint..." class="input-modern">
-                <div class="hidden md:flex gap-2">
-                    <kbd class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] text-muted">CTRL</kbd>
-                    <kbd class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] text-muted">K</kbd>
+        <section class="max-w-4xl mx-auto px-6 -mt-20 relative z-50">
+            <div class="search-wrapper flex items-center px-6">
+                <i class="fas fa-terminal text-zyrex-accent mr-4 opacity-50"></i>
+                <input type="text" id="searchInput" 
+                    placeholder="Enter command or search endpoint (e.g. /v1/auth)..." 
+                    class="input-modern bg-transparent border-none outline-none w-full py-5 text-lg font-mono placeholder:text-slate-600">
+                <div class="flex gap-2">
+                    <span class="px-3 py-1 bg-white/5 rounded border border-white/10 text-[10px] text-slate-500 font-mono">ESC</span>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="content" class="mt-32">
-            <div id="noResults" class="hidden text-center py-40 bg-slate-900/50 rounded-[40px] border border-dashed border-white/10">
-                <i class="fas fa-satellite-dish text-4xl mb-6 text-muted animate-pulse"></i>
-                <h3 class="text-xl font-bold">No Neural Connections Found</h3>
-                <p class="text-sm mt-2" style="color:var(--muted)">Adjust your search parameters to find the endpoint.</p>
+        <section id="content" class="max-w-7xl mx-auto px-6 py-32">
+            
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div>
+                    <h2 class="text-4xl font-black tracking-tight mb-2">Available <span class="text-zyrex-accent">Utilities</span></h2>
+                    <p class="text-slate-500 font-medium">Select a module to explore the technical documentation.</p>
+                </div>
+                <div class="flex gap-3">
+                    <div class="px-4 py-2 bg-zyrex-accent/10 border border-zyrex-accent/20 rounded-lg text-[10px] font-black text-zyrex-accent">
+                        ALL SYSTEMS ONLINE
+                    </div>
+                </div>
+            </div>
+
+            <div id="noResults" class="hidden text-center py-40 animate__animated animate__fadeIn">
+                <div class="w-24 h-24 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-red-500/20">
+                    <i class="fas fa-unlink text-3xl text-red-500"></i>
+                </div>
+                <h3 class="text-2xl font-bold">404: Node Not Found</h3>
+                <p class="text-slate-500 max-w-xs mx-auto mt-2">The endpoint you are looking for has been moved or doesn't exist in our cluster.</p>
             </div>
 
             <div id="apiList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="api-card group">
-                    <div class="relative z-10 flex flex-col h-full">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="p-4 bg-slate-800/50 rounded-2xl border border-white/10 group-hover:border-cyan-500/50 transition-colors">
-                                <i class="fas fa-cube text-2xl text-cyan-400"></i>
-                            </div>
-                            <span class="method-badge">GET</span>
+                
+                <div class="api-card p-8 group">
+                    <div class="data-line"></div>
+                    <div class="flex justify-between items-start mb-10">
+                        <div class="w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center border border-white/5 group-hover:border-zyrex-accent/50 transition-all duration-500 group-hover:rotate-6">
+                            <i class="fas fa-layer-group text-2xl text-zyrex-accent"></i>
                         </div>
+                        <span class="method-badge px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-black rounded-lg uppercase tracking-tighter">GET</span>
+                    </div>
 
-                        <h3 class="font-black text-2xl mb-4 group-hover:text-cyan-400 transition-colors">Core Example Endpoint</h3>
+                    <h3 class="text-2xl font-black mb-4 group-hover:text-zyrex-accent transition-colors">Neural Sync API</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-8 font-medium">
+                        Real-time synchronization engine with delta-compression. Perfect for multi-node state management.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="endpoint-path p-4 bg-black/40 rounded-xl border border-white/5 font-mono text-[11px] text-green-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                            /v2/sync/neural-gate?key=ZYREX_S
+                        </div>
                         
-                        <p class="text-sm leading-relaxed mb-8 flex-grow" style="color:var(--muted)">
-                            Integrated with secure token validation, smart compression engine, and 
-                            optimized response lifecycle handling for mission-critical applications.
-                        </p>
-
-                        <div class="space-y-6">
-                            <div class="endpoint-path">
-                                /api/v2/system/health?key=ZYREX_SECURE
+                        <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_green]"></div>
+                                <span class="text-[10px] font-black text-slate-400 tracking-widest">STABLE</span>
                             </div>
-
-                            <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider">
-                                <span class="flex items-center gap-2 text-green-400">
-                                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                                    Operational
-                                </span>
-                                <span class="text-muted">Rate Limit: 60/min</span>
-                            </div>
-
-                            <div class="pt-6 border-t border-white/5">
-                                <button class="api-btn">
-                                    <span>RUN DOCUMENTATION</span>
-                                    <i class="fas fa-chevron-right text-xs"></i>
-                                </button>
-                            </div>
+                            <span class="text-[10px] font-mono text-slate-600">342ms avg.</span>
                         </div>
+
+                        <button class="api-btn w-full mt-4 !py-4 flex items-center justify-center gap-2">
+                            <span>EXECUTE DOCS</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </button>
                     </div>
                 </div>
-                </div>
-        </div>
 
-        <footer class="mt-48 pb-20">
-            <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12"></div>
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                <div class="text-left">
-                    <h2 class="text-2xl font-black tracking-tighter">ZYREX<span class="text-cyan-400">API</span></h2>
-                    <p class="text-[10px] uppercase tracking-[0.4em] text-muted mt-1">Global Infrastructure</p>
+                <div class="api-card p-8 group border-dashed border-white/10 bg-transparent">
+                    <div class="flex flex-col items-center justify-center h-full text-center py-10 opacity-40 group-hover:opacity-100 transition-opacity">
+                        <i class="fas fa-plus-circle text-4xl mb-4 text-slate-600 group-hover:text-zyrex-accent"></i>
+                        <h3 class="text-xl font-bold">New Module</h3>
+                        <p class="text-xs mt-2">Deploy your own microservice to the cluster.</p>
+                    </div>
                 </div>
-                
-                <p id="footer" class="text-xs font-medium tracking-wide" style="color:var(--muted)">
-                    © 2026 ZYREX CORE • REWRITING THE DIGITAL FABRIC
-                </p>
 
-                <div class="flex gap-6 text-sm">
-                    <a href="#" class="hover:text-cyan-400 transition-colors">Terms</a>
-                    <a href="#" class="hover:text-cyan-400 transition-colors">Privacy</a>
-                    <a href="#" class="hover:text-cyan-400 transition-colors">Status</a>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-6 mb-40">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-1 px-1 bg-white/5 border border-white/10 rounded-[32px] overflow-hidden">
+                <div class="bg-zyrex-base p-12 text-center border-b md:border-b-0 md:border-r border-white/5">
+                    <p class="text-sm font-bold text-slate-500 tracking-[0.3em] mb-4 uppercase">Transactions</p>
+                    <h4 class="text-5xl font-black text-white italic">4.2M<span class="text-zyrex-accent">+</span></h4>
+                    <p class="text-[10px] text-slate-600 mt-2">Requests per 24h window</p>
+                </div>
+                <div class="bg-zyrex-base p-12 text-center border-b md:border-b-0 md:border-r border-white/5">
+                    <p class="text-sm font-bold text-slate-500 tracking-[0.3em] mb-4 uppercase">Nodes</p>
+                    <h4 class="text-5xl font-black text-white italic text-glow-anim">128</h4>
+                    <p class="text-[10px] text-slate-600 mt-2">Active edge clusters global</p>
+                </div>
+                <div class="bg-zyrex-base p-12 text-center">
+                    <p class="text-sm font-bold text-slate-500 tracking-[0.3em] mb-4 uppercase">Success Rate</p>
+                    <h4 class="text-5xl font-black text-white italic">99<span class="text-zyrex-neon">.</span>99%</h4>
+                    <p class="text-[10px] text-slate-600 mt-2">Zero-packet loss infrastructure</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-zyrex-base pt-32 pb-12 border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-20">
+                    <div class="col-span-1 lg:col-span-2">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-12 h-12 bg-zyrex-accent rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-atom text-black text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-black tracking-tighter italic">ZYREX ENGINE</span>
+                        </div>
+                        <p class="max-w-sm text-slate-500 leading-relaxed font-medium">
+                            Providing the neural backbone for modern applications. Built for speed, secured by quantum-resistant algorithms.
+                        </p>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-black text-xs tracking-widest uppercase mb-8">Ecosystem</h5>
+                        <ul class="space-y-4 text-sm text-slate-500 font-bold">
+                            <li><a href="#" class="hover:text-zyrex-accent transition-all">Cloud Functions</a></li>
+                            <li><a href="#" class="hover:text-zyrex-accent transition-all">Private CDN</a></li>
+                            <li><a href="#" class="hover:text-zyrex-accent transition-all">Auth Guard</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-black text-xs tracking-widest uppercase mb-8">Company</h5>
+                        <ul class="space-y-4 text-sm text-slate-500 font-bold">
+                            <li><a href="#" class="hover:text-zyrex-accent transition-all">About Us</a></li>
+                            <li><a href="#" class="hover:text-zyrex-accent transition-all">Network Status</a></li>
+                            <li><a href="#" class="hover:text-zyrex-accent transition-all">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p id="footer" class="text-[10px] font-black tracking-[0.5em] text-slate-700 uppercase">
+                        © 2026 ZYREX INFRASTRUCTURE • ALL RIGHTS RESERVED
+                    </p>
+                    <div class="flex gap-8">
+                        <i class="fab fa-cc-visa text-2xl opacity-20 hover:opacity-100 transition-opacity"></i>
+                        <i class="fab fa-cc-mastercard text-2xl opacity-20 hover:opacity-100 transition-opacity"></i>
+                        <i class="fab fa-cc-stripe text-2xl opacity-20 hover:opacity-100 transition-opacity"></i>
+                    </div>
                 </div>
             </div>
         </footer>
+
     </main>
 
-    <a id="contactCustomerBtn" href="#" target="_blank" class="contact-customer group">
-        <div class="relative">
-            <i class="fas fa-bolt text-2xl text-black animate__animated animate__pulse animate__infinite"></i>
-            <div class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full border-2 border-orange-500"></div>
-        </div>
-        <span class="absolute right-24 bg-white text-black text-xs font-black py-2 px-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-2xl">
-            DIRECT ENGINEER SUPPORT
-        </span>
-    </a>
+    <div class="fixed bottom-10 right-10 z-[1000] flex flex-col gap-4">
+        <a id="contactCustomerBtn" href="#" target="_blank" class="contact-customer group">
+            <i class="fas fa-comment-dots text-2xl text-zyrex-accent group-hover:text-white transition-colors"></i>
+            <span class="absolute right-24 px-4 py-2 bg-zyrex-accent text-black font-black text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-all pointer-events-none whitespace-nowrap">
+                TALK TO AN ENGINEER
+            </span>
+        </a>
+    </div>
 
     <script src="/script.js"></script>
-</body>
-</html>
+
+    </body>
+    </html>
