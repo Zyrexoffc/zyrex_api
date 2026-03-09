@@ -1,483 +1,332 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta name="description" content="Zyrex API - Enterprise-grade REST infrastructure engineered for high-performance distributed systems.">
-    <meta name="theme-color" content="#0B0F1A">
-    <title>ZYREX CORE • Next-Gen API Ecosystem</title>
-    <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Browse through our collection of API endpoints.">
+<meta name="theme-color" content="#0a0a0a">
+<title>Zyrex Api</title>
+<link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    },
-                    colors: {
-                        zyrex: {
-                            primary: '#32D2FF',
-                            secondary: '#A855F7',
-                            accent: '#FF7A18',
-                            dark: '#050810',
-                            card: 'rgba(15, 23, 42, 0.6)'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<script>
+tailwind.config = {
+darkMode: 'class',
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter','system-ui','sans-serif'],
+mono: ['JetBrains Mono', 'monospace']
+}
+}
+}
+}
+</script>
 
-    <style>
-        :root {
-            --glow-color: rgba(50, 210, 255, 0.4);
-        }
+<style>
+:root{
+--bg-main:#0a0a0a;
+--bg-card:#111111;
+--stroke:#222222;
+--accent-purple:#8b5cf6;
+--text-main:#ffffff;
+--text-muted:#a1a1aa;
+}
 
-        body {
-            background-color: #050810;
-            color: #F8FAFC;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 50% -20%, rgba(50, 210, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
-        }
+body{
+background-color: var(--bg-main);
+background-image: 
+    linear-gradient(var(--stroke) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stroke) 1px, transparent 1px);
+background-size: 40px 40px;
+color: var(--text-main);
+}
 
-        /* Scanline Effect */
-        body::before {
-            content: " ";
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            z-index: 100;
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-            opacity: 0.3;
-        }
+/* ================= LOADING (TIDAK DIUBAH) ================= */
+#loadingScreen{ background:linear-gradient(180deg,#1F2937,#263449); }
+.loader-wrapper{ position:relative; width:170px; height:170px; display:flex; align-items:center; justify-content:center; }
+.outer-ring{ position:absolute; width:160px; height:160px; border-radius:50%; border:6px solid transparent; border-top:6px solid #32D2FF; border-right:6px solid #32D2FF; animation:spinOuter 2.2s linear infinite; }
+.inner-ring{ position:absolute; width:90px; height:90px; border-radius:50%; border:5px solid transparent; border-bottom:5px solid #FF7A18; border-left:5px solid #FF7A18; animation:spinInner 1.8s linear infinite reverse; }
+@keyframes spinOuter{to{transform:rotate(360deg)}}
+@keyframes spinInner{to{transform:rotate(360deg)}}
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #050810; }
-        ::-webkit-scrollbar-thumb { 
-            background: linear-gradient(var(--zyrex-primary), var(--zyrex-secondary)); 
-            border-radius: 10px; 
-        }
+/* ================= STATS CARDS ================= */
+.stat-box {
+    background: var(--bg-card);
+    border: 1px solid var(--stroke);
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent-purple);
+}
 
-        /* --- LOADING SCREEN --- */
-        #loadingScreen {
-            background: #050810;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+/* ================= TERMINAL SEARCH ================= */
+.terminal-window {
+    background: #0d0d0d;
+    border: 1px solid var(--stroke);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 30px;
+}
+.terminal-header {
+    background: #1a1a1a;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--stroke);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-red { background: #ff5f56; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green { background: #27c93f; }
 
-        .cube-loader {
-            width: 60px;
-            height: 60px;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: cubeRotate 2s infinite ease-in-out;
-        }
+.input-modern {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 12px 15px;
+}
 
-        @keyframes cubeRotate {
-            0% { transform: rotateX(-30deg) rotateY(0deg); }
-            100% { transform: rotateX(-30deg) rotateY(360deg); }
-        }
+/* ================= ACCORDION API CARD ================= */
+.api-card {
+    background: var(--bg-card);
+    border: 1px solid var(--stroke);
+    margin-bottom: 10px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.api-card:hover { border-color: #444; }
 
-        .cube-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #32D2FF;
-            background: rgba(50, 210, 255, 0.1);
-            box-shadow: 0 0 20px rgba(50, 210, 255, 0.4);
-        }
+.api-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
 
-        /* --- HERO & TYPOGRAPHY --- */
-        .hero-title {
-            font-size: clamp(3rem, 10vw, 7rem);
-            line-height: 0.85;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            text-transform: uppercase;
-        }
+.method-badge {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.method-get { background: #2563eb; color: white; }
+.method-post { background: #16a34a; color: white; }
 
-        .text-gradient {
-            background: linear-gradient(to right, #fff, #32D2FF, #A855F7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: shine 5s linear infinite;
-        }
+.endpoint-content {
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--stroke);
+    background: #0f0f0f;
+}
 
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
+.endpoint-path {
+    font-family: 'JetBrains Mono', monospace;
+    background: #ffffff;
+    color: #000;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin: 15px 0;
+}
 
-        /* --- API CARDS PREMIUM --- */
-        .api-card {
-            background: var(--zyrex-card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            padding: 2rem;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(12px);
-        }
+/* ================= CATEGORY TABS ================= */
+.tab-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1a1a1a;
+    border: 1px solid var(--stroke);
+    transition: 0.3s;
+}
+.tab-btn.active {
+    background: var(--accent-purple);
+    border-color: var(--accent-purple);
+}
 
-        .api-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(50, 210, 255, 0.5), transparent);
-        }
-
-        .api-card:hover {
-            transform: translateY(-10px) scale(1.01);
-            border-color: rgba(50, 210, 255, 0.3);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(50, 210, 255, 0.1);
-        }
-
-        .method-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 10px;
-            padding: 4px 12px;
-            border-radius: 6px;
-            background: rgba(50, 210, 255, 0.1);
-            color: #32D2FF;
-            border: 1px solid rgba(50, 210, 255, 0.2);
-        }
-
-        .endpoint-box {
-            background: rgba(0, 0, 0, 0.4);
-            font-family: 'JetBrains Mono', monospace;
-            padding: 1rem;
-            border-radius: 12px;
-            border-left: 3px solid #32D2FF;
-            font-size: 0.8rem;
-            color: #94A3B8;
-        }
-
-        /* --- NAVIGATION / DOCK --- */
-        .search-wrapper {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 8px 16px;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .search-wrapper:focus-within {
-            border-color: #32D2FF;
-            width: 110%;
-            transform: translateX(-5%);
-        }
-
-        /* --- BUTTONS --- */
-        .btn-premium {
-            background: #fff;
-            color: #000;
-            padding: 14px 28px;
-            border-radius: 14px;
-            font-weight: 800;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-premium:hover {
-            background: #32D2FF;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(50, 210, 255, 0.3);
-        }
-
-        /* --- STATS --- */
-        .stat-card {
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 0 20px;
-        }
-
-        /* --- FLOATING ELEMENTS --- */
-        .float-icon {
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @media (max-width: 768px) {
-            .hero-title { font-size: 3.5rem; }
-            .stat-card { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 20px 0; }
-        }
-    </style>
+.contact-customer {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+}
+</style>
 </head>
 
-<body class="antialiased">
+<body class="min-h-screen font-sans antialiased">
 
-    <div id="loadingScreen" class="fixed inset-0 z-[10000] flex items-center justify-center">
-        <div class="cube-loader">
-            <div class="cube-face" style="transform: translateZ(30px)"></div>
-            <div class="cube-face" style="transform: rotateY(90deg) translateZ(30px)"></div>
-            <div class="cube-face" style="transform: rotateY(180deg) translateZ(30px)"></div>
-            <div class="cube-face" style="transform: rotateY(-90deg) translateZ(30px)"></div>
-            <div class="cube-face" style="transform: rotateX(90deg) translateZ(30px)"></div>
-            <div class="cube-face" style="transform: rotateX(-90deg) translateZ(30px)"></div>
+<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="text-center">
+        <div class="loader-wrapper mx-auto">
+            <div class="outer-ring"></div>
+            <div class="inner-ring"></div>
         </div>
-        <div class="text-center">
-            <h2 class="font-mono text-sm tracking-[0.5em] text-zyrex-primary animate-pulse">SYSTEM_BOOTING</h2>
-            <p class="text-[10px] text-slate-500 mt-2">© ZYREX_CORE_v2.0.6</p>
+        <h2 class="mt-8 text-xl font-bold tracking-widest text-white">Loading Rest Api</h2>
+        <p class="mt-4 text-sm text-gray-400">Akan Masuk Ke Dalam • Rest Api</p>
+    </div>
+</div>
+
+<main class="max-w-5xl mx-auto px-6 py-10">
+
+    <header class="mb-10">
+        <div class="flex items-center gap-2 mb-2">
+            <h1 id="titleApi" class="text-3xl font-extrabold tracking-tight">Skyzopedia API</h1>
+            <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded border border-blue-600/30">v1.0.0-x</span>
+        </div>
+        <p id="descApi" class="text-gray-400 text-sm">Interactive API documentation with real-time testing</p>
+    </header>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div class="stat-box">
+            <div class="stat-icon"><i class="fas fa-code"></i></div>
+            <div>
+                <div class="text-xl font-bold">8</div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-500">Endpoints</div>
+            </div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+            <div>
+                <div class="text-xl font-bold">4</div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-500">Categories</div>
+            </div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-icon text-green-500 bg-green-500/10"><i class="fas fa-check-circle"></i></div>
+            <div>
+                <div class="text-xl font-bold">100%</div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-500">Status Ready</div>
+            </div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-icon text-cyan-400 bg-cyan-400/10"><i class="fas fa-clock"></i></div>
+            <div>
+                <div id="serverTime" class="text-xl font-bold">22:03:47</div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-500">Server Time</div>
+            </div>
         </div>
     </div>
 
-    <nav class="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center pointer-events-none">
-        <div class="pointer-events-auto">
-            <a href="#" class="text-2xl font-black tracking-tighter flex items-center gap-2">
-                <div class="w-8 h-8 bg-gradient-to-br from-zyrex-primary to-zyrex-secondary rounded-lg flex items-center justify-center">
-                    <i class="fas fa-bolt text-black text-xs"></i>
-                </div>
-                ZYREX<span class="text-zyrex-primary">.CORE</span>
-            </a>
-        </div>
-        <div class="hidden md:flex gap-8 pointer-events-auto items-center">
-            <a href="#" class="text-xs font-bold uppercase tracking-widest hover:text-zyrex-primary transition-colors">Documentation</a>
-            <a href="#" class="text-xs font-bold uppercase tracking-widest hover:text-zyrex-primary transition-colors">Pricing</a>
-            <a href="#" class="text-xs font-bold uppercase tracking-widest hover:text-zyrex-primary transition-colors">Status</a>
-            <div class="h-8 w-px bg-white/10"></div>
-            <a href="#" class="btn-premium py-2 px-6">LOGIN</a>
-        </div>
-    </nav>
-
-    <div class="fixed inset-0 z-0 overflow-hidden">
-        <div class="absolute top-[20%] left-[10%] w-[400px] h-[400px] bg-zyrex-primary/10 rounded-full blur-[120px] animate-pulse"></div>
-        <div class="absolute bottom-[10%] right-[10%] w-[300px] h-[300px] bg-zyrex-secondary/10 rounded-full blur-[100px] animate-pulse"></div>
+    <div class="flex flex-wrap gap-3 mb-8">
+        <button class="tab-btn active"><i class="fas fa-cubes"></i> All Endpoints</button>
+        <button class="tab-btn text-gray-400"><i class="fas fa-download"></i> Downloader <span class="ml-1 text-[10px] bg-white/10 px-1.5 rounded">2</span></button>
+        <button class="tab-btn text-gray-400"><i class="fas fa-brain"></i> AI Tools <span class="ml-1 text-[10px] bg-white/10 px-1.5 rounded">2</span></button>
+        <button class="tab-btn text-gray-400"><i class="fas fa-search"></i> Search <span class="ml-1 text-[10px] bg-white/10 px-1.5 rounded">2</span></button>
+        <button class="tab-btn text-gray-400"><i class="fas fa-pen-nib"></i></button>
     </div>
 
-    <main class="relative z-10">
-        
-        <section class="min-h-screen flex flex-col items-center justify-center pt-20 px-6">
-            <div class="max-w-6xl w-full">
-                <div class="mb-6 flex items-center gap-4 animate__animated animate__fadeInLeft">
-                    <span class="h-px w-12 bg-zyrex-primary"></span>
-                    <span class="text-xs font-bold tracking-[0.3em] text-zyrex-primary uppercase">Elite Infrastructure Provider</span>
+    <div class="terminal-window mb-10">
+        <div class="terminal-header">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+            <span class="ml-auto text-[10px] text-gray-500 font-mono">terminal — bash — 120x40</span>
+        </div>
+        <div class="flex items-center px-4">
+            <span class="text-green-500 font-mono text-sm mr-2">root@Skyzopedia Team:~#</span>
+            <input type="text" id="searchInput" placeholder="search endpoints..." class="input-modern">
+        </div>
+    </div>
+
+    <div id="content">
+        <div id="noResults" class="hidden text-center py-20">
+            <p class="text-sm text-gray-500">No matching endpoint found.</p>
+        </div>
+
+        <div id="apiList" class="flex flex-col gap-2">
+            
+            <div class="api-card">
+                <div class="api-header" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-chevron-down text-[10px] text-gray-500"></i>
+                        <span class="font-medium text-sm">Example Endpoint</span>
+                    </div>
+                    <span class="method-badge method-get">GET</span>
                 </div>
                 
-                <h1 id="titleApi" class="hero-title animate__animated animate__fadeInUp">
-                    BUILDING THE <br>
-                    <span class="text-gradient">NEURAL DATA</span> <br>
-                    HIGHWAY.
-                </h1>
-
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mt-16 items-start">
-                    <div class="md:col-span-7">
-                        <p id="descApi" class="text-lg md:text-xl text-slate-400 leading-relaxed font-medium">
-                            Architecting the future of data transmission. Our enterprise REST infrastructure 
-                            is engineered with <span class="text-white">adaptive routing</span>, 
-                            <span class="text-white">military-grade encryption</span>, and a 
-                            <span class="text-white">low-latency distributed runtime</span>.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-4 mt-10">
-                            <a href="#" class="btn-premium">
-                                <span>GET STARTED NOW</span>
-                                <i class="fas fa-arrow-right text-xs"></i>
-                            </a>
-                            <div class="flex -space-x-3">
-                                <img src="https://i.pravatar.cc/150?u=1" class="w-12 h-12 rounded-full border-2 border-zyrex-dark" alt="">
-                                <img src="https://i.pravatar.cc/150?u=2" class="w-12 h-12 rounded-full border-2 border-zyrex-dark" alt="">
-                                <img src="https://i.pravatar.cc/150?u=3" class="w-12 h-12 rounded-full border-2 border-zyrex-dark" alt="">
-                                <div class="w-12 h-12 rounded-full border-2 border-zyrex-dark bg-slate-800 flex items-center justify-center text-[10px] font-bold">+2k</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="md:col-span-5 flex flex-col gap-6 animate__animated animate__fadeInRight">
-                        <div class="flex justify-between items-end border-b border-white/10 pb-4">
-                            <span class="text-xs text-slate-500 font-bold uppercase tracking-widest">Global Latency</span>
-                            <span class="text-3xl font-black text-zyrex-primary">&lt;12ms</span>
-                        </div>
-                        <div class="flex justify-between items-end border-b border-white/10 pb-4">
-                            <span class="text-xs text-slate-500 font-bold uppercase tracking-widest">Uptime Record</span>
-                            <span class="text-3xl font-black text-white">99.99%</span>
-                        </div>
-                        <div class="flex justify-between items-end border-b border-white/10 pb-4">
-                            <span class="text-xs text-slate-500 font-bold uppercase tracking-widest">Request Capacity</span>
-                            <span class="text-3xl font-black text-zyrex-secondary">10B+</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-20 px-6">
-            <div class="max-w-4xl mx-auto">
-                <div class="search-wrapper flex items-center gap-4">
-                    <i class="fas fa-search text-slate-500 ml-4"></i>
-                    <input type="text" id="searchInput" placeholder="Search neural endpoints, models, or documentation..." 
-                           class="w-full bg-transparent border-none py-4 text-white placeholder:text-slate-600 focus:ring-0 font-medium">
-                    <div class="hidden md:flex gap-2 mr-4">
-                        <kbd class="px-3 py-1 bg-white/5 rounded border border-white/10 text-[10px] font-bold text-slate-500">CTRL</kbd>
-                        <kbd class="px-3 py-1 bg-white/5 rounded border border-white/10 text-[10px] font-bold text-slate-500">K</kbd>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="content" class="py-20 px-6">
-            <div class="max-w-7xl mx-auto">
-                <div id="noResults" class="hidden py-40 text-center rounded-[40px] border border-dashed border-white/10 bg-zyrex-card">
-                    <div class="w-20 h-20 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-microchip text-3xl text-slate-600"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold">No Data Clusters Found</h3>
-                    <p class="text-slate-500 mt-2">Try searching for common terms like 'System', 'Health' or 'User'</p>
-                </div>
-
-                <div id="apiList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    
-                    <div class="api-card group">
-                        <div class="flex justify-between items-start mb-10">
-                            <div class="w-14 h-14 bg-zyrex-primary/10 rounded-2xl flex items-center justify-center border border-zyrex-primary/20 group-hover:bg-zyrex-primary group-hover:text-black transition-all duration-500">
-                                <i class="fas fa-shield-halved text-2xl"></i>
-                            </div>
-                            <span class="method-tag">GET</span>
-                        </div>
-
-                        <h3 class="text-2xl font-black mb-4 tracking-tight group-hover:text-zyrex-primary transition-colors">Authentication Core</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-8">
-                            High-throughput JWT validation system with automated rotation and multi-factor 
-                            verification protocols.
-                        </p>
-
-                        <div class="endpoint-box mb-8">
-                            /v2/auth/validate?key=CORE_HASH
-                        </div>
-
-                        <div class="flex items-center justify-between pt-6 border-t border-white/5">
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                <span class="text-[10px] font-bold uppercase text-slate-500">99ms Latency</span>
-                            </div>
-                            <button class="text-xs font-black uppercase tracking-widest text-zyrex-primary flex items-center gap-2 hover:gap-4 transition-all">
-                                DOCS <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="api-card group">
-                        <div class="flex justify-between items-start mb-10">
-                            <div class="w-14 h-14 bg-zyrex-secondary/10 rounded-2xl flex items-center justify-center border border-zyrex-secondary/20 group-hover:bg-zyrex-secondary group-hover:text-black transition-all duration-500">
-                                <i class="fas fa-database text-2xl"></i>
-                            </div>
-                            <span class="method-tag">POST</span>
-                        </div>
-
-                        <h3 class="text-2xl font-black mb-4 tracking-tight group-hover:text-zyrex-secondary transition-colors">Neural Storage</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-8">
-                            Distributed database sync with CRDT conflict resolution and sub-millisecond 
-                            propagation across nodes.
-                        </p>
-
-                        <div class="endpoint-box mb-8">
-                            /v2/cluster/sync?node=global_x
-                        </div>
-
-                        <div class="flex items-center justify-between pt-6 border-t border-white/5">
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-zyrex-accent animate-pulse"></span>
-                                <span class="text-[10px] font-bold uppercase text-slate-500">Heavy Load</span>
-                            </div>
-                            <button class="text-xs font-black uppercase tracking-widest text-zyrex-secondary flex items-center gap-2 hover:gap-4 transition-all">
-                                DOCS <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <section class="py-20 bg-zyrex-dark/50 border-y border-white/5">
-            <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12">
-                <a id="telegramLink" href="#" class="group flex flex-col items-center gap-4">
-                    <div class="w-20 h-20 rounded-3xl bg-slate-900 border border-white/5 flex items-center justify-center group-hover:border-zyrex-primary group-hover:-translate-y-2 transition-all duration-500">
-                        <i class="fab fa-telegram-plane text-3xl group-hover:text-zyrex-primary"></i>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-[0.3em] text-slate-500 group-hover:text-white">COMMUNITY</span>
-                </a>
-                <a id="whatsappLink" href="#" class="group flex flex-col items-center gap-4">
-                    <div class="w-20 h-20 rounded-3xl bg-slate-900 border border-white/5 flex items-center justify-center group-hover:border-green-500 group-hover:-translate-y-2 transition-all duration-500">
-                        <i class="fab fa-whatsapp text-3xl group-hover:text-green-500"></i>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-[0.3em] text-slate-500 group-hover:text-white">PRIORITY</span>
-                </a>
-                <a id="youtubeLink" href="#" class="group flex flex-col items-center gap-4">
-                    <div class="w-20 h-20 rounded-3xl bg-slate-900 border border-white/5 flex items-center justify-center group-hover:border-red-500 group-hover:-translate-y-2 transition-all duration-500">
-                        <i class="fab fa-youtube text-3xl group-hover:text-red-500"></i>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-[0.3em] text-slate-500 group-hover:text-white">STREAM</span>
-                </a>
-                <div class="group flex flex-col items-center gap-4">
-                    <div class="w-20 h-20 rounded-3xl bg-slate-900 border border-white/5 flex items-center justify-center group-hover:border-zyrex-secondary group-hover:-translate-y-2 transition-all duration-500">
-                        <i class="fab fa-github text-3xl group-hover:text-zyrex-secondary"></i>
-                    </div>
-                    <span class="text-[10px] font-bold tracking-[0.3em] text-slate-500 group-hover:text-white">REPOSITORY</span>
-                </div>
-            </div>
-        </section>
-
-        <footer class="pt-40 pb-20 px-6">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-12">
-                    <div class="text-center md:text-left">
-                        <h2 class="text-4xl font-black tracking-tighter">ZYREX<span class="text-zyrex-primary">API</span></h2>
-                        <p id="footer" class="text-xs font-mono text-slate-600 mt-2 uppercase tracking-widest">
-                            Distributed Systems Engineering • v2.0.6 Build
-                        </p>
-                    </div>
-                    <div class="flex gap-12 text-[10px] font-black tracking-[0.2em] text-slate-500">
-                        <a href="#" class="hover:text-zyrex-primary">TERMS_OF_SERVICE</a>
-                        <a href="#" class="hover:text-zyrex-primary">PRIVACY_POLICY</a>
-                        <a href="#" class="hover:text-zyrex-primary">SYSTEM_STATUS</a>
-                    </div>
-                </div>
-                <div class="mt-20 pt-10 border-t border-white/5 text-center">
-                    <p class="text-[10px] text-slate-700 font-mono">
-                        01011010 01011001 01010010 01000101 01011000 00100000 01000011 01001111 01010010 01000101
+                <div class="endpoint-content hidden">
+                    <p class="text-xs text-gray-400 mt-4 leading-relaxed">
+                        High-performance API endpoint integrated with secure token validation, 
+                        smart compression engine, and optimized response lifecycle handling.
                     </p>
+                    <div class="endpoint-path">
+                        /api/example?apikey=YOUR_KEY
+                    </div>
+                    <div class="flex justify-between items-center mt-4">
+                        <div class="flex gap-4 text-[10px] text-gray-500 uppercase tracking-widest">
+                            <span>V 2.1 STABLE</span>
+                            <span>PRODUCTION READY</span>
+                        </div>
+                        <button class="api-btn px-4 py-2 bg-purple-600 text-white text-[11px] font-bold rounded hover:bg-purple-700 transition">
+                            EXECUTE LIVE
+                        </button>
+                    </div>
                 </div>
             </div>
-        </footer>
-    </main>
+            </div>
+    </div>
 
-    <a id="contactCustomerBtn" href="#" class="fixed bottom-10 right-10 z-[100] group">
-        <div class="w-20 h-20 bg-zyrex-primary rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(50,210,255,0.4)] group-hover:scale-110 transition-transform duration-500">
-            <i class="fas fa-headset text-black text-2xl"></i>
-            <div class="absolute inset-0 rounded-full border border-zyrex-primary animate-ping opacity-20"></div>
-        </div>
-        <div class="absolute right-24 top-1/2 -translate-y-1/2 bg-white text-black text-[10px] font-black px-6 py-3 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-10 group-hover:translate-x-0 whitespace-nowrap">
-            ESTABLISH SECURE CONNECTION
-        </div>
-    </a>
+    <div class="flex justify-center gap-8 mt-16">
+        <a id="telegramLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-telegram text-xl"></i></a>
+        <a id="whatsappLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
+        <a id="youtubeLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+    </div>
 
-    <script src="/script.js"></script>
+    <footer class="mt-12 text-center">
+        <p id="footer" class="text-[11px] text-gray-600 tracking-widest">
+            © 2026 SKYZOPEDIA TEAM • ALL RIGHTS RESERVED.
+        </p>
+    </footer>
+
+</main>
+
+<a id="contactCustomerBtn" href="#" target="_blank" class="contact-customer">
+    <i class="fas fa-comment text-white"></i>
+</a>
+
+<script src="/script.js"></script>
+
+<script>
+    // Script tambahan untuk simulasi jam di gambar
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                        now.getMinutes().toString().padStart(2, '0') + ':' + 
+                        now.getSeconds().toString().padStart(2, '0');
+        const clockEl = document.getElementById('serverTime');
+        if(clockEl) clockEl.innerText = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
 
 </body>
-    </html>
+</html>
