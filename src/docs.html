@@ -1,264 +1,297 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Browse through our collection of API endpoints.">
-<meta name="theme-color" content="#0a0a0a">
-<title>Zyrex Api</title>
-<link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="Browse through our collection of API endpoints.">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Zyrex Api</title>
+    <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-<script>
-tailwind.config = {
-darkMode: 'class',
-theme: {
-extend: {
-fontFamily: {
-sans: ['Inter','system-ui','sans-serif'],
-mono: ['Fira Code', 'monospace']
-}
-}
-}
-}
-</script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter','system-ui','sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
 
-<style>
-:root{
---bg-main:#0d1117;
---bg-card:#161b22;
---stroke:#30363d;
---accent-purple:#8b5cf6;
---text-main:#e6edf3;
---text-muted:#8b949e;
-}
+    <style>
+        :root{
+            --bg-main:#0a0a0a;
+            --bg-card:#111111;
+            --stroke:#222222;
+            --accent-purple:#8b5cf6;
+            --text-main:#ffffff;
+            --text-muted:#a1a1aa;
+        }
 
-body{
-background-color: #0a0a0a;
-background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-background-size: 30px 30px;
-color: var(--text-main);
-}
+        body{
+            background-color: var(--bg-main);
+            background-image: 
+                linear-gradient(var(--stroke) 1px, transparent 1px),
+                linear-gradient(90deg, var(--stroke) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: var(--text-main);
+        }
 
-/* ================= MODERN LOADING (TIDAK DIUBAH) ================= */
-#loadingScreen{ background:linear-gradient(180deg,#1F2937,#263449); }
-.loader-wrapper{ position:relative; width:170px; height:170px; display:flex; align-items:center; justify-content:center; }
-.outer-ring{ position:absolute; width:160px; height:160px; border-radius:50%; border:6px solid transparent; border-top:6px solid #32D2FF; border-right:6px solid #32D2FF; animation:spinOuter 2.2s linear infinite; }
-.inner-ring{ position:absolute; width:90px; height:90px; border-radius:50%; border:5px solid transparent; border-bottom:5px solid #FF7A18; border-left:5px solid #FF7A18; animation:spinInner 1.8s linear infinite reverse; }
-@keyframes spinOuter{to{transform:rotate(360deg)}}
-@keyframes spinInner{to{transform:rotate(360deg)}}
+        /* ================= LOADING SCREEN ================= */
+        #loadingScreen{ background:linear-gradient(180deg,#1F2937,#263449); transition: opacity 0.5s ease; }
+        .loader-wrapper{ position:relative; width:170px; height:170px; display:flex; align-items:center; justify-content:center; }
+        .outer-ring{ position:absolute; width:160px; height:160px; border-radius:50%; border:6px solid transparent; border-top:6px solid #32D2FF; border-right:6px solid #32D2FF; animation:spinOuter 2.2s linear infinite; }
+        .inner-ring{ position:absolute; width:90px; height:90px; border-radius:50%; border:5px solid transparent; border-bottom:5px solid #FF7A18; border-left:5px solid #FF7A18; animation:spinInner 1.8s linear infinite reverse; }
+        @keyframes spinOuter{to{transform:rotate(360deg)}}
+        @keyframes spinInner{to{transform:rotate(360deg)}}
 
-/* ================= STATS CARDS ================= */
-.stat-box {
-    background: #111;
-    border: 1px solid #222;
-    padding: 15px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-.stat-icon {
-    width: 35px;
-    height: 35px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(139, 92, 246, 0.15);
-    color: var(--accent-purple);
-}
+        /* ================= STATS CARDS ================= */
+        .stat-box {
+            background: var(--bg-card);
+            border: 1px solid var(--stroke);
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--accent-purple);
+        }
 
-/* ================= TERMINAL STYLE ================= */
-.terminal-window {
-    background: #0d0d0d;
-    border: 1px solid #222;
-    border-radius: 8px;
-    overflow: hidden;
-}
-.terminal-header {
-    background: #1a1a1a;
-    padding: 8px 15px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border-bottom: 1px solid #222;
-}
-.dot { width: 10px; height: 10px; border-radius: 50%; }
-.input-modern {
-    background: transparent;
-    border: none;
-    outline: none;
-    width: 100%;
-    color: #00ff00;
-    font-family: 'Fira Code', monospace;
-    font-size: 13px;
-}
+        /* ================= TERMINAL SEARCH ================= */
+        .terminal-window {
+            background: #0d0d0d;
+            border: 1px solid var(--stroke);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--stroke);
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .input-modern {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 12px 15px;
+            font-size: 13px;
+        }
 
-/* ================= API CARD & TABS ================= */
-.api-card {
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    overflow: hidden;
-}
-.api-header {
-    padding: 12px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-}
-.api-content {
-    padding: 20px;
-    border-top: 1px solid #222;
-    background: #0a0a0a;
-}
-.tab-btn {
-    padding: 6px 15px;
-    font-size: 13px;
-    color: var(--text-muted);
-    border-bottom: 2px solid transparent;
-    transition: 0.2s;
-}
-.tab-btn.active {
-    color: #3b82f6;
-    border-bottom-color: #3b82f6;
-}
+        /* ================= API CARD & TABS ================= */
+        .api-card {
+            background: var(--bg-card);
+            border: 1px solid var(--stroke);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .api-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .api-header:hover { background: rgba(255,255,255,0.02); }
+        
+        .api-content {
+            background: #0a0a0a;
+            border-top: 1px solid var(--stroke);
+            padding: 20px;
+        }
 
-/* Code Block Style */
-.code-container {
-    background: #0d1117;
-    border-radius: 8px;
-    padding: 15px;
-    position: relative;
-    border: 1px solid #30363d;
-}
-.code-text {
-    font-family: 'Fira Code', monospace;
-    font-size: 12px;
-    color: #e6edf3;
-    line-height: 1.6;
-    white-space: pre-wrap;
-}
-.copy-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 4px 8px;
-    font-size: 11px;
-    background: #21262d;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    color: #8b949e;
-}
+        /* Tab System */
+        .tabs-container {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid var(--stroke);
+            margin-bottom: 15px;
+        }
+        .tab-trigger {
+            padding: 8px 0;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            font-weight: 500;
+        }
+        .tab-trigger.active {
+            color: #3b82f6; /* Blue Accent */
+        }
+        .tab-trigger.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #3b82f6;
+        }
 
-.method-badge {
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 4px;
-}
+        /* Code Block (Gambar 2 Style) */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #8b949e;
+            font-size: 11px;
+        }
+        .copy-btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #c9d1d9;
+            cursor: pointer;
+        }
+        .copy-btn:hover { background: #30363d; }
 
-.category-pill {
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    background: #1a1a1a;
-    border: 1px solid #222;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.category-pill.active {
-    background: #8b5cf6;
-    border-color: #8b5cf6;
-    color: white;
-}
+        .method-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
 
-.contact-customer {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    border-radius: 18px;
-    background: #8b5cf6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
-}
-</style>
+        /* ================= CATEGORY TABS ================= */
+        .tab-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            border: 1px solid var(--stroke);
+            color: #a1a1aa;
+        }
+        .tab-btn.active {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: white;
+        }
+
+        .contact-customer {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
+            background: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+    </style>
 </head>
 
 <body class="min-h-screen font-sans antialiased">
 
 <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50">
-<div class="text-center">
-<div class="loader-wrapper mx-auto">
-<div class="outer-ring"></div>
-<div class="inner-ring"></div>
-</div>
-<h2 class="mt-8 text-xl font-bold tracking-widest text-white">Loading Rest Api</h2>
-<p class="mt-4 text-sm" style="color:var(--text-muted)">
-Akan Masuk Ke Dalam • Rest Api
-</p>
-</div>
+    <div class="text-center">
+        <div class="loader-wrapper mx-auto">
+            <div class="outer-ring"></div>
+            <div class="inner-ring"></div>
+        </div>
+        <h2 class="mt-8 text-xl font-bold tracking-widest text-white">Loading Rest Api</h2>
+        <p class="mt-4 text-sm text-gray-400">Akan Masuk Ke Dalam • Rest Api</p>
+    </div>
 </div>
 
 <main class="max-w-5xl mx-auto px-6 py-10">
 
-    <div class="mb-10">
-        <div class="flex items-center gap-2">
-            <h1 id="titleApi" class="text-3xl font-bold tracking-tight">Skyzopedia API</h1>
-            <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded border border-blue-500/30">v1.0.0-x</span>
+    <header class="mb-10">
+        <div class="flex items-center gap-2 mb-2">
+            <h1 id="titleApi" class="text-3xl font-extrabold tracking-tight">Skyzopedia API</h1>
+            <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded border border-blue-600/30 font-mono">v1.0.0-x</span>
         </div>
-        <p id="descApi" class="text-sm text-gray-500 mt-1">Interactive API documentation with real-time testing</p>
-    </div>
+        <p id="descApi" class="text-gray-400 text-sm">Interactive API documentation with real-time testing</p>
+    </header>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <div class="stat-box">
-            <div class="stat-icon"><i class="fas fa-code text-sm"></i></div>
-            <div><div class="text-lg font-bold">8</div><div class="text-[10px] text-gray-500 uppercase">Endpoints</div></div>
+            <div class="stat-icon"><i class="fas fa-code"></i></div>
+            <div>
+                <div class="text-xl font-bold">8</div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-500">Endpoints</div>
+            </div>
         </div>
         <div class="stat-box">
-            <div class="stat-icon"><i class="fas fa-cubes text-sm"></i></div>
-            <div><div class="text-lg font-bold">4</div><div class="text-[10px] text-gray-500 uppercase">Categories</div></div>
+            <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+            <div>
+                <div class="text-xl font-bold">4</div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-500">Categories</div>
+            </div>
         </div>
         <div class="stat-box">
-            <div class="stat-icon text-green-500 bg-green-500/10"><i class="fas fa-check-circle text-sm"></i></div>
-            <div><div class="text-lg font-bold">100%</div><div class="text-[10px] text-gray-500 uppercase">Status</div></div>
+            <div class="stat-icon text-green-500 bg-green-500/10"><i class="fas fa-check-circle"></i></div>
+            <div>
+                <div class="text-xl font-bold">100%</div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-500">Status Ready</div>
+            </div>
         </div>
         <div class="stat-box">
-            <div class="stat-icon text-cyan-400 bg-cyan-400/10"><i class="fas fa-clock text-sm"></i></div>
-            <div><div id="serverTimeDisplay" class="text-lg font-bold">22:03:47</div><div class="text-[10px] text-gray-500 uppercase">Server Time</div></div>
+            <div class="stat-icon text-cyan-400 bg-cyan-400/10"><i class="fas fa-clock"></i></div>
+            <div>
+                <div id="serverTime" class="text-xl font-bold">00:00:00</div>
+                <div class="text-[10px] uppercase tracking-wider text-gray-500">Server Time</div>
+            </div>
         </div>
     </div>
 
     <div class="flex flex-wrap gap-3 mb-8">
-        <button class="category-pill active"><i class="fas fa-th-large"></i> All Endpoints</button>
-        <button class="category-pill text-gray-500"><i class="fas fa-download"></i> Downloader <span class="bg-gray-800 px-1.5 rounded text-[10px]">2</span></button>
-        <button class="category-pill text-gray-500"><i class="fas fa-brain"></i> AI Tools <span class="bg-gray-800 px-1.5 rounded text-[10px]">2</span></button>
-        <button class="category-pill text-gray-500"><i class="fas fa-search"></i> Search <span class="bg-gray-800 px-1.5 rounded text-[10px]">2</span></button>
-        <button class="category-pill text-gray-500"><i class="fas fa-pencil-alt"></i></button>
+        <button class="tab-btn active"><i class="fas fa-cubes"></i> All Endpoints</button>
+        <button class="tab-btn"><i class="fas fa-download"></i> Downloader</button>
+        <button class="tab-btn"><i class="fas fa-brain"></i> AI Tools</button>
+        <button class="tab-btn"><i class="fas fa-search"></i> Search</button>
     </div>
 
     <div class="terminal-window mb-10">
         <div class="terminal-header">
-            <div class="dot bg-red-500"></div>
-            <div class="dot bg-yellow-500"></div>
-            <div class="dot bg-green-500"></div>
-            <span class="ml-auto text-[10px] text-gray-600 font-mono">terminal — bash — 120x40</span>
+            <div class="dot bg-[#ff5f56]"></div>
+            <div class="dot bg-[#ffbd2e]"></div>
+            <div class="dot bg-[#27c93f]"></div>
+            <span class="ml-auto text-[10px] text-gray-500 font-mono">terminal — search</span>
         </div>
-        <div class="flex items-center px-4 py-3">
-            <span class="text-green-500 font-mono text-xs mr-2">root@Skyzopedia Team:~$</span>
+        <div class="flex items-center px-4">
+            <span class="text-green-500 font-mono text-sm mr-2">root@Skyzopedia:~$</span>
             <input type="text" id="searchInput" placeholder="search endpoints..." class="input-modern">
         </div>
     </div>
@@ -267,64 +300,18 @@ Akan Masuk Ke Dalam • Rest Api
         <div id="noResults" class="hidden text-center py-20">
             <p class="text-sm text-gray-500">No matching endpoint found.</p>
         </div>
-
-        <div id="apiList" class="flex flex-col gap-3">
-            
-            <div class="api-card">
-                <div class="api-header" onclick="const c = this.nextElementSibling; c.classList.contains('hidden') ? c.classList.remove('hidden') : c.classList.add('hidden');">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-chevron-down text-[10px] text-gray-600"></i>
-                        <span class="font-semibold text-sm">YouTube Downloader</span>
-                    </div>
-                    <span class="method-badge bg-blue-600 text-white">GET</span>
-                </div>
-
-                <div class="api-content hidden">
-                    <div class="flex border-bottom border-[#222] mb-4">
-                        <button class="tab-btn active">Method</button>
-                        <button class="tab-btn">Example</button>
-                    </div>
-
-                    <div class="tab-pane">
-                        <p class="text-xs text-gray-400 mb-4">Download videos from YouTube in various formats and qualities.</p>
-                        <div class="bg-white text-black p-3 rounded font-mono text-xs mb-4">
-                            /api/download/youtube?url=https://youtube.com/...&apikey=YOUR_KEY
-                        </div>
-                        <div class="flex justify-end">
-                            <button class="api-btn bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold py-2 px-4 rounded">
-                                EXECUTE LIVE TEST
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane hidden">
-                        <p class="text-xs text-gray-400 mb-2">Sample code for using this endpoint in JavaScript:</p>
-                        <div class="code-container">
-                            <button class="copy-btn"><i class="far fa-copy mr-1"></i> Copy</button>
-                            <div class="code-text">const fetch = require('node-fetch');
-
-fetch('https://api.zyrex.com/api/download/youtube?url=URL_HERE')
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));</div>
-                        </div>
-                        <p class="text-[10px] text-gray-500 mt-3 italic">
-                            <i class="fas fa-info-circle mr-1"></i> This example uses the Fetch API available in modern browsers and Node.js.
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <div id="apiList" class="flex flex-col gap-2">
             </div>
     </div>
 
-    <div class="hero-social flex justify-center gap-6 mt-16 text-gray-600">
-        <a id="telegramLink" target="_blank" class="hover:text-white transition"><i class="fab fa-telegram"></i></a>
-        <a id="whatsappLink" target="_blank" class="hover:text-white transition"><i class="fab fa-whatsapp"></i></a>
-        <a id="youtubeLink" target="_blank" class="hover:text-white transition"><i class="fab fa-youtube"></i></a>
+    <div class="flex justify-center gap-8 mt-16">
+        <a id="telegramLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-telegram text-xl"></i></a>
+        <a id="whatsappLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
+        <a id="youtubeLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
     </div>
 
-    <footer class="mt-10 mb-10 text-center">
-        <p id="footer" class="text-[10px] text-gray-600 uppercase tracking-[2px]">
+    <footer class="mt-12 text-center pb-10">
+        <p id="footer" class="text-[10px] text-gray-600 tracking-[3px] uppercase">
             © 2026 SKYZOPEDIA TEAM • ALL RIGHTS RESERVED.
         </p>
     </footer>
@@ -338,30 +325,37 @@ fetch('https://api.zyrex.com/api/download/youtube?url=URL_HERE')
 <script src="/script.js"></script>
 
 <script>
-    // Update Server Time (Simulasi)
-    function updateTime() {
+    // Sinkronisasi Jam Real-time
+    function updateClock() {
         const now = new Date();
-        const timeStr = now.toTimeString().split(' ')[0];
-        const el = document.getElementById('serverTimeDisplay');
-        if(el) el.innerText = timeStr;
+        const timeStr = now.toLocaleTimeString('en-GB');
+        const clockEl = document.getElementById('serverTime');
+        if(clockEl) clockEl.innerText = timeStr;
     }
-    setInterval(updateTime, 1000);
-    updateTime();
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    // Tab switcher logic
-    document.addEventListener('click', function(e) {
-        if(e.target.classList.contains('tab-btn')) {
-            const btns = e.target.parentElement.querySelectorAll('.tab-btn');
-            const panes = e.target.parentElement.parentElement.querySelectorAll('.tab-pane');
-            const index = Array.from(btns).indexOf(e.target);
-            
-            btns.forEach(b => b.classList.remove('active'));
-            panes.forEach(p => p.classList.add('hidden'));
-            
-            e.target.classList.add('active');
-            panes[index].classList.remove('hidden');
+    // Fungsi Tambahan untuk Navigasi Tab (Metode vs Example)
+    // Ini dipanggil dari renderAPIData di script.js
+    function switchTab(el, target) {
+        const parent = el.closest('.api-content');
+        
+        // Update styling tab button
+        parent.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+
+        // Toggle visibility pane
+        const methodPane = parent.querySelector('.tab-pane-method');
+        const examplePane = parent.querySelector('.tab-pane-example');
+
+        if(target === 'method') {
+            methodPane.classList.remove('hidden');
+            examplePane.classList.add('hidden');
+        } else {
+            methodPane.classList.add('hidden');
+            examplePane.classList.remove('hidden');
         }
-    });
+    }
 </script>
 
 </body>
