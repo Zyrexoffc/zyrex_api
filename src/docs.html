@@ -115,14 +115,17 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            transition: background 0.2s;
         }
+        .api-header:hover { background: rgba(255,255,255,0.02); }
+        
         .api-content {
             background: #0a0a0a;
             border-top: 1px solid var(--stroke);
             padding: 20px;
         }
 
-        /* Tab System Fix */
+        /* Tab System */
         .tabs-container {
             display: flex;
             gap: 20px;
@@ -135,9 +138,11 @@
             color: #666;
             cursor: pointer;
             position: relative;
-            transition: color 0.2s;
+            font-weight: 500;
         }
-        .tab-trigger.active { color: var(--accent-purple); }
+        .tab-trigger.active {
+            color: #3b82f6; /* Blue Accent */
+        }
         .tab-trigger.active::after {
             content: '';
             position: absolute;
@@ -145,25 +150,45 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: var(--accent-purple);
+            background: #3b82f6;
         }
 
-        .loader-request {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-top-color: var(--accent-purple);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
+        /* Code Block Style */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #8b949e;
+            font-size: 11px;
+        }
+        .copy-btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #c9d1d9;
+            cursor: pointer;
+        }
+        .copy-btn:hover { background: #30363d; }
 
-        .response-media-container img { max-width: 100%; border-radius: 8px; margin-top: 10px; }
-        .response-json { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee787; white-space: pre-wrap; }
-        
-        /* Utility */
-        .hidden { display: none !important; }
+        .method-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
 
+        /* ================= CATEGORY TABS ================= */
         .tab-btn {
             padding: 8px 16px;
             border-radius: 8px;
@@ -194,6 +219,21 @@
             justify-content: center;
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
         }
+
+        /* FIX: CSS Loader untuk Execute agar tidak Blank saat loading */
+        .loader-request {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent-purple);
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Response Style */
+        .response-media-container img { max-width: 100%; border-radius: 8px; border: 1px solid var(--stroke); }
+        .response-json { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee787; white-space: pre-wrap; }
     </style>
 </head>
 
@@ -214,7 +254,7 @@
 
     <header class="mb-10">
         <div class="flex items-center gap-2 mb-2">
-            <h1 id="titleApi" class="text-3xl font-extrabold tracking-tight">Skyzopedia API</h1>
+            <h1 id="titleApi" class="text-3xl font-extrabold tracking-tight">Zyrex API</h1>
             <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded border border-blue-600/30 font-mono">v1.0.0-x</span>
         </div>
         <p id="descApi" class="text-gray-400 text-sm">Interactive API documentation with real-time testing</p>
@@ -253,7 +293,7 @@
 
     <div id="categoryTabs" class="flex flex-wrap gap-3 mb-8">
         <button class="tab-btn active" onclick="filterCategory('all')"><i class="fas fa-cubes"></i> All Endpoints</button>
-    </div>
+        </div>
 
     <div class="terminal-window mb-10">
         <div class="terminal-header">
@@ -263,7 +303,7 @@
             <span class="ml-auto text-[10px] text-gray-500 font-mono">terminal — search</span>
         </div>
         <div class="flex items-center px-4">
-            <span class="text-green-500 font-mono text-sm mr-2">root@Skyzopedia:~$</span>
+            <span class="text-green-500 font-mono text-sm mr-2">root@Zyrex:~$</span>
             <input type="text" id="searchInput" placeholder="search endpoints..." class="input-modern">
         </div>
     </div>
@@ -277,6 +317,18 @@
             </div>
     </div>
 
+    <div class="flex justify-center gap-8 mt-16">
+        <a id="telegramLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-telegram text-xl"></i></a>
+        <a id="whatsappLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
+        <a id="youtubeLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+    </div>
+
+    <footer class="mt-12 text-center pb-10">
+        <p id="footerText" class="text-[10px] text-gray-600 tracking-[3px] uppercase">
+            © 2026 ZYREX API • ALL RIGHTS RESERVED.
+        </p>
+    </footer>
+
 </main>
 
 <a id="contactCustomerBtn" href="#" target="_blank" class="contact-customer">
@@ -286,7 +338,7 @@
 <script src="/script.js"></script>
 
 <script>
-    // Logic Jam
+    // Sinkronisasi Jam Real-time
     function updateClock() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('en-GB');
@@ -296,60 +348,49 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    /**
-     * FIX UNTUK METODE & EXAMPLE YANG HILANG
-     * Fungsi ini harus bisa menangani elemen yang baru dibuat secara dinamis oleh JS
-     */
+    // Fungsi Switch Tab Internal Card (Parameters vs Example)
     function switchTab(el, target) {
-        // Cari container API Content terdekat dari tombol tab yang diklik
         const parent = el.closest('.api-content');
         if(!parent) return;
 
-        console.log("Switching tab to:", target); // Debugging
-
-        // 1. Reset semua tab trigger di dalam card ini
-        const triggers = parent.querySelectorAll('.tab-trigger');
-        triggers.forEach(t => t.classList.remove('active'));
-        
-        // 2. Aktifkan tab yang diklik
+        // Update styling tab button
+        parent.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
         el.classList.add('active');
 
-        // 3. Cari panel konten
+        // Toggle visibility pane
         const methodPane = parent.querySelector('.tab-pane-method');
         const examplePane = parent.querySelector('.tab-pane-example');
 
-        // 4. Mainkan visibility
         if(target === 'method') {
-            if(methodPane) methodPane.classList.remove('hidden');
-            if(examplePane) examplePane.classList.add('hidden');
+            methodPane.classList.remove('hidden');
+            examplePane.classList.add('hidden');
         } else {
-            if(methodPane) methodPane.classList.add('hidden');
-            if(examplePane) examplePane.classList.remove('hidden');
+            methodPane.classList.add('hidden');
+            examplePane.classList.remove('hidden');
         }
     }
 
-    // Filter Kategori
+    // Fungsi Filter Kategori (Jika JS lu support filter)
     function filterCategory(catName) {
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b => b.classList.remove('active'));
-        if(event) event.currentTarget.classList.add('active');
+        event.currentTarget.classList.add('active');
         
+        // Panggil fungsi render ulang atau filter di script.js lu jika ada
         if (typeof window.filterEndpoints === 'function') {
             window.filterEndpoints(catName);
         }
     }
 
-    // Loading Screen Removal
+    // Sembunyikan Loading Screen setelah segalanya siap
     window.addEventListener('load', () => {
         setTimeout(() => {
             const ls = document.getElementById('loadingScreen');
-            if(ls) {
-                ls.style.opacity = '0';
-                setTimeout(() => ls.remove(), 500);
-            }
+            ls.style.opacity = '0';
+            setTimeout(() => ls.remove(), 500);
         }, 1000);
     });
 </script>
 
 </body>
-    </html>
+ </html>
