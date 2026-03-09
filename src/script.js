@@ -136,253 +136,128 @@ function renderAPIData(categories) {
     categories.forEach((category, catIndex) => {
         if (!category || !category.items) return;
         
+        // Header kategori tetap sama
         const icon = categoryIcons[category.name] || 'folder';
         const itemCount = category.items.length || 0;
         
         html += `
-        <div class="category-group" data-category="${(category.name || '').toLowerCase()}">
-            <div class="panel overflow-hidden">
-                <button onclick="toggleCategory(${catIndex})" class="w-full px-4 sm:px-5 py-4 text-left flex items-center justify-between transition-colors duration-150" style="background: rgba(255,255,255,.02);">
-                    <h2 class="flex items-center min-w-0">
-                        <span class="material-icons text-lg mr-3" style="color: var(--muted);">${icon}</span>
-                        <span class="truncate max-w-xs text-sm sm:text-base font-semibold" style="color: var(--text);">${category.name || 'Unnamed Category'}</span>
-                        <span class="ml-2 text-xs" style="color: var(--muted2);">(${itemCount})</span>
-                    </h2>
-                    <span class="material-icons transition-transform duration-150" id="category-icon-${catIndex}" style="color: var(--muted);">expand_less</span>
-                </button>
-                
-                <div id="category-${catIndex}">`;
+        <div class="category-group mb-6" data-category="${(category.name || '').toLowerCase()}">
+             <div class="flex items-center gap-2 mb-3 px-2">
+                <span class="material-icons text-sm" style="color: var(--accent-purple);">${icon}</span>
+                <span class="text-xs font-bold uppercase tracking-widest" style="color: var(--text-muted);">${category.name}</span>
+             </div>
+             <div id="category-${catIndex}" class="flex flex-col gap-3">`;
         
         category.items.forEach((item, endpointIndex) => {
-    if (!item) return;
+            if (!item) return;
 
-    const method = item.method || 'GET';
-    const pathParts = (item.path || '').split('?');
-    const path = pathParts[0] || '';
-    const itemName = item.name || 'Unnamed Endpoint';
-    const itemDesc = item.desc || 'No description';
+            const method = item.method || 'GET';
+            const path = (item.path || '').split('?')[0] || '/';
+            const itemName = item.name || 'Unnamed Endpoint';
+            const itemDesc = item.desc || 'No description available';
+            const fullUrl = `${window.location.origin}${path}`;
 
-    const status = (item.status || 'ready').toLowerCase();
-    const statusClass =
-        status.includes('error')
-            ? 'status-error'
-            : status.includes('update')
-            ? 'status-update'
-            : 'status-ready';
+            // Template Example Code (JavaScript)
+            const exampleCode = `const fetch = require('node-fetch');\n\nfetch('${fullUrl}?apikey=YOUR_KEY')\n  .then(response => response.json())\n  .then(data => console.log(data))\n  .catch(err => console.error(err));`;
 
-    html += `
-    <div class="border-t api-item transition-all duration-200"
-         style="border-color: var(--stroke);"
-         data-method="${method.toLowerCase()}"
-         data-path="${path}"
-         data-alias="${itemName}"
-         data-description="${itemDesc}"
-         data-category="${(category.name || '').toLowerCase()}">
-
-        <!-- HEADER -->
-        <button
-            onclick="toggleEndpoint(${catIndex}, ${endpointIndex})"
-            class="w-full px-4 sm:px-5 py-4 text-left flex items-center justify-between gap-3
-                   hover:bg-white/5 active:bg-white/10 transition-colors duration-150">
-
-            <div class="flex items-center min-w-0 flex-1 gap-3">
-
-                <!-- METHOD -->
-                <span
-                    class="inline-flex items-center justify-center px-3 py-1 text-xs text-white
-                           rounded-xl font-semibold tracking-wide flex-shrink-0
-                           method-${method.toLowerCase()}">
-                    ${method}
-                </span>
-
-                <!-- PATH & META -->
-                <div class="flex flex-col min-w-0 flex-1 gap-0.5">
-                    <span
-                        class="truncate font-mono text-sm leading-snug"
-                        title="${path}"
-                        style="color: var(--text);">
-                        ${path || '/'}
-                    </span>
-
-                    <div class="flex items-center gap-2 min-w-0">
-                        <span
-                            class="text-[13px] truncate max-w-[90%]"
-                            title="${itemName}"
-                            style="color: var(--muted);">
-                            ${itemName}
-                        </span>
-
-                        <span
-                            class="px-2 py-0.5 text-[11px] font-medium rounded-full ${statusClass}">
-                            ${item.status || 'ready'}
-                        </span>
+            html += `
+            <div class="api-card">
+                <div class="api-header" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-chevron-down text-[10px] text-gray-600"></i>
+                        <span class="font-semibold text-sm">${itemName}</span>
                     </div>
-                </div>
-            </div>
-
-            <!-- ICON -->
-            <span
-                class="material-icons transition-transform duration-200 flex-shrink-0"
-                id="endpoint-icon-${catIndex}-${endpointIndex}"
-                style="color: var(--muted);">
-                expand_more
-            </span>
-        </button>
-
-        <!-- EXPAND -->
-        <div
-            id="endpoint-${catIndex}-${endpointIndex}"
-            class="hidden border-t expand-transition"
-            style="border-color: var(--stroke); background: rgba(255,255,255,.025);">
-
-            <div class="p-4 sm:p-5 space-y-5">
-
-                <!-- DESC -->
-                <div class="text-[13px] leading-relaxed"
-                     style="color: var(--muted);">
-                    ${itemDesc}
+                    <span class="method-badge ${method === 'GET' ? 'bg-blue-600' : 'bg-green-600'} text-white">${method}</span>
                 </div>
 
-                <!-- FORM -->
-                <form id="form-${catIndex}-${endpointIndex}" class="space-y-5">
+                <div class="api-content hidden">
+                    <div class="tabs-container">
+                        <div class="tab-trigger active" onclick="switchTab(this, 'method')">Method</div>
+                        <div class="tab-trigger" onclick="switchTab(this, 'example')">Example</div>
+                    </div>
 
-                    <!-- PARAMS -->
-                    <div id="params-container-${catIndex}-${endpointIndex}"
-                         class="space-y-3"></div>
-
-                    <!-- REQUEST URL -->
-                    <div class="space-y-2">
-                        <div class="font-semibold text-[12px] flex items-center gap-1"
-                             style="color: var(--text);">
-                            <span class="material-icons text-[14px]"
-                                  style="color: var(--muted);">link</span>
-                            REQUEST URL
+                    <div class="tab-pane-method">
+                        <p class="text-xs text-gray-400 mb-4">${itemDesc}</p>
+                        <div class="bg-white text-black p-3 rounded font-mono text-[11px] mb-4 overflow-x-auto">
+                            ${path}?apikey=YOUR_KEY
                         </div>
+                        
+                        <form id="form-${catIndex}-${endpointIndex}" class="space-y-4 mb-4">
+                            <div id="params-container-${catIndex}-${endpointIndex}" class="space-y-2"></div>
+                        </form>
 
-                        <div class="flex items-center gap-2">
-                            <div
-                                class="flex-1 min-w-0 rounded-2xl px-3 py-2
-                                       overflow-x-auto scrollbar-thin"
-                                style="background: rgba(0,0,0,.18);
-                                       border: 1px solid var(--stroke);">
-                                <code
-                                    id="url-display-${catIndex}-${endpointIndex}"
-                                    class="block text-[13px] font-mono whitespace-nowrap"
-                                    style="color: var(--text);">
-                                    ${window.location.origin}${item.path || ''}
-                                </code>
-                            </div>
-
-                            <button
-                                type="button"
-                                onclick="copyUrl(${catIndex}, ${endpointIndex})"
-                                class="copy-btn rounded-2xl px-3 py-2 text-[13px]
-                                       hover:bg-white/10 transition"
-                                style="border: 1px solid var(--stroke);
-                                       color: var(--text);">
-                                <i class="fas fa-copy"></i>
+                        <div class="flex justify-end gap-2">
+                            <button onclick="clearResponse(${catIndex}, ${endpointIndex})" class="px-4 py-2 rounded text-[11px] font-bold border border-[#222] text-gray-400">CLEAR</button>
+                            <button onclick="executeRequest(event, ${catIndex}, ${endpointIndex}, '${method}', '${path}', 'application/json')" 
+                                    class="bg-blue-600 text-white px-4 py-2 rounded text-[11px] font-bold hover:bg-blue-700">
+                                EXECUTE LIVE TEST
                             </button>
                         </div>
                     </div>
 
-                    <!-- ACTIONS -->
-                    <div class="flex gap-2 flex-wrap">
-                        <button
-                            type="button"
-                            onclick="executeRequest(event, ${catIndex}, ${endpointIndex}, '${method}', '${path}', 'application/json')"
-                            class="btn-gradient text-white px-6 py-2.5 rounded-2xl
-                                   text-xs font-semibold flex items-center gap-2">
-                            <i class="fas fa-play"></i>
-                            Execute
-                        </button>
-
-                        <button
-                            type="button"
-                            onclick="clearResponse(${catIndex}, ${endpointIndex})"
-                            class="px-6 py-2.5 rounded-2xl text-xs font-semibold
-                                   flex items-center gap-2 hover:bg-white/10 transition"
-                            style="border: 1px solid var(--stroke);
-                                   color: var(--text);">
-                            <i class="fas fa-times"></i>
-                            Clear
-                        </button>
-                    </div>
-                </form>
-
-                <!-- RESPONSE -->
-                <div id="response-${catIndex}-${endpointIndex}" class="hidden space-y-2">
-
-                    <div class="font-semibold text-[12px] flex items-center gap-1"
-                         style="color: var(--text);">
-                        <span class="material-icons text-[14px]"
-                              style="color: var(--muted);">code</span>
-                        RESPONSE
+                    <div class="tab-pane-example hidden">
+                        <p class="text-xs text-gray-400 mb-2">Sample code for using this endpoint :</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>JavaScript (Node.js)</span>
+                                <button class="copy-btn" onclick="copyToClipboard(\`#code-${catIndex}-${endpointIndex}\`)"><i class="far fa-copy"></i> Copy</button>
+                            </div>
+                            <pre id="code-${catIndex}-${endpointIndex}" class="text-[11px] text-blue-300 font-mono overflow-x-auto">${exampleCode}</pre>
+                        </div>
                     </div>
 
-                    <div class="rounded-2xl overflow-hidden"
-                         style="border: 1px solid var(--stroke);
-                                background: rgba(0,0,0,.14);">
-
-                        <div class="px-4 py-3 flex items-center justify-between"
-                             style="background: rgba(255,255,255,.03);
-                                    border-bottom: 1px solid var(--stroke);">
-
-                            <div class="flex items-center gap-2">
-                                <span
-                                    id="response-status-${catIndex}-${endpointIndex}"
-                                    class="text-[12px] px-2 py-1 rounded-xl">
-                                    200 OK
-                                </span>
-                                <span
-                                    id="response-time-${catIndex}-${endpointIndex}"
-                                    class="text-[12px]"
-                                    style="color: var(--muted);">
-                                    0ms
-                                </span>
-                            </div>
-
-                            <button
-                                onclick="copyResponse(${catIndex}, ${endpointIndex})"
-                                class="copy-btn text-[13px] px-2 py-1 rounded-xl
-                                       hover:bg-white/10 transition"
-                                style="color: var(--muted);">
-                                <i class="fas fa-copy"></i>
-                            </button>
+                    <div id="response-${catIndex}-${endpointIndex}" class="hidden mt-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-bold uppercase text-gray-500">Response Body</span>
+                            <span id="response-status-${catIndex}-${endpointIndex}" class="text-[10px] px-2 py-0.5 rounded bg-green-500/20 text-green-400"></span>
                         </div>
-
-                        <div class="p-0 max-h-96 overflow-auto scrollbar-thin">
-                            <div
-                                id="response-content-${catIndex}-${endpointIndex}"
-                                class="response-media-container">
-                            </div>
+                        <div id="response-content-${catIndex}-${endpointIndex}" class="bg-[#0d0d0d] border border-[#222] rounded p-3 text-[11px] font-mono overflow-auto max-h-60 text-green-500">
                         </div>
-
                     </div>
                 </div>
+            </div>`;
+        });
 
-            </div>
-        </div>
-    </div>`;
-});
-
-html += `</div></div>`;
+        html += `</div></div>`;
     });
     
     apiList.innerHTML = html;
     
+    // Inisialisasi parameter form setelah HTML di-render
     setTimeout(() => {
-        if (categories && categories.length > 0) {
-            categories.forEach((category, catIndex) => {
-                if (category && category.items) {
-                    category.items.forEach((item, endpointIndex) => {
-                        if (item) {
-                            initializeEndpointParameters(catIndex, endpointIndex, item);
-                        }
-                    });
-                }
-            });
-        }
+        categories.forEach((category, catIndex) => {
+            if (category && category.items) {
+                category.items.forEach((item, endpointIndex) => {
+                    if (item) initializeEndpointParameters(catIndex, endpointIndex, item);
+                });
+            }
+        });
     }, 100);
+}
+
+// Tambahkan fungsi helper ini di luar renderAPIData jika belum ada
+function switchTab(el, target) {
+    const parent = el.closest('.api-content');
+    parent.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+
+    const methodPane = parent.querySelector('.tab-pane-method');
+    const examplePane = parent.querySelector('.tab-pane-example');
+
+    if(target === 'method') {
+        methodPane.classList.remove('hidden');
+        examplePane.classList.add('hidden');
+    } else {
+        methodPane.classList.add('hidden');
+        examplePane.classList.remove('hidden');
+    }
+}
+
+function copyToClipboard(elementId) {
+    const text = document.querySelector(elementId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Code copied to clipboard!');
+    });
 }
 
 function setupEventListeners() {
