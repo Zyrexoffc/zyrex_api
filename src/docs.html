@@ -32,6 +32,8 @@
             --bg-card:#111111;
             --stroke:#222222;
             --accent-purple:#8b5cf6;
+            --accent-blue:#3b82f6; /* Warna Biru GET */
+            --accent-green:#10b981; /* Warna Hijau POST */
             --text-main:#ffffff;
             --text-muted:#a1a1aa;
         }
@@ -180,12 +182,25 @@
         }
         .copy-btn:hover { background: #30363d; }
 
+        /* FIX: Styling Badge Method (Kotak Biru/Hijau) */
         .method-badge {
             font-size: 10px;
             font-weight: 800;
-            padding: 3px 10px;
-            border-radius: 4px;
+            padding: 4px 12px;
+            border-radius: 6px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+            transition: transform 0.2s ease;
+        }
+        
+        /* Warna spesifik untuk method */
+        .method-badge.method-get { background-color: var(--accent-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+        .method-badge.method-post { background-color: var(--accent-green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+
+        /* Efek hover pada header card */
+        .api-header:hover .method-badge {
+            transform: scale(1.05);
         }
 
         /* ================= CATEGORY TABS ================= */
@@ -254,7 +269,7 @@
 
     <header class="mb-10">
         <div class="flex items-center gap-2 mb-2">
-            <h1 id="titleApi" class="text-3xl font-extrabold tracking-tight">Zyrex API</h1>
+            <h1 id="titleApi" class="text-3xl font-extrabold tracking-tight">Zyrex Rest Api</h1>
             <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded border border-blue-600/30 font-mono">v1.0.0-x</span>
         </div>
         <p id="descApi" class="text-gray-400 text-sm">Interactive API documentation with real-time testing</p>
@@ -293,14 +308,14 @@
 
     <div id="categoryTabs" class="flex flex-wrap gap-3 mb-8">
         <button class="tab-btn active" onclick="filterCategory('all')"><i class="fas fa-cubes"></i> All Endpoints</button>
-        </div>
+    </div>
 
     <div class="terminal-window mb-10">
         <div class="terminal-header">
             <div class="dot bg-[#ff5f56]"></div>
             <div class="dot bg-[#ffbd2e]"></div>
             <div class="dot bg-[#27c93f]"></div>
-            <span class="ml-auto text-[10px] text-gray-500 font-mono">terminal — search</span>
+            <span class="ml-auto text-[10px] text-gray-500 font-mono">terminal — bash — search</span>
         </div>
         <div class="flex items-center px-4">
             <span class="text-green-500 font-mono text-sm mr-2">root@Zyrex:~$</span>
@@ -374,7 +389,7 @@
     function filterCategory(catName) {
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b => b.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        if(event && event.currentTarget) event.currentTarget.classList.add('active');
         
         // Panggil fungsi render ulang atau filter di script.js lu jika ada
         if (typeof window.filterEndpoints === 'function') {
@@ -386,11 +401,13 @@
     window.addEventListener('load', () => {
         setTimeout(() => {
             const ls = document.getElementById('loadingScreen');
-            ls.style.opacity = '0';
-            setTimeout(() => ls.remove(), 500);
+            if(ls) {
+                ls.style.opacity = '0';
+                setTimeout(() => ls.remove(), 500);
+            }
         }, 1000);
     });
 </script>
 
 </body>
- </html>
+</html>
