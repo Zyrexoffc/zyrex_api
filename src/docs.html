@@ -11,6 +11,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -32,10 +33,11 @@
             --bg-card:#111111;
             --stroke:#222222;
             --accent-purple:#8b5cf6;
-            --accent-blue:#3b82f6; /* Warna Biru GET */
-            --accent-green:#10b981; /* Warna Hijau POST */
+            --accent-blue:#3b82f6; 
+            --accent-green:#10b981; 
             --text-main:#ffffff;
             --text-muted:#a1a1aa;
+            --muted2: #71717a;
         }
 
         body{
@@ -103,105 +105,34 @@
             font-size: 13px;
         }
 
-        /* ================= API CARD & TABS ================= */
-        .api-card {
+        /* ================= API RENDER STYLES (Sync with JS) ================= */
+        .panel {
             background: var(--bg-card);
             border: 1px solid var(--stroke);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 12px;
-        }
-        .api-header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .api-header:hover { background: rgba(255,255,255,0.02); }
-        
-        .api-content {
-            background: #0a0a0a;
-            border-top: 1px solid var(--stroke);
-            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
 
-        /* Tab System */
-        .tabs-container {
-            display: flex;
-            gap: 20px;
-            border-bottom: 1px solid var(--stroke);
-            margin-bottom: 15px;
+        .method-get { background: var(--accent-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+        .method-post { background: var(--accent-green); box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+
+        .status-ready { color: #10b981; background: rgba(16, 185, 129, 0.1); }
+        .status-update { color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+        .status-error { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            transition: all 0.3s ease;
         }
-        .tab-trigger {
-            padding: 8px 0;
-            font-size: 13px;
-            color: #666;
-            cursor: pointer;
-            position: relative;
-            font-weight: 500;
-        }
-        .tab-trigger.active {
-            color: #3b82f6; /* Blue Accent */
-        }
-        .tab-trigger.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #3b82f6;
+        .btn-gradient:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
-        /* Code Block Style */
-        .code-block {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 15px;
-            position: relative;
-        }
-        .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            color: #8b949e;
-            font-size: 11px;
-        }
-        .copy-btn {
-            background: #21262d;
-            border: 1px solid #30363d;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            color: #c9d1d9;
-            cursor: pointer;
-        }
-        .copy-btn:hover { background: #30363d; }
-
-        /* FIX: Styling Badge Method (Kotak Biru/Hijau) */
-        .method-badge {
-            font-size: 10px;
-            font-weight: 800;
-            padding: 4px 12px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #fff;
-            transition: transform 0.2s ease;
-        }
-        
-        /* Warna spesifik untuk method */
-        .method-badge.method-get { background-color: var(--accent-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
-        .method-badge.method-post { background-color: var(--accent-green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
-
-        /* Efek hover pada header card */
-        .api-header:hover .method-badge {
-            transform: scale(1.05);
-        }
+        /* Custom Scrollbar */
+        .scrollbar-thin::-webkit-scrollbar { width: 5px; height: 5px; }
+        .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: var(--stroke); border-radius: 10px; }
 
         /* ================= CATEGORY TABS ================= */
         .tab-btn {
@@ -214,6 +145,7 @@
             background: #1a1a1a;
             border: 1px solid var(--stroke);
             color: #a1a1aa;
+            transition: all 0.2s;
         }
         .tab-btn.active {
             background: var(--accent-purple);
@@ -233,21 +165,9 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+            z-index: 40;
         }
 
-        /* FIX: CSS Loader untuk Execute agar tidak Blank saat loading */
-        .loader-request {
-            width: 24px;
-            height: 24px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--accent-purple);
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* Response Style */
-        .response-media-container img { max-width: 100%; border-radius: 8px; border: 1px solid var(--stroke); }
         .response-json { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee787; white-space: pre-wrap; }
     </style>
 </head>
@@ -328,14 +248,13 @@
             <p class="text-sm text-gray-500">No matching endpoint found.</p>
         </div>
         
-        <div id="apiList" class="flex flex-col gap-2">
-            </div>
+        <div id="apiList"></div>
     </div>
 
     <div class="flex justify-center gap-8 mt-16">
-        <a id="telegramLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-telegram text-xl"></i></a>
-        <a id="whatsappLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
-        <a id="youtubeLink" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+        <a id="telegramLink" href="#" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-telegram text-xl"></i></a>
+        <a id="whatsappLink" href="#" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
+        <a id="youtubeLink" href="#" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
     </div>
 
     <footer class="mt-12 text-center pb-10">
@@ -363,41 +282,19 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Fungsi Switch Tab Internal Card (Parameters vs Example)
-    function switchTab(el, target) {
-        const parent = el.closest('.api-content');
-        if(!parent) return;
-
-        // Update styling tab button
-        parent.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-
-        // Toggle visibility pane
-        const methodPane = parent.querySelector('.tab-pane-method');
-        const examplePane = parent.querySelector('.tab-pane-example');
-
-        if(target === 'method') {
-            methodPane.classList.remove('hidden');
-            examplePane.classList.add('hidden');
-        } else {
-            methodPane.classList.add('hidden');
-            examplePane.classList.remove('hidden');
-        }
-    }
-
-    // Fungsi Filter Kategori (Jika JS lu support filter)
+    // Fungsi Filter Kategori
     function filterCategory(catName) {
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b => b.classList.remove('active'));
         if(event && event.currentTarget) event.currentTarget.classList.add('active');
         
-        // Panggil fungsi render ulang atau filter di script.js lu jika ada
+        // Memanggil fungsi filter global jika ada di script.js
         if (typeof window.filterEndpoints === 'function') {
             window.filterEndpoints(catName);
         }
     }
 
-    // Sembunyikan Loading Screen setelah segalanya siap
+    // Sembunyikan Loading Screen
     window.addEventListener('load', () => {
         setTimeout(() => {
             const ls = document.getElementById('loadingScreen');
@@ -410,4 +307,4 @@
 </script>
 
 </body>
-</html>
+            </html>
