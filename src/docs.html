@@ -282,20 +282,40 @@
     setInterval(updateClock, 1000);
     updateClock();
 
+    /** * FUNGSI BARU: Update Stats Otomatis
+     * Fungsi ini akan menghitung jumlah data dari script.js
+     */
+    function updateStats() {
+        // Asumsi data kamu di script.js disimpan dalam variabel global 'apiData'
+        // Jika nama variabel di script.js berbeda, silakan sesuaikan 'apiData' di bawah
+        if (typeof window.apiData !== 'undefined') {
+            const totalE = window.apiData.length;
+            
+            // Menghitung kategori unik
+            const categories = [...new Set(window.apiData.map(item => item.category))];
+            const totalC = categories.length;
+
+            document.getElementById('totalEndpoints').innerText = totalE;
+            document.getElementById('totalCategories').innerText = totalC;
+        }
+    }
+
     // Fungsi Filter Kategori
     function filterCategory(catName) {
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b => b.classList.remove('active'));
         if(event && event.currentTarget) event.currentTarget.classList.add('active');
         
-        // Memanggil fungsi filter global jika ada di script.js
         if (typeof window.filterEndpoints === 'function') {
             window.filterEndpoints(catName);
         }
     }
 
-    // Sembunyikan Loading Screen
+    // Sembunyikan Loading Screen & Jalankan Stats
     window.addEventListener('load', () => {
+        // Jalankan update stats saat page load
+        updateStats();
+
         setTimeout(() => {
             const ls = document.getElementById('loadingScreen');
             if(ls) {
@@ -307,4 +327,4 @@
 </script>
 
 </body>
-            </html>
+</html>
