@@ -148,212 +148,224 @@ function renderAPIData(categories) {
                         <span class="truncate max-w-xs text-sm sm:text-base font-semibold" style="color: var(--text);">${category.name || 'Unnamed Category'}</span>
                         <span class="ml-2 text-xs" style="color: var(--muted2);">(${itemCount})</span>
                     </h2>
-                    <span class="material-icons transition-transform duration-150" id="category-icon-${catIndex}" style="color: var(--muted);"></span>
+                    <span class="material-icons transition-transform duration-150" id="category-icon-${catIndex}" style="color: var(--muted);">expand_less</span>
                 </button>
                 
                 <div id="category-${catIndex}">`;
         
         category.items.forEach((item, endpointIndex) => {
-            if (!item) return;
+    if (!item) return;
 
-            const method = item.method || 'GET';
-            const pathParts = (item.path || '').split('?');
-            const path = pathParts[0] || '';
-            const itemName = item.name || 'Unnamed Endpoint';
-            const itemDesc = item.desc || 'No description';
+    const method = item.method || 'GET';
+    const pathParts = (item.path || '').split('?');
+    const path = pathParts[0] || '';
+    const itemName = item.name || 'Unnamed Endpoint';
+    const itemDesc = item.desc || 'No description';
 
-            const status = (item.status || 'ready').toLowerCase();
-            const statusClass =
-                status.includes('error')
-                    ? 'status-error'
-                    : status.includes('update')
-                    ? 'status-update'
-                    : 'status-ready';
+    const status = (item.status || 'ready').toLowerCase();
+    const statusClass =
+        status.includes('error')
+            ? 'status-error'
+            : status.includes('update')
+            ? 'status-update'
+            : 'status-ready';
 
-            html += `
-            <div class="border-t api-item transition-all duration-200"
-                 style="border-color: var(--stroke);"
-                 data-method="${method.toLowerCase()}"
-                 data-path="${path}"
-                 data-alias="${itemName}"
-                 data-description="${itemDesc}"
-                 data-category="${(category.name || '').toLowerCase()}">
+    html += `
+    <div class="border-t api-item transition-all duration-200"
+         style="border-color: var(--stroke);"
+         data-method="${method.toLowerCase()}"
+         data-path="${path}"
+         data-alias="${itemName}"
+         data-description="${itemDesc}"
+         data-category="${(category.name || '').toLowerCase()}">
 
-                <button
-                    onclick="toggleEndpoint(${catIndex}, ${endpointIndex})"
-                    class="w-full px-4 sm:px-5 py-4 text-left flex items-center justify-between gap-3
-                           hover:bg-white/5 active:bg-white/10 transition-colors duration-150">
+        <!-- HEADER -->
+        <button
+            onclick="toggleEndpoint(${catIndex}, ${endpointIndex})"
+            class="w-full px-4 sm:px-5 py-4 text-left flex items-center justify-between gap-3
+                   hover:bg-white/5 active:bg-white/10 transition-colors duration-150">
 
-                    <div class="flex items-center min-w-0 flex-1 gap-3">
+            <div class="flex items-center min-w-0 flex-1 gap-3">
 
+                <!-- METHOD -->
+                <span
+                    class="inline-flex items-center justify-center px-3 py-1 text-xs text-white
+                           rounded-xl font-semibold tracking-wide flex-shrink-0
+                           method-${method.toLowerCase()}">
+                    ${method}
+                </span>
+
+                <!-- PATH & META -->
+                <div class="flex flex-col min-w-0 flex-1 gap-0.5">
+                    <span
+                        class="truncate font-mono text-sm leading-snug"
+                        title="${path}"
+                        style="color: var(--text);">
+                        ${path || '/'}
+                    </span>
+
+                    <div class="flex items-center gap-2 min-w-0">
                         <span
-                            class="inline-flex items-center justify-center px-3 py-1 text-xs text-white
-                                   rounded-xl font-semibold tracking-wide flex-shrink-0
-                                   method-${method.toLowerCase()}">
-                            ${method}
+                            class="text-[13px] truncate max-w-[90%]"
+                            title="${itemName}"
+                            style="color: var(--muted);">
+                            ${itemName}
                         </span>
 
-                        <div class="flex flex-col min-w-0 flex-1 gap-0.5">
-                            <span
-                                class="truncate font-mono text-sm leading-snug"
-                                title="${path}"
-                                style="color: var(--text);">
-                                ${path || '/'}
-                            </span>
+                        <span
+                            class="px-2 py-0.5 text-[11px] font-medium rounded-full ${statusClass}">
+                            ${item.status || 'ready'}
+                        </span>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="flex items-center gap-2 min-w-0">
-                                <span
-                                    class="text-[13px] truncate max-w-[90%]"
-                                    title="${itemName}"
-                                    style="color: var(--muted);">
-                                    ${itemName}
-                                </span>
+            <!-- ICON -->
+            <span
+                class="material-icons transition-transform duration-200 flex-shrink-0"
+                id="endpoint-icon-${catIndex}-${endpointIndex}"
+                style="color: var(--muted);">
+                expand_more
+            </span>
+        </button>
 
-                                <span
-                                    class="px-2 py-0.5 text-[11px] font-medium rounded-full ${statusClass}">
-                                    ${item.status || 'ready'}
-                                </span>
+        <!-- EXPAND -->
+        <div
+            id="endpoint-${catIndex}-${endpointIndex}"
+            class="hidden border-t expand-transition"
+            style="border-color: var(--stroke); background: rgba(255,255,255,.025);">
+
+            <div class="p-4 sm:p-5 space-y-5">
+
+                <!-- DESC -->
+                <div class="text-[13px] leading-relaxed"
+                     style="color: var(--muted);">
+                    ${itemDesc}
+                </div>
+
+                <!-- FORM -->
+                <form id="form-${catIndex}-${endpointIndex}" class="space-y-5">
+
+                    <!-- PARAMS -->
+                    <div id="params-container-${catIndex}-${endpointIndex}"
+                         class="space-y-3"></div>
+
+                    <!-- REQUEST URL -->
+                    <div class="space-y-2">
+                        <div class="font-semibold text-[12px] flex items-center gap-1"
+                             style="color: var(--text);">
+                            <span class="material-icons text-[14px]"
+                                  style="color: var(--muted);">link</span>
+                            REQUEST URL
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="flex-1 min-w-0 rounded-2xl px-3 py-2
+                                       overflow-x-auto scrollbar-thin"
+                                style="background: rgba(0,0,0,.18);
+                                       border: 1px solid var(--stroke);">
+                                <code
+                                    id="url-display-${catIndex}-${endpointIndex}"
+                                    class="block text-[13px] font-mono whitespace-nowrap"
+                                    style="color: var(--text);">
+                                    ${window.location.origin}${item.path || ''}
+                                </code>
                             </div>
+
+                            <button
+                                type="button"
+                                onclick="copyUrl(${catIndex}, ${endpointIndex})"
+                                class="copy-btn rounded-2xl px-3 py-2 text-[13px]
+                                       hover:bg-white/10 transition"
+                                style="border: 1px solid var(--stroke);
+                                       color: var(--text);">
+                                <i class="fas fa-copy"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <span
-                        class="material-icons transition-transform duration-200 flex-shrink-0"
-                        id="endpoint-icon-${catIndex}-${endpointIndex}"
-                        style="color: var(--muted);">
-                    </span>
-                </button>
+                    <!-- ACTIONS -->
+                    <div class="flex gap-2 flex-wrap">
+                        <button
+                            type="button"
+                            onclick="executeRequest(event, ${catIndex}, ${endpointIndex}, '${method}', '${path}', 'application/json')"
+                            class="btn-gradient text-white px-6 py-2.5 rounded-2xl
+                                   text-xs font-semibold flex items-center gap-2">
+                            <i class="fas fa-play"></i>
+                            Execute
+                        </button>
 
-                <div
-                    id="endpoint-${catIndex}-${endpointIndex}"
-                    class="hidden border-t expand-transition"
-                    style="border-color: var(--stroke); background: rgba(255,255,255,.025);">
+                        <button
+                            type="button"
+                            onclick="clearResponse(${catIndex}, ${endpointIndex})"
+                            class="px-6 py-2.5 rounded-2xl text-xs font-semibold
+                                   flex items-center gap-2 hover:bg-white/10 transition"
+                            style="border: 1px solid var(--stroke);
+                                   color: var(--text);">
+                            <i class="fas fa-times"></i>
+                            Clear
+                        </button>
+                    </div>
+                </form>
 
-                    <div class="p-4 sm:p-5 space-y-5">
+                <!-- RESPONSE -->
+                <div id="response-${catIndex}-${endpointIndex}" class="hidden space-y-2">
 
-                        <div class="text-[13px] leading-relaxed"
-                             style="color: var(--muted);">
-                            ${itemDesc}
+                    <div class="font-semibold text-[12px] flex items-center gap-1"
+                         style="color: var(--text);">
+                        <span class="material-icons text-[14px]"
+                              style="color: var(--muted);">code</span>
+                        RESPONSE
+                    </div>
+
+                    <div class="rounded-2xl overflow-hidden"
+                         style="border: 1px solid var(--stroke);
+                                background: rgba(0,0,0,.14);">
+
+                        <div class="px-4 py-3 flex items-center justify-between"
+                             style="background: rgba(255,255,255,.03);
+                                    border-bottom: 1px solid var(--stroke);">
+
+                            <div class="flex items-center gap-2">
+                                <span
+                                    id="response-status-${catIndex}-${endpointIndex}"
+                                    class="text-[12px] px-2 py-1 rounded-xl">
+                                    200 OK
+                                </span>
+                                <span
+                                    id="response-time-${catIndex}-${endpointIndex}"
+                                    class="text-[12px]"
+                                    style="color: var(--muted);">
+                                    0ms
+                                </span>
+                            </div>
+
+                            <button
+                                onclick="copyResponse(${catIndex}, ${endpointIndex})"
+                                class="copy-btn text-[13px] px-2 py-1 rounded-xl
+                                       hover:bg-white/10 transition"
+                                style="color: var(--muted);">
+                                <i class="fas fa-copy"></i>
+                            </button>
                         </div>
 
-                        <form id="form-${catIndex}-${endpointIndex}" class="space-y-5">
-
-                            <div id="params-container-${catIndex}-${endpointIndex}"
-                                 class="space-y-3"></div>
-
-                            <div class="space-y-2">
-                                <div class="font-semibold text-[12px] flex items-center gap-1"
-                                     style="color: var(--text);">
-                                    <span class="material-icons text-[14px]"
-                                          style="color: var(--muted);">link</span>
-                                    REQUEST URL
-                                </div>
-
-                                <div class="flex items-center gap-2">
-                                    <div
-                                        class="flex-1 min-w-0 rounded-2xl px-3 py-2
-                                               overflow-x-auto scrollbar-thin"
-                                        style="background: rgba(0,0,0,.18);
-                                               border: 1px solid var(--stroke);">
-                                        <code
-                                            id="url-display-${catIndex}-${endpointIndex}"
-                                            class="block text-[13px] font-mono whitespace-nowrap"
-                                            style="color: var(--text);">
-                                            ${window.location.origin}${item.path || ''}
-                                        </code>
-                                    </div>
-
-                                    <button
-                                        type="button"
-                                        onclick="copyUrl(${catIndex}, ${endpointIndex})"
-                                        class="copy-btn rounded-2xl px-3 py-2 text-[13px]
-                                               hover:bg-white/10 transition"
-                                        style="border: 1px solid var(--stroke);
-                                               color: var(--text);">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-2 flex-wrap">
-                                <button
-                                    type="button"
-                                    onclick="executeRequest(event, ${catIndex}, ${endpointIndex}, '${method}', '${path}', 'application/json')"
-                                    class="btn-gradient text-white px-6 py-2.5 rounded-2xl
-                                           text-xs font-semibold flex items-center gap-2">
-                                    <i class="fas fa-play"></i>
-                                    Execute
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onclick="clearResponse(${catIndex}, ${endpointIndex})"
-                                    class="px-6 py-2.5 rounded-2xl text-xs font-semibold
-                                           flex items-center gap-2 hover:bg-white/10 transition"
-                                    style="border: 1px solid var(--stroke);
-                                           color: var(--text);">
-                                    <i class="fas fa-times"></i>
-                                    Clear
-                                </button>
-                            </div>
-                        </form>
-
-                        <div id="response-${catIndex}-${endpointIndex}" class="hidden space-y-2">
-
-                            <div class="font-semibold text-[12px] flex items-center gap-1"
-                                 style="color: var(--text);">
-                                <span class="material-icons text-[14px]"
-                                      style="color: var(--muted);">code</span>
-                                RESPONSE
-                            </div>
-
-                            <div class="rounded-2xl overflow-hidden"
-                                 style="border: 1px solid var(--stroke);
-                                        background: rgba(0,0,0,.14);">
-
-                                <div class="px-4 py-3 flex items-center justify-between"
-                                     style="background: rgba(255,255,255,.03);
-                                            border-bottom: 1px solid var(--stroke);">
-
-                                    <div class="flex items-center gap-2">
-                                        <span
-                                            id="response-status-${catIndex}-${endpointIndex}"
-                                            class="text-[12px] px-2 py-1 rounded-xl">
-                                            200 OK
-                                        </span>
-                                        <span
-                                            id="response-time-${catIndex}-${endpointIndex}"
-                                            class="text-[12px]"
-                                            style="color: var(--muted);">
-                                            0ms
-                                        </span>
-                                    </div>
-
-                                    <button
-                                        onclick="copyResponse(${catIndex}, ${endpointIndex})"
-                                        class="copy-btn text-[13px] px-2 py-1 rounded-xl
-                                               hover:bg-white/10 transition"
-                                        style="color: var(--muted);">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                </div>
-
-                                <div class="p-0 max-h-96 overflow-auto scrollbar-thin">
-                                    <div
-                                        id="response-content-${catIndex}-${endpointIndex}"
-                                        class="response-media-container p-4">
-                                    </div>
-                                </div>
-
+                        <div class="p-0 max-h-96 overflow-auto scrollbar-thin">
+                            <div
+                                id="response-content-${catIndex}-${endpointIndex}"
+                                class="response-media-container">
                             </div>
                         </div>
 
                     </div>
                 </div>
-            </div>`;
-        });
 
-        html += `</div></div>`;
+            </div>
+        </div>
+    </div>`;
+});
+
+html += `</div></div>`;
     });
     
     apiList.innerHTML = html;
@@ -391,10 +403,13 @@ function handleSearch(searchTerm) {
     const noResults = document.getElementById('noResults');
     
     if (!searchTermLower) {
+        console.log('Empty search, showing all');
         renderAPIData(originalCategories);
         if (noResults) noResults.classList.add('hidden');
         return;
     }
+    
+    console.log('Searching for:', searchTermLower);
     
     const filteredData = [];
     
@@ -425,6 +440,8 @@ function handleSearch(searchTerm) {
             });
         }
     });
+    
+    console.log('Filtered results:', filteredData.length, 'categories');
     
     if (filteredData.length === 0) {
         const apiList = document.getElementById('apiList');
@@ -491,7 +508,7 @@ function extractParameters(path) {
         const urlParams = new URLSearchParams(queryString);
         
         for (const [key, value] of urlParams) {
-            if (value === '' || value === 'YOUR_API_KEY' || value === 'YOUR_KEY') {
+            if (value === '' || value === 'YOUR_API_KEY') {
                 params.push({
                     name: key,
                     required: true,
@@ -543,10 +560,10 @@ function toggleCategory(index) {
     if (category && icon) {
         if (category.classList.contains('hidden')) {
             category.classList.remove('hidden');
-            // icon.textContent = 'expand_less'; // Dihapus teksnya
+            icon.textContent = 'expand_less';
         } else {
             category.classList.add('hidden');
-            // icon.textContent = 'expand_more'; // Dihapus teksnya
+            icon.textContent = 'expand_more';
         }
     }
 }
@@ -557,28 +574,28 @@ function toggleEndpoint(catIndex, endpointIndex) {
     if (endpoint && icon) {
         if (endpoint.classList.contains('hidden')) {
             endpoint.classList.remove('hidden');
-            // icon.textContent = 'expand_less'; // Dihapus teksnya
+            icon.textContent = 'expand_less';
         } else {
             endpoint.classList.add('hidden');
-            // icon.textContent = 'expand_more'; // Dihapus teksnya
+            icon.textContent = 'expand_more';
         }
     }
 }
 
 function updateRequestUrl(catIndex, endpointIndex) {
     const form = document.getElementById(`form-${catIndex}-${endpointIndex}`);
+    if (!form) return { url: '', hasErrors: false };
+
     const urlDisplay = document.getElementById(`url-display-${catIndex}-${endpointIndex}`);
-    if (!form || !urlDisplay) return { url: '', hasErrors: false };
+    if (!urlDisplay) return { url: '', hasErrors: false };
 
     let hasErrors = false;
-    
     if (!urlDisplay.dataset.baseUrl) {
         const full = urlDisplay.textContent.trim();
         const [base, query] = full.split('?');
         urlDisplay.dataset.baseUrl = base;
         urlDisplay.dataset.defaultQuery = query || '';
     }
-    
     const baseUrl = urlDisplay.dataset.baseUrl;
     const params = new URLSearchParams(urlDisplay.dataset.defaultQuery);
 
@@ -593,7 +610,7 @@ function updateRequestUrl(catIndex, endpointIndex) {
             hasErrors = true;
             input.classList.add('border-red-500');
         }
-        if (value) params.set(name, value);
+        params.set(name, value);
     });
 
     const finalUrl = baseUrl + '?' + params.toString();
@@ -634,6 +651,8 @@ async function executeRequest(event, catIndex, endpointIndex, method, path, prod
     const startTime = Date.now();
     
     try {
+        console.log('Request URL:', url);
+        
         const response = await fetch(url, {
             method: method,
             headers: {
@@ -660,42 +679,75 @@ async function executeRequest(event, catIndex, endpointIndex, method, path, prod
         if (contentType.startsWith('image/')) {
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
-            responseContent.innerHTML = `<img src="${blobUrl}" alt="Image Response" class="max-w-full max-h-full object-contain rounded-2xl">`;
+            
+            responseContent.innerHTML = `
+                <img src="${blobUrl}" alt="Image Response" class="max-w-full max-h-full object-contain rounded-2xl">
+            `;
+            
         } else if (contentType.includes('audio/')) {
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
-            responseContent.innerHTML = `<audio controls autoplay class="w-full max-w-md"><source src="${blobUrl}" type="${contentType}"></audio>`;
+            
+            responseContent.innerHTML = `
+                <audio controls autoplay class="w-full max-w-md">
+                    <source src="${blobUrl}" type="${contentType}">
+                </audio>
+            `;
+            
         } else if (contentType.includes('video/')) {
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
-            responseContent.innerHTML = `<video controls autoplay class="w-full h-full object-contain rounded-2xl"><source src="${blobUrl}" type="${contentType}"></video>`;
+            
+            responseContent.innerHTML = `
+                <video controls autoplay class="w-full h-full object-contain rounded-2xl">
+                    <source src="${blobUrl}" type="${contentType}">
+                </video>
+            `;
+            
         } else if (contentType.includes('application/json')) {
             const data = await response.json();
-            if (data && typeof data === 'object' && data.error) throw new Error(`API Error: ${data.error}`);
+            
+            if (data && typeof data === 'object' && data.error) {
+                throw new Error(`API Error: ${data.error}`);
+            }
+            
             const formattedResponse = JSON.stringify(data, null, 2);
-            responseContent.innerHTML = `<pre class="block whitespace-pre-wrap text-xs px-4 pt-3 pb-3 overflow-x-auto leading-relaxed font-mono" style="color: var(--text);">${formattedResponse}</pre>`;
+            responseContent.innerHTML = `
+<pre class="block whitespace-pre-wrap text-xs px-4 pt-3 pb-3 overflow-x-auto leading-relaxed font-mono" style="color: var(--text);">${formattedResponse}</pre>`;
+           
+        } else if (contentType.includes('text/')) {
+            const text = await response.text();
+            responseContent.innerHTML = `
+                <pre class="text-xs p-4 overflow-x-auto whitespace-pre-wrap font-mono" style="color: var(--text);">${escapeHtml(text)}</pre>
+            `;
+            
         } else {
             const text = await response.text();
-            responseContent.innerHTML = `<pre class="text-xs p-4 overflow-x-auto whitespace-pre-wrap font-mono" style="color: var(--text);">${escapeHtml(text)}</pre>`;
+            responseContent.innerHTML = `
+                <pre class="text-xs p-4 overflow-x-auto whitespace-pre-wrap font-mono" style="color: var(--text);">${escapeHtml(text)}</pre>
+            `;
         }
         
         showToast('Request successful!', 'success');
         
     } catch (error) {
         console.error('API Request Error:', error);
+        
         const errorMessage = error.message || 'Unknown error occurred';
         responseContent.innerHTML = `
             <div class="text-center py-10">
                 <i class="fas fa-exclamation-triangle text-2xl mb-3" style="color: rgba(239,68,68,.95);"></i>
                 <div class="text-sm font-semibold" style="color: rgba(239,68,68,.95);">Error</div>
                 <div class="text-xs mt-1" style="color: var(--muted);">${escapeHtml(errorMessage)}</div>
-            </div>`;
+            </div>
+        `;
         responseStatus.textContent = 'Error';
         responseStatus.className = 'text-xs px-2 py-1 rounded-xl';
         responseStatus.style.background = 'rgba(239,68,68,.12)';
         responseStatus.style.color = 'rgba(239,68,68,.95)';
         responseStatus.style.border = '1px solid rgba(239,68,68,.18)';
         responseTime.textContent = '0ms';
+        
         showToast(`Request failed: ${errorMessage}`, 'error');
     }
 }
@@ -853,6 +905,84 @@ function toggleTheme() {
     }
 }
 
+
+// 1. Definisikan Data Mentah (Cukup ini saja yang di-edit manual)
+
+// 2. Buat apiData secara flat (Hanya untuk keperluan logic internal/search)
+const apiData = originalCategories.flatMap(cat => 
+    cat.items.map(item => ({
+        ...item,
+        category: cat.name,
+        // Otomatis ambil icon dari list categoryIcons, kalau gak ada pake 'folder'
+        icon: categoryIcons[cat.name] || 'folder' 
+    }))
+);
+
+// 3. Gunakan SATU fungsi render utama saja (Pake fungsi yang kamu kirim tadi)
+function renderApi() {
+    const apiList = document.getElementById('apiList');
+    const totalEndpoints = document.getElementById('totalEndpoints');
+    const totalCategories = document.getElementById('totalCategories');
+    const categoryTabs = document.getElementById('categoryTabs');
+
+    // Update Stats (Ambil dari data flat)
+    if (totalEndpoints) totalEndpoints.innerText = apiData.length;
+    if (totalCategories) totalCategories.innerText = originalCategories.length;
+
+    // OTOMATISASI TABS: (Sisipkan logic dari kode sebelumnya ke sini)
+    if (categoryTabs) {
+        let tabsHtml = `<button class="tab-btn active" onclick="filterByCategory('all')"><i class="fas fa-cubes"></i> All Endpoints</button>`;
+        originalCategories.forEach(cat => {
+            tabsHtml += `
+                <button class="tab-btn" onclick="filterByCategory('${cat.name}')">
+                    <i class="material-icons text-[14px]">${cat.icon || 'folder'}</i> ${cat.name}
+                </button>`;
+        });
+        categoryTabs.innerHTML = tabsHtml;
+    }
+
+    // Render List API (Pake logic reduce kamu tadi)
+    const groupedData = apiData.reduce((acc, curr) => {
+        if (!acc[curr.category]) acc[curr.category] = [];
+        acc[curr.category].push(curr);
+        return acc;
+    }, {});
+
+    apiList.innerHTML = '';
+    Object.keys(groupedData).forEach((cat, index) => {
+        const section = document.createElement('div');
+        section.className = 'panel';
+        section.innerHTML = `
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition" onclick="toggleCategory(${index})">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-folder text-purple-500"></i>
+                    <h3 class="font-bold uppercase tracking-wider text-sm">${cat}</h3>
+                    <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full">${groupedData[cat].length}</span>
+                </div>
+                <span id="category-icon-${index}" class="material-icons text-gray-500">expand_more</span>
+            </div>
+            <div id="category-${index}" class="hidden border-t border-white/5 p-2 flex flex-col gap-1">
+                ${groupedData[cat].map(api => `
+                    <div class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 group">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-[10px] font-bold ${api.method === 'GET' ? 'method-get' : 'method-post'}">${api.method}</span>
+                            <span class="text-sm font-mono text-gray-300 group-hover:text-white">${api.name}</span>
+                        </div>
+                        <a href="${api.path}" target="_blank" class="btn-gradient px-4 py-1 rounded-md text-xs font-semibold">Execute</a>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        apiList.appendChild(section);
+    });
+}
+
+// 4. Inisialisasi Final
+window.onload = () => {
+    renderApi(); // Panggil fungsi gabungan di atas
+    if (typeof setupEventListeners === 'function') setupEventListeners();
+};
+
 function updateThemeUI() {
     const html = document.documentElement;
     const icon = document.getElementById('themeIcon');
@@ -866,6 +996,7 @@ function updateThemeUI() {
 window.toggleCategory = toggleCategory;
 window.toggleEndpoint = toggleEndpoint;
 window.executeRequest = executeRequest;
+window.apiData = apiData;
 window.clearResponse = clearResponse;
 window.copyUrl = copyUrl;
 window.copyResponse = copyResponse;
