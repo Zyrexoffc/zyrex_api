@@ -1,299 +1,338 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0B1020">
-<meta name="description" content="Kurokami REST API Platform">
-<title>ZYREX - REST API</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050810">
+    <meta name="description" content="Kurokami REST API Platform - High Performance">
+    <title>ZYREX - REST API</title>
 
-<link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
+    <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
-<!-- ✅ AnimeJS CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        space: ['Space Grotesk', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
 
-<script>
-tailwind.config = {
-darkMode: 'class',
-theme: {
-extend: {
-fontFamily: {
-sans: ['Sora','system-ui','sans-serif']
-}
-}
-}
-}
-</script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --bg-dark: #050810;
+            --glass: rgba(15, 23, 42, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+        }
 
-<style>
-:root{
---bg-main:#0B1020;
---bg-soft:#121A2F;
---card:#161F36;
---card-light:#1C2745;
---stroke:rgba(255,255,255,.07);
---text:#F1F5FF;
---muted:#9CAACF;
---accent:#6C63FF;
---accent2:#9F7AEA;
---glow:rgba(108,99,255,.35);
-}
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
+            color: #fff;
+            overflow-x: hidden;
+        }
 
-body{
-background:
-radial-gradient(800px 500px at 0% 0%, rgba(159,122,234,.15), transparent 60%),
-radial-gradient(800px 500px at 100% 0%, rgba(108,99,255,.12), transparent 60%),
-linear-gradient(180deg,var(--bg-main),var(--bg-soft));
-color:var(--text);
-}
+        /* Animated Mesh Background */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+            filter: blur(80px);
+        }
 
-.window-card{
-background:linear-gradient(160deg,var(--card),var(--card-light));
-border:1px solid var(--stroke);
-border-radius:28px;
-box-shadow:0 40px 120px -40px var(--glow);
-overflow:hidden;
-opacity:0;
-transform:translateY(30px);
-transition:all .8s ease;
-}
+        .mesh-ball {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            animation: move 20s infinite alternate;
+        }
 
-.window-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:14px 20px;
-border-bottom:1px solid var(--stroke);
-}
+        @keyframes move {
+            from { transform: translate(0, 0); }
+            to { transform: translate(100vw, 100vh); }
+        }
 
-.dot{width:12px;height:12px;border-radius:50%;}
-.dot.red{background:#ff5f56}
-.dot.yellow{background:#ffbd2e}
-.dot.green{background:#27c93f}
+        /* Premium Glass Card */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
 
-.status-online{
-font-size:12px;
-padding:6px 14px;
-border-radius:20px;
-background:rgba(39,201,63,.15);
-color:#27c93f;
-font-weight:600;
-letter-spacing:1px;
-}
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 32px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent, rgba(168, 85, 247, 0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
 
-.hero-img{
-border-radius:20px;
-overflow:hidden;
-border:1px solid var(--stroke);
-}
+        /* Hero Image Effect */
+        .hologram-box {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
 
-.version-badge{
-position:absolute;
-bottom:14px;
-left:14px;
-background:#0f172a;
-padding:6px 12px;
-border-radius:10px;
-font-size:12px;
-border:1px solid var(--stroke);
-}
+        .hologram-box::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 2px);
+            pointer-events: none;
+        }
 
-.title-main{
-font-size:40px;
-font-weight:800;
-letter-spacing:2px;
-margin-top:25px;
-}
+        /* Modern Buttons */
+        .btn-cyber {
+            position: relative;
+            padding: 16px 24px;
+            border-radius: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
-.subtitle{
-margin-top:20px;
-max-width:600px;
-font-size:14px;
-color:var(--muted);
-line-height:1.7;
-}
+        .btn-cyber-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+        }
 
-.btn-primary{
-background:linear-gradient(135deg,var(--accent),var(--accent2));
-padding:18px;
-border-radius:20px;
-font-weight:700;
-transition:.3s;
-box-shadow:0 20px 60px -25px var(--glow);
-position:relative;
-overflow:hidden;
-}
+        .btn-cyber-outline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: #cbd5e1;
+        }
 
-.btn-dark, .icon-box{
-background:#0f172a;
-padding:18px;
-border-radius:20px;
-border:1px solid var(--stroke);
-font-weight:700;
-transition:.3s;
-position:relative;
-overflow:hidden;
-}
+        .btn-cyber:hover {
+            transform: translateY(-5px) scale(1.02);
+            filter: brightness(1.1);
+        }
 
-.btn-primary:hover,
-.btn-dark:hover,
-.icon-box:hover{
-transform:translateY(-5px);
-}
+        .btn-cyber-primary:hover {
+            box-shadow: 0 20px 35px -5px rgba(99, 102, 241, 0.6);
+        }
 
-/* Ripple animation */
-@keyframes ripple {
-to {
-transform: scale(4);
-opacity: 0;
-}
-}
+        /* Title Glow */
+        .glow-text {
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
 
-/* ✅ TAMBAHAN CSS ANIMASI */
-#animation .text-xl {
-  font-size: 1.5rem;
-  color: currentColor;
-  letter-spacing: 0.06em;
-}
-</style>
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Floating Animation */
+        .float { animation: floating 3s ease-in-out infinite; }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* New Animation Text Styling */
+        #welcome-text span {
+            display: inline-block;
+            filter: drop-shadow(0 0 8px var(--glow));
+        }
+
+    </style>
 </head>
 
-<body class="min-h-screen font-sans antialiased flex items-center justify-center px-6 py-16">
+<body class="min-h-screen flex items-center justify-center p-6">
 
-<div class="max-w-2xl w-full">
-<div class="window-card">
+    <div class="mesh-bg">
+        <div class="mesh-ball" style="width: 400px; height: 400px; top: -100px; left: -100px;"></div>
+        <div class="mesh-ball" style="width: 300px; height: 300px; bottom: 10%; right: 10%; animation-delay: -5s;"></div>
+    </div>
 
-<div class="window-top">
-<div class="flex gap-2">
-<div class="dot red"></div>
-<div class="dot yellow"></div>
-<div class="dot green"></div>
-</div>
-<div class="status-online">● ONLINE</div>
-</div>
+    <div class="max-w-xl w-full py-12">
+        <div class="glass-card p-1"> <div class="px-8 pt-6 flex justify-between items-center">
+                <div class="flex gap-1.5">
+                    <div class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+                </div>
+                <div id="status-indicator" class="status-pill">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    System Active
+                </div>
+            </div>
 
-<div class="p-8 text-center">
+            <div class="p-8 text-center">
+                <div id="welcome-text" class="font-space text-sm font-bold tracking-[0.3em] text-indigo-400 mb-6 uppercase">
+                    Initializing System...
+                </div>
 
-<!-- ✅ TAMBAHAN ANIMASI TEXT DI ATAS -->
-<div id="animation" class="large grid centered square-grid mb-6">
-  <h2 class="text-xl font-bold">WELCOME</h2>
-</div>
+                <div class="hologram-box mb-8 float">
+                    <img src="https://files.catbox.moe/185i1y.jpg" class="w-full h-56 object-cover transform scale-105 hover:scale-110 transition-transform duration-700">
+                    <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] font-bold tracking-widest uppercase">
+                        Protocol v1.0
+                    </div>
+                </div>
 
-<div class="relative hero-img">
-<img src="https://files.catbox.moe/185i1y.jpg" 
-class="w-full h-64 object-cover">
-<div class="version-badge">v1.0</div>
-</div>
+                <h1 class="font-space text-4xl md:text-5xl font-bold mb-4 glow-text tracking-tighter">
+                    ZYREX<span class="text-indigo-500">.</span>API
+                </h1>
 
-<h1 class="title-main">ZYREX - REST  API</h1>
+                <p class="text-slate-400 text-sm leading-relaxed mb-10 font-light px-4">
+                    The next-gen REST API infrastructure. Engineered for <span class="text-white font-semibold">speed</span>, 
+                    designed for <span class="text-white font-semibold">stability</span>, and built for the 
+                    <span class="text-indigo-400 font-semibold underline decoration-indigo-500/30 underline-offset-4">future of development</span>.
+                </p>
 
-<p class="subtitle mx-auto">
-A free and reliable REST API platform built for modern application development. 
-Powered by Node.js and TypeScript, it delivers high performance, stable endpoints, 
-and seamless integration for developers worldwide.
-</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="docs.html" class="btn-cyber btn-cyber-primary col-span-2 md:col-span-1">
+                        <i class="fas fa-terminal text-sm"></i> Explore Docs
+                    </a>
+                    <a href="Stat.html" class="btn-cyber btn-cyber-outline col-span-2 md:col-span-1">
+                        <i class="fas fa-chart-line text-sm"></i> Analytics
+                    </a>
+                    
+                    <div class="flex gap-4 col-span-2 mt-2">
+                        <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
+                            <i class="fab fa-whatsapp text-green-400 text-xl group-hover:scale-125 transition-transform"></i>
+                        </a>
+                        <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
+                            <i class="fas fa-share-nodes text-indigo-400 text-xl group-hover:scale-125 transition-transform"></i>
+                        </a>
+                        <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
+                            <i class="fab fa-github text-white text-xl group-hover:scale-125 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-<div class="grid grid-cols-2 gap-6 mt-10">
+            <div class="pb-6 text-center">
+                <p class="text-[9px] uppercase tracking-[0.5em] text-slate-600 font-bold">
+                    &copy; 2024 ZYREX API • All Core Linked
+                </p>
+            </div>
+        </div>
+    </div>
 
-<a href="docs.html" class="btn-primary flex items-center justify-center gap-3">
-<i class="fas fa-book"></i> DOCS
-</a>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Fade-in main card
+            const card = document.querySelector(".glass-card");
+            anime({
+                targets: card,
+                opacity: [0, 1],
+                translateY: [50, 0],
+                easing: 'easeOutExpo',
+                duration: 1500,
+                delay: 300
+            });
 
-<a href="Stat.html" class="btn-dark flex items-center justify-center gap-3">
-<i class="fas fa-chart-pie text-purple-400"></i> STATS
-</a>
+            // Welcome Text Animation
+            const welcomeTag = document.querySelector("#welcome-text");
+            const text = "WELCOME TO ZYREX";
+            welcomeTag.innerHTML = text.split("").map(c => `<span>${c === " " ? "&nbsp;" : c}</span>`).join("");
 
-<div class="icon-box flex items-center justify-center">
-<i class="fab fa-whatsapp text-green-400 text-2xl"></i>
-</div>
+            anime({
+                targets: '#welcome-text span',
+                translateY: [10, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                loop: true,
+                direction: 'alternate',
+                easing: 'easeInOutQuad',
+                duration: 2000
+            });
 
-<div class="icon-box flex items-center justify-center">
-<i class="fas fa-share-alt text-blue-400 text-2xl"></i>
-</div>
+            // Random Status Fluctuation
+            const statusBox = document.querySelector("#status-indicator");
+            setInterval(() => {
+                const rand = Math.random();
+                if(rand > 0.95) {
+                    statusBox.innerHTML = `● DISTURBANCE`;
+                    statusBox.style.color = "#f87171";
+                    statusBox.style.background = "rgba(248,113,113,0.1)";
+                } else {
+                    statusBox.innerHTML = `
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        System Active`;
+                    statusBox.style.color = "#4ade80";
+                    statusBox.style.background = "rgba(34,197,94,0.1)";
+                }
+            }, 5000);
 
-</div>
-</div>
-</div>
-</div>
-
-<script>
-// Fade-in effect
-document.addEventListener("DOMContentLoaded", () => {
-  const card = document.querySelector(".window-card");
-  setTimeout(() => {
-    card.style.opacity = "1";
-    card.style.transform = "translateY(0)";
-  }, 200);
-});
-
-// Simulated online status
-const status = document.querySelector(".status-online");
-function updateStatus(){
-  const sec = new Date().getSeconds();
-  if(sec % 59 === 0){
-    status.textContent = "● MAINTENANCE";
-    status.style.color = "#ffbd2e";
-  } else {
-    status.textContent = "● ONLINE";
-    status.style.color = "#27c93f";
-  }
-}
-updateStatus();
-setInterval(updateStatus,10000);
-
-// Ripple click effect
-document.querySelectorAll(".btn-primary, .btn-dark, .icon-box")
-.forEach(btn=>{
-  btn.addEventListener("click",function(e){
-    const circle=document.createElement("span");
-    circle.style.position="absolute";
-    circle.style.width="100px";
-    circle.style.height="100px";
-    circle.style.background="rgba(255,255,255,.15)";
-    circle.style.borderRadius="50%";
-    circle.style.transform="scale(0)";
-    circle.style.animation="ripple .6s linear";
-    circle.style.left=e.offsetX-50+"px";
-    circle.style.top=e.offsetY-50+"px";
-    this.appendChild(circle);
-    setTimeout(()=>circle.remove(),600);
-  });
-});
-
-
-// ✅ TAMBAHAN ANIMASI TEXT (tanpa import, pakai const)
-document.addEventListener("DOMContentLoaded", () => {
-
-  const textWrapper = document.querySelector("#animation h2");
-  const text = textWrapper.textContent;
-  textWrapper.innerHTML = text.split("")
-    .map(char => `<span class="char inline-block">${char}</span>`)
-    .join("");
-
-  const chars = document.querySelectorAll("#animation .char");
-
-  anime({
-    targets: chars,
-    translateY: [
-      { value: '-2.75rem', duration: 600, easing: 'easeOutExpo' },
-      { value: 0, duration: 800, easing: 'easeOutBounce', delay: 100 }
-    ],
-    rotate: {
-      value: '-1turn',
-      delay: 0
-    },
-    delay: anime.stagger(50),
-    easing: 'easeInOutCirc',
-    loop: true,
-    loopDelay: 1000
-  });
-
-});
-</script>
-
+            // Ripple click effect
+            document.querySelectorAll(".btn-cyber").forEach(btn => {
+                btn.addEventListener("click", function(e) {
+                    let x = e.clientX - e.target.offsetLeft;
+                    let y = e.clientY - e.target.offsetTop;
+                    let ripple = document.createElement("span");
+                    ripple.style.position = "absolute";
+                    ripple.style.left = x + "px";
+                    ripple.style.top = y + "px";
+                    ripple.style.width = "0";
+                    ripple.style.height = "0";
+                    ripple.style.background = "rgba(255,255,255,0.3)";
+                    ripple.style.borderRadius = "50%";
+                    ripple.style.transform = "translate(-50%, -50%)";
+                    ripple.style.transition = "width 0.5s, height 0.5s, opacity 0.5s";
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.style.width = "300px";
+                        ripple.style.height = "300px";
+                        ripple.style.opacity = "0";
+                    }, 0);
+                    
+                    setTimeout(() => ripple.remove(), 500);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
