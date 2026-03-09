@@ -905,84 +905,6 @@ function toggleTheme() {
     }
 }
 
-
-// 1. Definisikan Data Mentah (Cukup ini saja yang di-edit manual)
-
-// 2. Buat apiData secara flat (Hanya untuk keperluan logic internal/search)
-const apiData = originalCategories.flatMap(cat => 
-    cat.items.map(item => ({
-        ...item,
-        category: cat.name,
-        // Otomatis ambil icon dari list categoryIcons, kalau gak ada pake 'folder'
-        icon: categoryIcons[cat.name] || 'folder' 
-    }))
-);
-
-// 3. Gunakan SATU fungsi render utama saja (Pake fungsi yang kamu kirim tadi)
-function renderApi() {
-    const apiList = document.getElementById('apiList');
-    const totalEndpoints = document.getElementById('totalEndpoints');
-    const totalCategories = document.getElementById('totalCategories');
-    const categoryTabs = document.getElementById('categoryTabs');
-
-    // Update Stats (Ambil dari data flat)
-    if (totalEndpoints) totalEndpoints.innerText = apiData.length;
-    if (totalCategories) totalCategories.innerText = originalCategories.length;
-
-    // OTOMATISASI TABS: (Sisipkan logic dari kode sebelumnya ke sini)
-    if (categoryTabs) {
-        let tabsHtml = `<button class="tab-btn active" onclick="filterByCategory('all')"><i class="fas fa-cubes"></i> All Endpoints</button>`;
-        originalCategories.forEach(cat => {
-            tabsHtml += `
-                <button class="tab-btn" onclick="filterByCategory('${cat.name}')">
-                    <i class="material-icons text-[14px]">${cat.icon || 'folder'}</i> ${cat.name}
-                </button>`;
-        });
-        categoryTabs.innerHTML = tabsHtml;
-    }
-
-    // Render List API (Pake logic reduce kamu tadi)
-    const groupedData = apiData.reduce((acc, curr) => {
-        if (!acc[curr.category]) acc[curr.category] = [];
-        acc[curr.category].push(curr);
-        return acc;
-    }, {});
-
-    apiList.innerHTML = '';
-    Object.keys(groupedData).forEach((cat, index) => {
-        const section = document.createElement('div');
-        section.className = 'panel';
-        section.innerHTML = `
-            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition" onclick="toggleCategory(${index})">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-folder text-purple-500"></i>
-                    <h3 class="font-bold uppercase tracking-wider text-sm">${cat}</h3>
-                    <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full">${groupedData[cat].length}</span>
-                </div>
-                <span id="category-icon-${index}" class="material-icons text-gray-500">expand_more</span>
-            </div>
-            <div id="category-${index}" class="hidden border-t border-white/5 p-2 flex flex-col gap-1">
-                ${groupedData[cat].map(api => `
-                    <div class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 group">
-                        <div class="flex items-center gap-3">
-                            <span class="px-2 py-1 rounded text-[10px] font-bold ${api.method === 'GET' ? 'method-get' : 'method-post'}">${api.method}</span>
-                            <span class="text-sm font-mono text-gray-300 group-hover:text-white">${api.name}</span>
-                        </div>
-                        <a href="${api.path}" target="_blank" class="btn-gradient px-4 py-1 rounded-md text-xs font-semibold">Execute</a>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-        apiList.appendChild(section);
-    });
-}
-
-// 4. Inisialisasi Final
-window.onload = () => {
-    renderApi(); // Panggil fungsi gabungan di atas
-    if (typeof setupEventListeners === 'function') setupEventListeners();
-};
-
 function updateThemeUI() {
     const html = document.documentElement;
     const icon = document.getElementById('themeIcon');
@@ -996,7 +918,6 @@ function updateThemeUI() {
 window.toggleCategory = toggleCategory;
 window.toggleEndpoint = toggleEndpoint;
 window.executeRequest = executeRequest;
-window.apiData = apiData;
 window.clearResponse = clearResponse;
 window.copyUrl = copyUrl;
 window.copyResponse = copyResponse;
