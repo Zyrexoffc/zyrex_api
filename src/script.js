@@ -351,6 +351,236 @@ function renderAPIData(categories) {
 
                     </div>
                 </div>
+function renderAPIData(categories) {
+    console.log('Rendering API data:', categories.length, 'categories');
+    
+    const apiList = document.getElementById('apiList');
+    if (!apiList) {
+        console.error('apiList element not found!');
+        return;
+    }
+    
+    apiList.innerHTML = '';
+    
+    if (!categories || categories.length === 0) {
+        apiList.innerHTML = '<div class="text-center py-10"><div class="panel p-7" style="color: var(--muted);">No API data available</div></div>';
+        return;
+    }
+    
+    let html = '';
+    
+    categories.forEach((category, catIndex) => {
+        if (!category || !category.items) return;
+        
+        const icon = categoryIcons[category.name] || 'folder';
+        const itemCount = category.items.length || 0;
+        
+        html += `
+        <div class="category-group" data-category="${(category.name || '').toLowerCase()}">
+            <div class="panel overflow-hidden">
+                <button onclick="toggleCategory(${catIndex})" class="w-full px-4 sm:px-5 py-4 text-left flex items-center justify-between transition-colors duration-150" style="background: rgba(255,255,255,.02);">
+                    <h2 class="flex items-center min-w-0">
+                        <span class="material-icons text-lg mr-3" style="color: var(--muted);">${icon}</span>
+                        <span class="truncate max-w-xs text-sm sm:text-base font-semibold" style="color: var(--text);">${category.name || 'Unnamed Category'}</span>
+                        <span class="ml-2 text-xs" style="color: var(--muted2);">(${itemCount})</span>
+                    </h2>
+                    <div class="px-3 py-1 rounded-md text-[10px] font-bold" style="background: var(--stroke); color: var(--muted); border: 1px solid rgba(255,255,255,0.1);">
+                        OPEN
+                    </div>
+                </button>
+                
+                <div id="category-${catIndex}">`;
+        
+        category.items.forEach((item, endpointIndex) => {
+            if (!item) return;
+
+            const method = item.method || 'GET';
+            const pathParts = (item.path || '').split('?');
+            const path = pathParts[0] || '';
+            const itemName = item.name || 'Unnamed Endpoint';
+            const itemDesc = item.desc || 'No description';
+
+            const status = (item.status || 'ready').toLowerCase();
+            const statusClass =
+                status.includes('error')
+                    ? 'status-error'
+                    : status.includes('update')
+                    ? 'status-update'
+                    : 'status-ready';
+
+            html += `
+            <div class="border-t api-item transition-all duration-200"
+                 style="border-color: var(--stroke);"
+                 data-method="${method.toLowerCase()}"
+                 data-path="${path}"
+                 data-alias="${itemName}"
+                 data-description="${itemDesc}"
+                 data-category="${(category.name || '').toLowerCase()}">
+
+                <button
+                    onclick="toggleEndpoint(${catIndex}, ${endpointIndex})"
+                    class="w-full px-4 sm:px-5 py-4 text-left flex items-center justify-between gap-3
+                           hover:bg-white/5 active:bg-white/10 transition-colors duration-150">
+
+                    <div class="flex items-center min-w-0 flex-1 gap-3">
+                        <div class="flex flex-col min-w-0 flex-1 gap-0.5">
+                            <span
+                                class="truncate font-mono text-sm leading-snug"
+                                title="${path}"
+                                style="color: var(--text);">
+                                ${path || '/'}
+                            </span>
+
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span
+                                    class="text-[13px] truncate max-w-[90%]"
+                                    title="${itemName}"
+                                    style="color: var(--muted);">
+                                    ${itemName}
+                                </span>
+
+                                <span
+                                    class="px-2 py-0.5 text-[11px] font-medium rounded-full ${statusClass}">
+                                    ${item.status || 'ready'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span
+                        class="method-${method.toLowerCase()} inline-flex items-center justify-center px-4 py-1.5 text-[10px] text-white
+                               rounded-lg font-extrabold tracking-wider flex-shrink-0 shadow-lg"
+                        style="min-width: 55px; text-transform: uppercase;">
+                        ${method}
+                    </span>
+                </button>
+
+                <div
+                    id="endpoint-${catIndex}-${endpointIndex}"
+                    class="hidden border-t expand-transition"
+                    style="border-color: var(--stroke); background: rgba(255,255,255,.025);">
+
+                    <div class="p-4 sm:p-5 space-y-5">
+
+                        <div class="text-[13px] leading-relaxed"
+                             style="color: var(--muted);">
+                            ${itemDesc}
+                        </div>
+
+                        <form id="form-${catIndex}-${endpointIndex}" class="space-y-5">
+
+                            <div id="params-container-${catIndex}-${endpointIndex}"
+                                 class="space-y-3"></div>
+
+                            <div class="space-y-2">
+                                <div class="font-semibold text-[12px] flex items-center gap-1"
+                                     style="color: var(--text);">
+                                    <span class="material-icons text-[14px]"
+                                          style="color: var(--muted);">link</span>
+                                    REQUEST URL
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="flex-1 min-w-0 rounded-2xl px-3 py-2
+                                               overflow-x-auto scrollbar-thin"
+                                        style="background: rgba(0,0,0,.18);
+                                               border: 1px solid var(--stroke);">
+                                        <code
+                                            id="url-display-${catIndex}-${endpointIndex}"
+                                            class="block text-[13px] font-mono whitespace-nowrap"
+                                            style="color: var(--text);">
+                                            ${window.location.origin}${item.path || ''}
+                                        </code>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onclick="copyUrl(${catIndex}, ${endpointIndex})"
+                                        class="copy-btn rounded-2xl px-3 py-2 text-[13px]
+                                               hover:bg-white/10 transition"
+                                        style="border: 1px solid var(--stroke);
+                                               color: var(--text);">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-2 flex-wrap">
+                                <button
+                                    type="button"
+                                    onclick="executeRequest(event, ${catIndex}, ${endpointIndex}, '${method}', '${path}', 'application/json')"
+                                    class="btn-gradient text-white px-6 py-2.5 rounded-2xl
+                                           text-xs font-semibold flex items-center gap-2">
+                                    <i class="fas fa-play"></i>
+                                    Execute
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onclick="clearResponse(${catIndex}, ${endpointIndex})"
+                                    class="px-6 py-2.5 rounded-2xl text-xs font-semibold
+                                           flex items-center gap-2 hover:bg-white/10 transition"
+                                    style="border: 1px solid var(--stroke);
+                                           color: var(--text);">
+                                    <i class="fas fa-times"></i>
+                                    Clear
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="response-${catIndex}-${endpointIndex}" class="hidden space-y-2">
+
+                            <div class="font-semibold text-[12px] flex items-center gap-1"
+                                 style="color: var(--text);">
+                                <span class="material-icons text-[14px]"
+                                      style="color: var(--muted);">code</span>
+                                RESPONSE
+                            </div>
+
+                            <div class="rounded-2xl overflow-hidden"
+                                 style="border: 1px solid var(--stroke);
+                                        background: rgba(0,0,0,.14);">
+
+                                <div class="px-4 py-3 flex items-center justify-between"
+                                     style="background: rgba(255,255,255,.03);
+                                            border-bottom: 1px solid var(--stroke);">
+
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            id="response-status-${catIndex}-${endpointIndex}"
+                                            class="text-[12px] px-2 py-1 rounded-xl">
+                                            200 OK
+                                        </span>
+                                        <span
+                                            id="response-time-${catIndex}-${endpointIndex}"
+                                            class="text-[12px]"
+                                            style="color: var(--muted);">
+                                            0ms
+                                        </span>
+                                    </div>
+
+                                    <button
+                                        onclick="copyResponse(${catIndex}, ${endpointIndex})"
+                                        class="copy-btn text-[13px] px-2 py-1 rounded-xl
+                                               hover:bg-white/10 transition"
+                                        style="color: var(--muted);">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+
+                                <div class="p-0 max-h-96 overflow-auto scrollbar-thin">
+                                    <div
+                                        id="response-content-${catIndex}-${endpointIndex}"
+                                        class="response-media-container p-4">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>`;
         });
 
@@ -372,7 +602,7 @@ function renderAPIData(categories) {
             });
         }
     }, 100);
-}
+                }
 
 function setupEventListeners() {
     const searchInput = document.getElementById('searchInput');
