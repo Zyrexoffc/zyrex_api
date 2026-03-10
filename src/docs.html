@@ -47,15 +47,14 @@
                 linear-gradient(90deg, var(--stroke) 1px, transparent 1px);
             background-size: 40px 40px;
             color: var(--text-main);
+            cursor: pointer; /* Memberi petunjuk bahwa halaman bisa diklik */
         }
 
-        /* FIX: Teks Input Hitam Pekat agar terlihat jelas */
         input, select, textarea {
-            color: #000000 !important; /* Hitam Pekat */
-            background-color: #f9fafb !important; /* Background Terang */
+            color: #000000 !important;
+            background-color: #f9fafb !important;
         }
 
-        /* Kecuali untuk search input di terminal bash (tetap putih agar estetik) */
         #searchInput {
             color: #ffffff !important;
             background-color: transparent !important;
@@ -117,7 +116,6 @@
             font-size: 13px;
         }
 
-        /* ================= API RENDER STYLES (Sync with JS) ================= */
         .panel {
             background: var(--bg-card);
             border: 1px solid var(--stroke);
@@ -181,7 +179,7 @@
         }
 
         .response-json { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee787; white-space: pre-wrap; }
-        
+
         /* Video Container Styling */
         .video-container {
             width: 100%;
@@ -195,7 +193,7 @@
     </style>
 </head>
 
-<body class="min-h-screen font-sans antialiased">
+<body class="min-h-screen font-sans antialiased" onclick="enableAudio()">
 
 <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50">
     <div class="text-center">
@@ -250,7 +248,7 @@
     </div>
 
     <div class="video-container">
-        <video width="100%" height="auto" autoplay muted loop playsinline controls>
+        <video id="myVideo" width="100%" height="auto" autoplay muted loop playsinline>
             <source src="https://files.catbox.moe/f55vw2.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -302,6 +300,15 @@
 <script src="/script.js"></script>
 
 <script>
+    // Fungsi untuk mengaktifkan suara saat klik di mana saja
+    function enableAudio() {
+        const video = document.getElementById('myVideo');
+        if (video) {
+            video.muted = false;
+            video.play();
+        }
+    }
+
     // Sinkronisasi Jam Real-time
     function updateClock() {
         const now = new Date();
@@ -312,7 +319,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Fungsi Filter Kategori
     function filterCategory(catName) {
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b => b.classList.remove('active'));
@@ -323,7 +329,6 @@
         }
     }
 
-    // Sembunyikan Loading Screen
     window.addEventListener('load', () => {
         setTimeout(() => {
             const ls = document.getElementById('loadingScreen');
