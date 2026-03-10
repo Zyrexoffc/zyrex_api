@@ -47,7 +47,8 @@
                 linear-gradient(90deg, var(--stroke) 1px, transparent 1px);
             background-size: 40px 40px;
             color: var(--text-main);
-            cursor: pointer; /* Memberi petunjuk bahwa halaman bisa diklik */
+            /* Penting: cursor pointer agar user tahu halaman ini interaktif */
+            cursor: pointer;
         }
 
         input, select, textarea {
@@ -123,63 +124,6 @@
             margin-bottom: 20px;
         }
 
-        .method-get { background: var(--accent-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-        .method-post { background: var(--accent-green); box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-
-        .status-ready { color: #10b981; background: rgba(16, 185, 129, 0.1); }
-        .status-update { color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
-        .status-error { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-
-        .btn-gradient {
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-            transition: all 0.3s ease;
-        }
-        .btn-gradient:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        /* Custom Scrollbar */
-        .scrollbar-thin::-webkit-scrollbar { width: 5px; height: 5px; }
-        .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-        .scrollbar-thin::-webkit-scrollbar-thumb { background: var(--stroke); border-radius: 10px; }
-
-        /* ================= CATEGORY TABS ================= */
-        .tab-btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #1a1a1a;
-            border: 1px solid var(--stroke);
-            color: #a1a1aa;
-            transition: all 0.2s;
-        }
-        .tab-btn.active {
-            background: var(--accent-purple);
-            border-color: var(--accent-purple);
-            color: white;
-        }
-
-        .contact-customer {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 55px;
-            height: 55px;
-            border-radius: 15px;
-            background: var(--accent-purple);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
-            z-index: 40;
-        }
-
-        .response-json { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7ee787; white-space: pre-wrap; }
-
         /* Video Container Styling */
         .video-container {
             width: 100%;
@@ -189,11 +133,27 @@
             overflow: hidden;
             border: 1px solid var(--stroke);
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+            position: relative;
+        }
+
+        /* Overlay untuk memberi tahu user harus klik (Opsional, bisa dihapus) */
+        #videoOverlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            pointer-events: none;
+            transition: opacity 0.3s;
         }
     </style>
 </head>
 
-<body class="min-h-screen font-sans antialiased" onclick="enableAudio()">
+<body class="min-h-screen font-sans antialiased" onclick="startEverything()">
 
 <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50">
     <div class="text-center">
@@ -248,10 +208,10 @@
     </div>
 
     <div class="video-container">
-        <video id="myVideo" width="100%" height="auto" autoplay muted loop playsinline>
+        <video id="myVideo" width="100%" height="auto" loop playsinline>
             <source src="https://files.catbox.moe/f55vw2.mp4" type="video/mp4">
-            Your browser does not support the video tag.
         </video>
+        <div id="videoOverlay"><i class="fas fa-play mr-2"></i> Click anywhere to play</div>
     </div>
 
     <div id="categoryTabs" class="flex flex-wrap gap-3 mb-8">
@@ -275,8 +235,7 @@
         <div id="noResults" class="hidden text-center py-20">
             <p class="text-sm text-gray-500">No matching endpoint found.</p>
         </div>
-        
-       <div id="apiList" class="flex flex-col gap-2">
+        <div id="apiList" class="flex flex-col gap-2"></div>
     </div>
 
     <div class="flex justify-center gap-8 mt-16">
@@ -300,16 +259,22 @@
 <script src="/script.js"></script>
 
 <script>
-    // Fungsi untuk mengaktifkan suara saat klik di mana saja
-    function enableAudio() {
+    // Fungsi yang akan jalan ketika user klik di MANA SAJA di halaman body
+    function startEverything() {
         const video = document.getElementById('myVideo');
+        const overlay = document.getElementById('videoOverlay');
+
         if (video) {
-            video.muted = false;
-            video.play();
+            video.muted = false; // Aktifkan suara
+            video.play();        // Jalankan video
+            if (overlay) overlay.style.opacity = '0'; // Hilangkan teks bantuan klik
         }
+        
+        // Opsional: Hapus event listener setelah klik pertama supaya tidak trigger terus
+        document.body.removeAttribute("onclick");
     }
 
-    // Sinkronisasi Jam Real-time
+    // Jam Real-time
     function updateClock() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('en-GB');
@@ -323,7 +288,6 @@
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b => b.classList.remove('active'));
         if(event && event.currentTarget) event.currentTarget.classList.add('active');
-        
         if (typeof window.filterEndpoints === 'function') {
             window.filterEndpoints(catName);
         }
@@ -341,4 +305,4 @@
 </script>
 
 </body>
-    </html>
+            </html>
