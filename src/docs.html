@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta name="description" content="Premium API Documentation Interface.">
+    <meta name="description" content="Advanced Cybernetic API Documentation.">
     <meta name="theme-color" content="#0a0a0a">
-    <title>Zyrex Api | Premium Edition</title>
+    <title>Zyrex High-End Api</title>
     <link rel="icon" href="https://file.idnet.my.id/api/preview.php?file=nnjwax6t.jpg" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans','system-ui','sans-serif'],
+                        sans: ['Plus Jakarta Sans','sans-serif'],
                         mono: ['JetBrains Mono', 'monospace']
                     },
                     animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                        'slide-up': 'slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
@@ -32,326 +30,364 @@
     </script>
 
     <style>
-        :root{
-            --bg-main:#050505;
-            --bg-card:rgba(17, 17, 17, 0.8);
-            --stroke:rgba(255, 255, 255, 0.08);
-            --accent-purple:#a855f7;
-            --accent-blue:#3b82f6; 
-            --text-main:#ffffff;
-            --text-muted:#94a3b8;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-
-        @keyframes glow {
-            from { box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
-            to { box-shadow: 0 0 30px rgba(168, 85, 247, 0.5); }
-        }
-
-        @keyframes pulse-border {
-            0% { border-color: rgba(168, 85, 247, 0.2); }
-            50% { border-color: rgba(168, 85, 247, 0.8); }
-            100% { border-color: rgba(168, 85, 247, 0.2); }
+        :root {
+            --bg-dark: #050505;
+            --cyber-purple: #8b5cf6;
+            --cyber-blue: #3b82f6;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.08);
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            overflow-x: hidden;
+            background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                linear-gradient(var(--stroke) 1px, transparent 1px),
-                linear-gradient(90deg, var(--stroke) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-            cursor: pointer;
+                radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+                linear-gradient(rgba(139, 92, 246, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            cursor: crosshair;
         }
 
-        /* --- Custom UI Components --- */
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--stroke);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-card:hover {
-            border-color: var(--accent-purple);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-        }
-
-        .video-container {
-            width: 100%;
-            max-width: 650px;
-            margin: 0 auto 50px auto;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 2px solid var(--stroke);
-            animation: float 6s ease-in-out infinite; /* Animasi melayang */
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            position: relative;
-        }
-
-        .video-container::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
-            pointer-events: none;
-        }
-
-        /* --- Loading Screen Update --- */
+        /* ================= EXTREME LOADING ================= */
         #loadingScreen {
             background: #000;
-            z-index: 9999;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        .progress-bar {
-            width: 200px;
+        .scan-line {
+            width: 100%;
             height: 2px;
-            background: rgba(255,255,255,0.1);
+            background: var(--cyber-purple);
+            position: absolute;
+            top: 0;
+            box-shadow: 0 0 15px var(--cyber-purple);
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        .load-text {
+            font-family: 'JetBrains Mono';
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            animation: blink 0.1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* ================= ANIMATIONS ================= */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(0.5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .floating-video {
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 20px 50px rgba(139, 92, 246, 0.15);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ================= UI COMPONENTS ================= */
+        .cyber-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            transition: all 0.3s ease;
             position: relative;
-            margin-top: 20px;
-            border-radius: 10px;
             overflow: hidden;
         }
-        .progress-fill {
+        .cyber-card:hover {
+            border-color: var(--cyber-purple);
+            background: rgba(139, 92, 246, 0.05);
+            transform: scale(1.02);
+        }
+        .cyber-card::before {
+            content: '';
             position: absolute;
-            top: 0; left: 0; height: 100%;
-            background: var(--accent-purple);
-            width: 0%;
-            transition: width 0.5s ease;
-            box-shadow: 0 0 15px var(--accent-purple);
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+        .cyber-card:hover::before {
+            left: 100%;
         }
 
-        /* --- Custom Scrollbar --- */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
+        .stat-value {
+            background: linear-gradient(to right, #fff, var(--cyber-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
 
-        .reveal { opacity: 0; animation: slideUp 0.8s ease forwards; }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
+        /* ================= TABS ================= */
+        .tab-cyber {
+            position: relative;
+            padding: 10px 25px;
+            background: transparent;
+            color: #64748b;
+            font-weight: 600;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .tab-cyber.active {
+            color: #fff;
+        }
+        .tab-cyber.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 2px;
+            background: var(--cyber-purple);
+            box-shadow: 0 0 10px var(--cyber-purple);
+        }
+
+        /* ================= INPUT ================= */
+        .terminal-search {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--cyber-purple);
+            box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.2);
+        }
+        
+        .contact-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 50;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: var(--cyber-purple);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px var(--cyber-purple);
+            animation: pulse-shadow 2s infinite;
+        }
+        @keyframes pulse-shadow {
+            0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(139, 92, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+        }
+
+        video {
+            mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+        }
+
     </style>
 </head>
 
-<body class="min-h-screen font-sans antialiased" onclick="startVideoAndAudio()">
+<body class="min-h-screen" onclick="startSystem()">
 
-<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center">
-    <div class="text-center">
-        <div class="relative mb-6">
-            <div class="w-20 h-20 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mx-auto"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <i class="fas fa-bolt text-purple-500 animate-pulse"></i>
-            </div>
+<div id="loadingScreen" class="fixed inset-0">
+    <div class="scan-line"></div>
+    <div class="text-center relative">
+        <div class="load-text text-4xl font-black mb-4 text-white">ZYREX_OS</div>
+        <div class="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
+            <div id="loadProgress" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
         </div>
-        <h2 class="text-white font-bold tracking-[0.3em] uppercase text-sm animate-pulse">Initialising System</h2>
-        <div class="progress-bar mx-auto">
-            <div id="pFill" class="progress-fill"></div>
-        </div>
+        <div id="loadPercent" class="mt-2 font-mono text-blue-400">0%</div>
+        <div class="mt-10 text-[10px] text-gray-500 font-mono animate-pulse">BOOTING SYSTEM CORES...</div>
     </div>
 </div>
 
-<main class="max-w-6xl mx-auto px-6 py-12 relative">
-    
-    <header class="mb-16 text-center reveal">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 mb-6">
-            <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-            </span>
-            <span class="text-[10px] text-purple-400 font-bold uppercase tracking-widest">System Online</span>
+<main class="max-w-6xl mx-auto px-6 py-12 relative z-10">
+
+    <header class="mb-16 reveal">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <div class="inline-block px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold tracking-[3px] uppercase mb-4">
+                    Neural Network Active
+                </div>
+                <h1 class="text-5xl md:text-6xl font-black tracking-tighter text-white mb-4">
+                    ZYREX<span class="text-purple-500">.</span>API
+                </h1>
+                <p class="text-gray-400 max-w-md leading-relaxed border-l-2 border-gray-800 pl-4">
+                    High-performance REST architecture designed for the next generation of digital applications.
+                </p>
+            </div>
+            <div class="text-right font-mono">
+                <div id="realTime" class="text-2xl text-white font-bold">00:00:00</div>
+                <div class="text-[10px] text-purple-500 uppercase tracking-widest">Global Protocol Time</div>
+            </div>
         </div>
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">
-            Zyrex Rest Api
-        </h1>
-        <p class="text-gray-400 max-w-xl mx-auto text-lg font-medium">
-            Next-generation documentation for advanced developers. Built for speed, precision, and elegance.
-        </p>
     </header>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16 reveal delay-1">
-        <div class="glass-card p-6 rounded-2xl group">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500 border border-green-500/20 group-hover:scale-110 transition">
-                    <i class="fas fa-signal"></i>
-                </div>
-                <div>
-                    <div class="text-2xl font-bold">100%</div>
-                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">System Uptime</div>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-16 reveal" style="transition-delay: 0.1s;">
+        <div class="cyber-card p-6">
+            <div class="flex justify-between items-start mb-4">
+                <i class="fas fa-microchip text-blue-400"></i>
+                <span class="text-[9px] text-green-500 bg-green-500/10 px-2 py-0.5 rounded">ONLINE</span>
             </div>
+            <div class="text-2xl stat-value">STABLE</div>
+            <div class="text-[10px] text-gray-500 uppercase mt-1">System Engine</div>
         </div>
-        <div class="glass-card p-6 rounded-2xl group">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 border border-blue-500/20 group-hover:scale-110 transition">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <div>
-                    <div class="text-2xl font-bold">Secure</div>
-                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">SSL Encrypted</div>
-                </div>
+        <div class="cyber-card p-6">
+            <div class="flex justify-between items-start mb-4">
+                <i class="fas fa-shield-halved text-purple-400"></i>
             </div>
+            <div class="text-2xl stat-value">SECURE</div>
+            <div class="text-[10px] text-gray-500 uppercase mt-1">SSL-256 Bit</div>
         </div>
-        <div class="glass-card p-6 rounded-2xl group">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 border border-purple-500/20 group-hover:scale-110 transition">
-                    <i class="fas fa-fire"></i>
-                </div>
-                <div>
-                    <div class="text-2xl font-bold">Fast</div>
-                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Low Latency</div>
-                </div>
+        <div class="cyber-card p-6">
+            <div class="flex justify-between items-start mb-4">
+                <i class="fas fa-bolt text-yellow-400"></i>
             </div>
+            <div class="text-2xl stat-value">240ms</div>
+            <div class="text-[10px] text-gray-500 uppercase mt-1">Avg Latency</div>
         </div>
-        <div class="glass-card p-6 rounded-2xl group">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 border border-orange-500/20 group-hover:scale-110 transition">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div>
-                    <div id="serverTime" class="text-2xl font-bold">00:00</div>
-                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Server Time</div>
+        <div class="cyber-card p-6">
+            <div class="flex justify-between items-start mb-4">
+                <i class="fas fa-users text-cyan-400"></i>
+            </div>
+            <div class="text-2xl stat-value">9.2k</div>
+            <div class="text-[10px] text-gray-500 uppercase mt-1">Active Peers</div>
+        </div>
+    </div>
+
+    <div class="mb-20 reveal" style="transition-delay: 0.2s;">
+        <div class="video-container floating-video relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition"></div>
+            <div class="relative bg-black rounded-xl overflow-hidden border border-white/10">
+                <video id="myVideo" class="w-full aspect-video object-cover opacity-80" loop playsinline>
+                    <source src="https://files.catbox.moe/f55vw2.mp4" type="video/mp4">
+                </video>
+                <div id="videoPrompt" class="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none transition-opacity duration-500">
+                    <div class="text-center">
+                        <div class="mb-4 flex justify-center">
+                            <span class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center animate-bounce">
+                                <i class="fas fa-mouse text-white"></i>
+                            </span>
+                        </div>
+                        <p class="font-mono text-sm tracking-[5px] text-white">INITIALIZE INTERFACE</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="video-container reveal delay-2">
-        <video id="myVideo" width="100%" height="auto" loop playsinline class="scale-105 hover:scale-100 transition duration-700">
-            <source src="https://files.catbox.moe/f55vw2.mp4" type="video/mp4">
-        </video>
-        <div id="vOverlay" class="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-500">
-            <div class="text-center">
-                <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mb-4 border border-white/20 animate-bounce">
-                    <i class="fas fa-play text-white"></i>
-                </div>
-                <p class="text-white font-bold text-xs uppercase tracking-[5px]">Click to Access</p>
+    <div class="mb-10 reveal" style="transition-delay: 0.3s;">
+        <div class="flex flex-col md:flex-row gap-6 items-center justify-between bg-white/5 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
+            <div class="flex gap-2" id="categoryTabs">
+                <button class="tab-cyber active" onclick="filterCategory('all')">ALL_DATA</button>
+            </div>
+            <div class="terminal-search flex items-center px-4 py-2 rounded-lg w-full md:w-96">
+                <span class="text-purple-500 mr-2 font-mono">>>></span>
+                <input type="text" id="searchInput" placeholder="Search Kernel..." class="bg-transparent border-none outline-none text-white font-mono text-sm w-full">
             </div>
         </div>
     </div>
 
-    <div class="max-w-3xl mx-auto mb-16 reveal delay-3">
-        <div id="categoryTabs" class="flex flex-wrap justify-center gap-3 mb-8">
-            <button class="tab-btn active px-6 py-2.5 rounded-full glass-card text-sm font-bold flex items-center gap-2" onclick="filterCategory('all')">
-                <i class="fas fa-layer-group"></i> All Core
-            </button>
+    <div id="apiList" class="grid grid-cols-1 gap-4 reveal" style="transition-delay: 0.4s;">
         </div>
 
-        <div class="glass-card rounded-2xl overflow-hidden border-purple-500/20">
-            <div class="bg-white/5 px-4 py-2 border-b border-white/5 flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
-                <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
-                <span class="text-[10px] text-gray-500 font-mono ml-2">zyrex_terminal v1.0</span>
-            </div>
-            <div class="p-4 flex items-center">
-                <i class="fas fa-terminal text-purple-500 mr-3"></i>
-                <input type="text" id="searchInput" placeholder="Type command or endpoint name..." class="bg-transparent border-none outline-none text-white w-full font-mono text-sm placeholder:text-gray-600">
-            </div>
+    <footer class="mt-32 pt-10 border-t border-white/5 flex flex-col items-center reveal">
+        <div class="flex gap-8 mb-8">
+            <a id="telegramLink" href="#" class="text-gray-500 hover:text-purple-500 transition-all transform hover:scale-125"><i class="fab fa-telegram-plane text-2xl"></i></a>
+            <a id="whatsappLink" href="#" class="text-gray-500 hover:text-green-500 transition-all transform hover:scale-125"><i class="fab fa-whatsapp text-2xl"></i></a>
+            <a id="youtubeLink" href="#" class="text-gray-500 hover:text-red-500 transition-all transform hover:scale-125"><i class="fab fa-youtube text-2xl"></i></a>
         </div>
-    </div>
-
-    <div id="content" class="reveal delay-3">
-        <div id="noResults" class="hidden text-center py-20">
-            <i class="fas fa-search text-4xl text-gray-800 mb-4"></i>
-            <p class="text-gray-500">Command not found. Try again.</p>
-        </div>
-        <div id="apiList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            </div>
-    </div>
-
-    <footer class="mt-24 text-center pb-12 border-t border-white/5 pt-12">
-        <div class="flex justify-center gap-6 mb-8">
-            <a href="#" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:text-purple-400"><i class="fab fa-telegram-plane"></i></a>
-            <a href="#" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:text-green-400"><i class="fab fa-whatsapp"></i></a>
-            <a href="#" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:text-red-400"><i class="fab fa-youtube"></i></a>
-        </div>
-        <p class="text-[11px] text-gray-600 uppercase tracking-[10px] font-bold">
-            &copy; 2026 ZYREX-API • EST 1998
+        <p class="font-mono text-[9px] text-gray-600 tracking-[10px] uppercase">
+            Protocol Established © 2026 ZYREX_UNIT
         </p>
     </footer>
 
 </main>
 
-<a id="contactCustomerBtn" href="#" target="_blank" class="fixed bottom-8 right-8 w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:scale-110 transition active:scale-95 z-40">
-    <i class="fas fa-comment-dots text-xl"></i>
+<a id="contactCustomerBtn" href="#" target="_blank" class="contact-btn">
+    <i class="fas fa-terminal text-white text-xl"></i>
 </a>
 
 <script src="/script.js"></script>
 
 <script>
-    // System Start & Unmute
-    function startVideoAndAudio() {
+    // FUNGSI AKTIVASI SISTEM (CLICK ANYWHERE)
+    function startSystem() {
         const video = document.getElementById('myVideo');
-        const overlay = document.getElementById('vOverlay');
+        const prompt = document.getElementById('videoPrompt');
+        
         if (video) {
             video.muted = false;
-            video.play();
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.remove(), 500);
+            video.play().catch(e => console.log("Audio requires interaction"));
+            if(prompt) prompt.style.opacity = '0';
         }
+        
+        // Animasi teks judul saat diklik
+        const title = document.querySelector('h1');
+        title.style.textShadow = '0 0 20px rgba(139, 92, 246, 0.5)';
+        
         document.body.removeAttribute("onclick");
     }
 
-    // Real-time Clock logic
+    // UPDATE PROGRESS BAR LOADING
+    function handleLoading() {
+        let progress = 0;
+        const bar = document.getElementById('loadProgress');
+        const text = document.getElementById('loadPercent');
+        
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 15) + 5;
+            if(progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(revealSite, 500);
+            }
+            bar.style.width = progress + '%';
+            text.innerText = progress + '%';
+        }, 150);
+    }
+
+    function revealSite() {
+        const ls = document.getElementById('loadingScreen');
+        ls.style.transition = "all 1s cubic-bezier(0.8, 0, 0.2, 1)";
+        ls.style.transform = "translateY(-100%)";
+        ls.style.opacity = "0";
+        
+        setTimeout(() => {
+            ls.remove();
+            // Trigger Reveal Animations
+            document.querySelectorAll('.reveal').forEach((el, i) => {
+                setTimeout(() => el.classList.add('active'), i * 150);
+            });
+        }, 1000);
+    }
+
+    // CLOCK
     function updateClock() {
         const now = new Date();
-        const clockEl = document.getElementById('serverTime');
-        if(clockEl) clockEl.innerText = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+        document.getElementById('realTime').innerText = now.toLocaleTimeString('en-GB');
     }
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Enhanced Loading Screen Logic
-    window.addEventListener('load', () => {
-        let width = 0;
-        const fill = document.getElementById('pFill');
-        const interval = setInterval(() => {
-            if (width >= 100) {
-                clearInterval(interval);
-                setTimeout(() => {
-                    const ls = document.getElementById('loadingScreen');
-                    ls.style.opacity = '0';
-                    ls.style.pointerEvents = 'none';
-                    setTimeout(() => ls.remove(), 1000);
-                }, 500);
-            } else {
-                width += Math.random() * 30;
-                if(width > 100) width = 100;
-                fill.style.width = width + '%';
-            }
-        }, 150);
-    });
-
-    // Tab Filter UI Logic
+    // FILTER UI
     function filterCategory(catName) {
-        const btns = document.querySelectorAll('.tab-btn');
-        btns.forEach(b => {
-            b.classList.remove('bg-purple-500', 'text-white');
-            b.classList.add('glass-card');
-        });
-        if(event && event.currentTarget) {
-            event.currentTarget.classList.add('bg-purple-500', 'text-white');
-            event.currentTarget.classList.remove('glass-card');
-        }
+        const btns = document.querySelectorAll('.tab-cyber');
+        btns.forEach(b => b.classList.remove('active'));
+        if(event && event.currentTarget) event.currentTarget.classList.add('active');
+        
         if (typeof window.filterEndpoints === 'function') {
             window.filterEndpoints(catName);
         }
     }
+
+    window.addEventListener('load', handleLoading);
 </script>
 
 </body>
-</html>
+    </html>
