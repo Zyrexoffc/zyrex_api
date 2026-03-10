@@ -358,11 +358,66 @@
 
 <script>
     const quotes = [
-        "Kadang lelah itu biasa, tapi menyerah bukan pilihan. Ingatlah alasan kenapa kamu memulai semua ini.",
-        "Setiap baris kode yang kamu tulis hari ini adalah fondasi untuk impianmu di masa depan.",
-        "Dunia ini keras, tapi kamu lebih kuat dari yang kamu bayangkan. Teruslah berkarya.",
-        "Terima kasih telah berkunjung. Semoga harimu menyenangkan dan penuh keberuntungan."
-    ];
+    // --- Coding & Logic Vibe ---
+    "Hidup itu seperti algoritma; jika ada yang salah, periksa inputnya, perbaiki prosesnya, lalu jalankan lagi.",
+    "Error hari ini adalah guru terbaik untuk logic-mu besok. Jangan menyerah pada 'bugs' kehidupan.",
+    "Setiap baris kode adalah doa, setiap function adalah harapan. Bangunlah sistem impianmu sendiri.",
+    "Jangan bandingkan 'Version 1.0'-mu dengan 'Version 5.0' orang lain. Semua butuh proses commit.",
+    "Konsistensi adalah compiler terbaik. Teruslah menulis meski dunia belum melihat hasilnya.",
+    "Kadang hidup butuh 'Ctrl + Z'. Tapi jika tidak bisa, buatlah 'New Branch' dan mulai lembaran baru.",
+    "Di balik UI yang bersih, ada ribuan baris kode yang berantakan. Begitu juga perjuangan manusia.",
+    "Logic mungkin membawamu dari A ke B, tapi kegigihan akan membawamu ke mana saja.",
+    "Jangan cuma jadi 'User' di dunia ini, jadilah 'Creator' yang meninggalkan legacy bermakna.",
+    "Kopi adalah bahan bakar, kode adalah bahasa, dan karya adalah tujuannya.",
+
+    // --- Deep & Meaningful ---
+    "Dunia ini keras, tapi kamu lebih kuat dari yang kamu bayangkan. Teruslah berkarya.",
+    "Kadang lelah itu biasa, tapi menyerah bukan pilihan. Ingatlah alasan kenapa kamu memulai semua ini.",
+    "Setiap langkah kecil yang kamu ambil hari ini adalah fondasi untuk impianmu di masa depan.",
+    "Masa depan tidak datang begitu saja, ia dibangun lewat baris demi baris kerja keras.",
+    "Jangan biarkan 'Stack Overflow' dalam pikiranmu menghentikan kreativitasmu hari ini.",
+    "Terima kasih telah berkunjung. Semoga hari ini 'Success Response 200' menyertai setiap langkahmu.",
+    "Kegagalan hanyalah 'Beta Version' dari keberhasilan yang sedang kamu kerjakan.",
+    "Tetaplah rendah hati seperti 'Source Code' yang open source, bermanfaat bagi banyak orang.",
+    "Fokuslah pada solusi, bukan pada masalahnya. Debugging adalah seni mencari jalan keluar.",
+    "Waktu adalah resource yang paling mahal. Gunakan dengan bijak, optimalkan setiap detiknya.",
+
+    // --- Daily Motivation ---
+    "Bangun, ngopi, ngoding, ulangi. Dedikasi adalah kunci dari setiap kesuksesan.",
+    "Tidak ada sistem yang sempurna, yang ada hanyalah sistem yang terus diperbaiki.",
+    "Jadilah versi terbaik dari dirimu sendiri, tanpa perlu melakukan 'Copy-Paste' hidup orang lain.",
+    "Hargai setiap proses 'Deployment' dalam hidupmu, meskipun itu penuh dengan tantangan.",
+    "Kesuksesan tidak butuh dokumentasi yang panjang, ia hanya butuh eksekusi yang nyata.",
+    "Pikiranmu adalah sistem operasi paling canggih. Pastikan tetap ter-update dengan hal positif.",
+    "Jangan takut mencoba teknologi baru, jangan takut melangkah ke zona yang belum terjamah.",
+    "Setiap masalah pasti punya solusi, jika belum ketemu, mungkin kamu butuh istirahat sejenak.",
+    "Kreativitas dimulai saat kamu berani keluar dari 'Standard Library' yang biasa.",
+    "Jadilah cahaya di tengah kegelapan, seperti tema 'Dark Mode' yang nyaman dipandang.",
+
+    // --- Short & Punchy ---
+    "Code is poetry, written with logic.",
+    "Eat. Sleep. Code. Improve.",
+    "Stay Hungry, Stay Foolish, Stay Coding.",
+    "Think twice, code once. Live fully.",
+    "Your potential is unlimited, like a cloud server.",
+    "Root of success is persistence.",
+    "Commit to your dreams, every single day.",
+    "Life is a sandbox. Play, learn, and grow.",
+    "Break the loop of negativity.",
+    "Execute your ideas now, don't wait for the 'Perfect' version.",
+
+    // --- Inspirational ---
+    "Satu baris kode bisa mengubah dunia, bayangkan apa yang bisa dilakukan oleh seluruh karyamu.",
+    "Jangan biarkan kegelapan malam menghentikan terang ide-idemu.",
+    "Bekerjalah dalam diam, biarkan sistemmu yang berbicara saat rilis nanti.",
+    "Kesempurnaan adalah ilusi, progres adalah segalanya.",
+    "Belajar adalah proses 'Pull Request' ilmu baru ke dalam otak kita.",
+    "Jangan pernah berhenti belajar, karena teknologi dan hidup tak pernah berhenti mengajar.",
+    "Terkadang solusi terbaik datang saat kita sedang tidak memikirkannya.",
+    "Jadilah debugger bagi masalah orang lain, berikan solusi dan manfaat.",
+    "Masa depanmu sedang di-compile sekarang. Pastikan tidak ada error di dalamnya.",
+    "Semangat hari ini! Semoga harimu menyenangkan dan penuh keberuntungan."
+];
 
     function typeEffect(element, text, speed = 50) {
         let i = 0;
