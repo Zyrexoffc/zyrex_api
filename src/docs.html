@@ -63,7 +63,7 @@
         @keyframes spinOuter{to{transform:rotate(360deg)}}
         @keyframes spinInner{to{transform:rotate(360deg)}}
 
-        /* ================= STATS CARDS (NEW UPGRADED DESIGN) ================= */
+        /* ================= STATS CARDS ================= */
         .stat-box {
             background: linear-gradient(145deg, rgba(20,20,20,0.9), rgba(10,10,10,1));
             border: 1px solid var(--stroke);
@@ -81,16 +81,6 @@
             transform: translateY(-4px);
             box-shadow: 0 10px 20px -10px rgba(139, 92, 246, 0.5);
         }
-        .stat-box::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
-            transform: translateX(-100%);
-            transition: 0.6s;
-        }
-        .stat-box:hover::before { transform: translateX(100%); }
-
         .stat-icon-wrapper {
             width: 36px; height: 36px;
             border-radius: 10px;
@@ -99,8 +89,7 @@
             font-size: 16px;
         }
 
-        /* ================= BADGE COLORS (GET & READY) ================= */
-        /* Gunakan class ini di script.js saat merender list API */
+        /* ================= BADGE COLORS ================= */
         .method-get { 
             background: rgba(59, 130, 246, 0.15); 
             color: #3b82f6; 
@@ -116,7 +105,64 @@
             font-weight: 700;
         }
 
-        /* ================= EXTREME TERMINAL UPDATE ================= */
+        /* ================= VIDEO & OVERLAY ================= */
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--stroke);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+            animation: floatVideo 4s ease-in-out infinite;
+        }
+        @keyframes floatVideo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+        .video-overlay.hidden-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .click-icon {
+            font-size: 40px;
+            color: white;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.8));
+            animation: pulseClick 1.5s infinite;
+        }
+        @keyframes pulseClick {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .click-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: rgba(0,0,0,0.6);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        /* ================= TERMINAL ================= */
         .terminal-window {
             background: #0d0d0d;
             border: 1px solid var(--accent-purple);
@@ -133,28 +179,15 @@
             border-bottom: 1px solid var(--stroke);
         }
         .dot { width: 12px; height: 12px; border-radius: 50%; }
-        
-        .terminal-content {
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
+        .terminal-content { padding: 20px; font-family: 'JetBrains Mono', monospace; }
         .quote-container {
             background: rgba(139, 92, 246, 0.05);
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
             border-left: 3px solid var(--accent-purple);
-            position: relative;
         }
-        
-        #typingQuote {
-            color: #d4d4d8;
-            font-size: 13px;
-            line-height: 1.6;
-            display: inline-block;
-        }
-
+        #typingQuote { color: #d4d4d8; font-size: 13px; line-height: 1.6; }
         .search-terminal-wrapper {
             background: rgba(0,0,0,0.4);
             border: 1px solid var(--stroke);
@@ -162,13 +195,7 @@
             padding: 12px 15px;
             display: flex;
             align-items: center;
-            transition: all 0.3s ease;
         }
-        .search-terminal-wrapper:focus-within {
-            border-color: var(--accent-purple);
-            box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.1);
-        }
-
         #searchInput {
             color: #ffffff !important;
             background-color: transparent !important;
@@ -178,29 +205,6 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 14px;
             padding-left: 10px;
-        }
-
-        /* ================= VIDEO ANIMATION ================= */
-        .video-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto 40px auto;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--stroke);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
-            animation: floatVideo 4s ease-in-out infinite;
-        }
-        @keyframes floatVideo {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .panel {
-            background: var(--bg-card);
-            border: 1px solid var(--stroke);
-            border-radius: 12px;
-            margin-bottom: 20px;
         }
 
         .tab-btn {
@@ -263,36 +267,28 @@
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <div class="stat-box">
-            <div class="stat-icon-wrapper text-green-400 bg-green-400/10">
-                <i class="fas fa-heartbeat"></i>
-            </div>
+            <div class="stat-icon-wrapper text-green-400 bg-green-400/10"><i class="fas fa-heartbeat"></i></div>
             <div>
                 <div class="text-xs uppercase tracking-widest text-gray-500 font-bold mb-1">Status</div>
                 <div class="text-xl font-black text-green-400">HEALTHY</div>
             </div>
         </div>
         <div class="stat-box">
-            <div class="stat-icon-wrapper text-yellow-400 bg-yellow-400/10">
-                <i class="fas fa-bolt"></i>
-            </div>
+            <div class="stat-icon-wrapper text-yellow-400 bg-yellow-400/10"><i class="fas fa-bolt"></i></div>
             <div>
                 <div class="text-xs uppercase tracking-widest text-gray-500 font-bold mb-1">Rate Limit</div>
                 <div class="text-xl font-black text-white">UNLIMITED</div>
             </div>
         </div>
         <div class="stat-box">
-            <div class="stat-icon-wrapper text-purple-400 bg-purple-400/10">
-                <i class="fas fa-check-circle"></i>
-            </div>
+            <div class="stat-icon-wrapper text-purple-400 bg-purple-400/10"><i class="fas fa-check-circle"></i></div>
             <div>
                 <div class="text-xs uppercase tracking-widest text-gray-500 font-bold mb-1">Deployment</div>
                 <div class="text-xl font-black text-purple-400">100% READY</div>
             </div>
         </div>
         <div class="stat-box">
-            <div class="stat-icon-wrapper text-cyan-400 bg-cyan-400/10">
-                <i class="fas fa-clock"></i>
-            </div>
+            <div class="stat-icon-wrapper text-cyan-400 bg-cyan-400/10"><i class="fas fa-clock"></i></div>
             <div>
                 <div class="text-xs uppercase tracking-widest text-gray-500 font-bold mb-1">Uptime</div>
                 <div id="serverTime" class="text-xl font-black text-white">00:00:00</div>
@@ -300,7 +296,11 @@
         </div>
     </div>
 
-    <div class="video-container">
+    <div class="video-container" id="vidCont">
+        <div class="video-overlay" id="videoOverlay">
+            <div class="click-icon"><i class="fas fa-hand-pointer"></i></div>
+            <div class="click-text">Click anywhere to play</div>
+        </div>
         <video id="myVideo" width="100%" height="auto" loop playsinline>
             <source src="https://files.catbox.moe/f55vw2.mp4" type="video/mp4">
         </video>
@@ -317,13 +317,11 @@
             <div class="dot bg-[#27c93f]"></div>
             <span class="ml-auto text-[10px] text-gray-500 font-mono uppercase tracking-widest">Zyrex Main Console</span>
         </div>
-        
         <div class="terminal-content">
             <div class="quote-container">
                 <span class="text-purple-500 font-bold mr-2"> [SYSTEM_MSG]:</span>
                 <p id="typingQuote"></p>
             </div>
-
             <div class="search-terminal-wrapper">
                 <span class="text-green-500 font-mono text-sm">root@Zyrex:~$</span>
                 <input type="text" id="searchInput" placeholder="Enter endpoint name or category..." autocomplete="off">
@@ -335,8 +333,7 @@
         <div id="noResults" class="hidden text-center py-20">
             <p class="text-sm text-gray-500">No matching endpoint found.</p>
         </div>
-        
-       <div id="apiList" class="flex flex-col gap-2"></div>
+        <div id="apiList" class="flex flex-col gap-2"></div>
     </div>
 
     <div class="flex justify-center gap-8 mt-16">
@@ -360,7 +357,6 @@
 <script src="/script.js"></script>
 
 <script>
-    // Typing Effect Logic
     const quotes = [
         "Kadang lelah itu biasa, tapi menyerah bukan pilihan. Ingatlah alasan kenapa kamu memulai semua ini.",
         "Setiap baris kode yang kamu tulis hari ini adalah fondasi untuk impianmu di masa depan.",
@@ -381,13 +377,22 @@
         }, speed);
     }
 
+    // LOGIC UNTUK PLAY VIDEO & HAPUS OVERLAY
     function startVideoAndAudio() {
         const video = document.getElementById('myVideo');
+        const overlay = document.getElementById('videoOverlay');
+        
         if (video) {
             video.muted = false;
-            video.play();
+            video.play().then(() => {
+                // Berhasil play, hapus overlay
+                if(overlay) overlay.classList.add('hidden-overlay');
+                // Hapus event onclick di body agar tidak trigger terus
+                document.body.removeAttribute("onclick");
+            }).catch(error => {
+                console.log("Video play failed:", error);
+            });
         }
-        document.body.removeAttribute("onclick");
     }
 
     function updateClock() {
@@ -403,7 +408,6 @@
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b => b.classList.remove('active'));
         if(event && event.currentTarget) event.currentTarget.classList.add('active');
-        
         if (typeof window.filterEndpoints === 'function') {
             window.filterEndpoints(catName);
         }
