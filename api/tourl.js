@@ -12,7 +12,7 @@ function generateRandomUrl(originalName) {
   const nameWithoutExt = path.parse(originalName).name || 'image';
   // Generate angka random 1 - 5 digit (1 sampai 99999)
   const randomNumber = Math.floor(Math.random() * 90000) + 10000;
-  return `https://zyrexapi.vercel.app/${nameWithoutExt}/${randomNumber}.jpg`;
+  return `https://zyrexapi.njir.gu/${nameWithoutExt}/${randomNumber}.jpg`;
 }
 
 // =====================
