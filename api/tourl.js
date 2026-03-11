@@ -27,6 +27,7 @@ module.exports = [
     name: "Upload to URL",
     desc: "Upload direct image and get Zyrex URL",
     category: "Tools",
+    methode: "POST",
     path: "/tools/tourl", // Method harus POST untuk upload gambar
 
     async run(req, res) {
