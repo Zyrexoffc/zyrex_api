@@ -184,7 +184,7 @@
         <div class="mesh-gradient"></div>
     </div>
 
-    <main class="w-full max-w-3xl px-4 py-10 relative">
+    <main class="w-full max-w-4xl px-4 py-10 relative">
         <div class="premium-card p-6 md:p-10">
             <div class="scan-anim"></div>
 
@@ -194,7 +194,7 @@
                         <div class="w-2 h-2 rounded-full bg-cyber-accent animate-pulse"></div>
                         <h1 class="font-space text-2xl font-bold tracking-tighter">DEVICE<span class="text-cyber-accent">.</span>INFO</h1>
                     </div>
-                    <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">Information Device Indetification</p>
+                    <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">Deep System Audit & Trace v2.5</p>
                 </div>
                 <div class="flex gap-4">
                     <div class="text-right">
@@ -222,7 +222,7 @@
                             <div class="mockup-content">
                                 <i id="brand-logo" class="fas fa-mobile-alt text-3xl mb-2 opacity-50"></i>
                                 <p id="mockup-brand-name" class="mockup-brand">ZYREX</p>
-                                <p class="text-[6px] text-slate-500 mt-2 font-mono uppercase">System Audit v2.0</p>
+                                <p class="text-[6px] text-slate-500 mt-2 font-mono uppercase">Tracking Active</p>
                             </div>
                             <div class="w-10 h-1 bg-white/20 mx-auto rounded-full mb-1"></div>
                         </div>
@@ -236,42 +236,42 @@
                             <i class="fas fa-globe"></i> NETWORK_LAYER
                         </h3>
                         <div class="data-row">
-                            <p class="label-text">Public IP</p>
+                            <p class="label-text">Public IP Address</p>
                             <p id="ip-addr" class="value-text">SCANNING...</p>
                         </div>
                         <div class="data-row">
-                            <p class="label-text">Provider / ISP</p>
+                            <p class="label-text">ISP / Provider</p>
                             <p id="isp" class="value-text">---</p>
                         </div>
                         <div class="data-row">
-                            <p class="label-text">Connection / Speed</p>
-                            <p id="net-speed" class="value-text">DETECTING...</p>
+                            <p class="label-text">Timezone</p>
+                            <p id="timezone" class="value-text">---</p>
                         </div>
                         <div class="data-row">
-                            <p class="label-text">Geographic</p>
-                            <p id="location" class="value-text">LOCATING...</p>
+                            <p class="label-text">ASN / Routing</p>
+                            <p id="asn" class="value-text">---</p>
                         </div>
                     </div>
 
                     <div class="space-y-2 mt-8 md:mt-0">
                         <h3 class="text-[10px] font-bold text-cyber-secondary mb-4 flex items-center gap-2">
-                            <i class="fas fa-microchip"></i> HARDWARE_LAYER
+                            <i class="fas fa-map-marker-alt"></i> GEOGRAPHIC_DATA
                         </h3>
                         <div class="data-row">
-                            <p class="label-text">System / Version</p>
-                            <p id="brand-info" class="value-text">EXTRACTING...</p>
+                            <p class="label-text">City / District</p>
+                            <p id="city" class="value-text">LOCATING...</p>
                         </div>
                         <div class="data-row">
-                            <p class="label-text">Total System RAM</p>
-                            <p id="ram-val" class="value-text">MEASURING...</p>
+                            <p class="label-text">State / Province</p>
+                            <p id="region" class="value-text">---</p>
                         </div>
                         <div class="data-row">
-                            <p class="label-text">Graphics / GPU</p>
-                            <p id="gpu-val" class="value-text">ANALYZING...</p>
+                            <p class="label-text">Country Code</p>
+                            <p id="country" class="value-text">---</p>
                         </div>
                         <div class="data-row">
-                            <p class="label-text">Refresh Rate</p>
-                            <p id="hz-val" class="value-text">-- Hz</p>
+                            <p class="label-text">Coordinates (LAT, LONG)</p>
+                            <p id="coords" class="value-text">---</p>
                         </div>
                     </div>
                 </div>
@@ -280,29 +280,48 @@
             <div class="mt-10 pt-6 border-t border-white/5 space-y-6">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
-                        <p class="label-text">Battery</p>
-                        <p id="bat-val" class="text-sm font-mono mt-1">--%</p>
+                        <p class="label-text">System OS</p>
+                        <p id="brand-info" class="text-sm font-mono mt-1 text-cyber-accent">---</p>
                     </div>
                     <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
-                        <p class="label-text">Resolution</p>
-                        <p id="screen-val" class="text-sm font-mono mt-1">0x0</p>
+                        <p class="label-text">Connection Speed</p>
+                        <p id="net-speed" class="text-sm font-mono mt-1">---</p>
                     </div>
                     <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
-                        <p class="label-text">CPU Logic</p>
-                        <p id="cpu-threads" class="text-sm font-mono mt-1">-- Cores</p>
+                        <p class="label-text">Display Hz</p>
+                        <p id="hz-val" class="text-sm font-mono mt-1">-- Hz</p>
                     </div>
                     <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
-                        <p class="label-text">OS Kernel</p>
-                        <p id="os-full" class="text-sm font-mono mt-1">--</p>
+                        <p class="label-text">Postal Code</p>
+                        <p id="postal" class="text-sm font-mono mt-1 text-cyber-success">---</p>
                     </div>
                 </div>
 
-                <div>
-                    <p class="label-text mb-2">Device Fingerprint (User Agent)</p>
-                    <div class="bg-black/40 rounded-xl p-4 border border-white/5">
-                        <p id="ua-string" class="text-[10px] font-mono text-slate-500 leading-relaxed break-all uppercase tracking-tighter">
-                            Initializing...
-                        </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="label-text mb-2">Hardware Specification</p>
+                        <div class="bg-black/40 rounded-xl p-4 border border-white/5 space-y-2">
+                            <div class="flex justify-between text-[10px] font-mono">
+                                <span class="text-slate-500">CPU LOGIC:</span>
+                                <span id="cpu-threads" class="text-white">-- Cores</span>
+                            </div>
+                            <div class="flex justify-between text-[10px] font-mono">
+                                <span class="text-slate-500">MEMORY:</span>
+                                <span id="ram-val" class="text-white">-- GB</span>
+                            </div>
+                            <div class="flex justify-between text-[10px] font-mono">
+                                <span class="text-slate-500">GPU:</span>
+                                <span id="gpu-val" class="text-white">---</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="label-text mb-2">Device Fingerprint</p>
+                        <div class="bg-black/40 rounded-xl p-4 border border-white/5 h-[64px] overflow-y-auto">
+                            <p id="ua-string" class="text-[9px] font-mono text-slate-500 leading-tight break-all uppercase">
+                                Initializing...
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -310,7 +329,7 @@
             <div class="mt-10 flex flex-col md:flex-row gap-4">
                 <button onclick="location.reload()" class="flex-1 py-4 bg-cyber-accent/10 hover:bg-cyber-accent/20 border border-cyber-accent/30 rounded-2xl transition-all group">
                     <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-cyber-accent">
-                        <i class="fas fa-sync-alt mr-2 group-hover:rotate-180 transition-transform duration-500"></i> Ulang Scanning Device Info 
+                        <i class="fas fa-sync-alt mr-2 group-hover:rotate-180 transition-transform duration-500"></i> RE-SCAN SYSTEM
                     </span>
                 </button>
                 <button onclick="window.history.back()" class="flex-1 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all">
@@ -322,7 +341,7 @@
         </div>
 
         <p class="text-center mt-8 text-[10px] text-slate-600 font-mono tracking-[0.5em] uppercase">
-            &copy; 2026 ZYREX • REST API 
+            &copy; 2026 ZYREX • ADVANCED TRACE API 
         </p>
     </main>
 
@@ -337,112 +356,76 @@
         updateClock();
 
         async function auditSystem() {
-            // IP & Network
+            // Precise IP & Location Details
             try {
                 const netResp = await fetch('https://ipapi.co/json/');
-                const netData = await netResp.json();
-                typeWriter("#ip-addr", netData.ip);
-                typeWriter("#isp", netData.org);
-                typeWriter("#location", `${netData.city}, ${netData.country_name}`);
+                const d = await netResp.json();
+                
+                typeWriter("#ip-addr", d.ip);
+                typeWriter("#isp", d.org);
+                typeWriter("#timezone", d.timezone.toUpperCase());
+                typeWriter("#asn", d.asn || "UNKNOWN");
+                
+                typeWriter("#city", d.city.toUpperCase());
+                typeWriter("#region", d.region.toUpperCase());
+                typeWriter("#country", `${d.country_name} (${d.country_code})`);
+                typeWriter("#coords", `${d.latitude}, ${d.longitude}`);
+                typeWriter("#postal", d.postal || "N/A");
+
             } catch (e) {
                 document.getElementById('ip-addr').innerText = "ENCRYPTED";
+                document.getElementById('city').innerText = "FAILED TO LOCATE";
             }
 
-            // OS & Version Detection
+            // OS & Hardware
             const ua = navigator.userAgent;
             const frame = document.getElementById('phone-frame');
             const logo = document.getElementById('brand-logo');
-            let systemDisplay = "Unknown Device";
-            let os = "Linux";
+            let systemDisplay = "Unknown";
 
             if (ua.match(/iPhone|iPad|iPod/i)) {
                 let iosVersion = ua.match(/OS (\d+)_(\d+)_?(\d+)?/);
-                let ver = iosVersion ? `iOS ${iosVersion[1]}.${iosVersion[2]}` : "iOS Device";
-                systemDisplay = ver;
-                os = "iOS";
+                systemDisplay = iosVersion ? `iOS ${iosVersion[1]}.${iosVersion[2]}` : "iOS";
                 frame.classList.add('ios');
                 logo.className = "fab fa-apple text-3xl mb-2 opacity-70";
             } else if (ua.match(/Android/i)) {
                 let androidVersion = ua.match(/Android\s([0-9\.]+)/);
-                let ver = androidVersion ? `Android ${androidVersion[1]}` : "Android Device";
-                systemDisplay = ver;
-                os = "Android";
+                systemDisplay = androidVersion ? `Android ${androidVersion[1]}` : "Android";
                 frame.classList.add('android');
                 logo.className = "fab fa-android text-3xl mb-2 opacity-70";
             } else {
-                systemDisplay = "PC / Desktop";
-                os = ua.includes('Windows') ? "Windows" : "MacOS";
+                systemDisplay = ua.includes('Windows') ? "Windows PC" : "MacOS / Desktop";
                 logo.className = "fas fa-laptop text-3xl mb-2 opacity-70";
             }
 
             typeWriter("#brand-info", systemDisplay.toUpperCase());
             document.getElementById('mockup-brand-name').innerText = systemDisplay.toUpperCase();
-            document.getElementById('os-full').innerText = os;
 
-            // RAM
+            // RAM & CPU
             const rawRam = navigator.deviceMemory || 8; 
-            typeWriter("#ram-val", rawRam + " GB RAM");
-
-            // GPU Detection (PowerVR, Adreno, Mali, etc)
-            try {
-                const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                if (gl) {
-                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                    const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-                    // Bersihkan string renderer (biasanya mengandung "ANGLE..." atau "Direct3D...")
-                    let gpuName = renderer.split(',')[0].replace(/ANGLE \(|Direct3D11 vs_5_0 ps_5_0\)/g, '').trim();
-                    typeWriter("#gpu-val", gpuName);
-                } else {
-                    typeWriter("#gpu-val", "SOFTWARE_RENDERER");
-                }
-            } catch (e) {
-                typeWriter("#gpu-val", "UNKNOWN GPU");
-            }
-
-            // Hardware Threads
+            typeWriter("#ram-val", rawRam + " GB");
             document.getElementById('cpu-threads').innerText = (navigator.hardwareConcurrency || "---") + " Cores";
 
-            // Network Info (4G/5G/Wifi & Mbps)
+            // GPU
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl');
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                let gpuName = renderer.split(',')[0].replace(/ANGLE \(|Direct3D11.+?\)/g, '').trim();
+                typeWriter("#gpu-val", gpuName);
+            } catch (e) {
+                typeWriter("#gpu-val", "GENERIC_GPU");
+            }
+
+            // Connection
             const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            const netIcon = document.getElementById('mockup-net-icon');
             if(conn) {
-                let type = conn.effectiveType ? conn.effectiveType.toUpperCase() : "WIFI";
-                if(conn.type === 'wifi') {
-                    netIcon.className = "fas fa-wifi";
-                    type = "WIFI";
-                } else {
-                    netIcon.className = "fas fa-signal";
-                }
-                const speed = conn.downlink ? `${conn.downlink} MBPS` : "--- MBPS";
-                typeWriter("#net-speed", `${type} • ${speed}`);
-            } else {
-                typeWriter("#net-speed", "WIFI • UNSTABLE");
+                const speed = conn.downlink ? `${conn.downlink} MBPS` : "STABLE";
+                typeWriter("#net-speed", `${(conn.effectiveType || 'WIFI').toUpperCase()} • ${speed}`);
             }
 
-            // Battery Logic
-            if ('getBattery' in navigator) {
-                const bat = await navigator.getBattery();
-                const updateBat = () => {
-                    const level = Math.round(bat.level * 100);
-                    const batText = `${level}% ${bat.charging ? '⚡' : ''}`;
-                    document.getElementById('bat-val').innerText = batText;
-                    document.getElementById('mockup-bat-text').innerText = level + "%";
-                    
-                    const batIcon = document.getElementById('mockup-bat-icon');
-                    if(bat.charging) batIcon.className = "fas fa-battery-charging text-cyber-success";
-                    else if(level < 20) batIcon.className = "fas fa-battery-empty text-red-500";
-                    else batIcon.className = "fas fa-battery-three-quarters";
-                };
-                updateBat();
-                bat.onlevelchange = updateBat;
-                bat.onchargingchange = updateBat;
-            }
-
-            // SCREEN & HZ
-            document.getElementById('screen-val').innerText = `${window.screen.width} x ${window.screen.height}`;
-            
-            // Accurate Hz Detection
+            // Hz Detection
             let startTime = null;
             let frameCount = 0;
             function checkHz(timestamp) {
@@ -451,8 +434,7 @@
                 if (timestamp - startTime < 1000) {
                     requestAnimationFrame(checkHz);
                 } else {
-                    const hz = Math.round(frameCount);
-                    typeWriter("#hz-val", hz + " Hz");
+                    typeWriter("#hz-val", Math.round(frameCount) + " Hz");
                 }
             }
             requestAnimationFrame(checkHz);
@@ -462,6 +444,7 @@
 
         function typeWriter(selector, text) {
             const el = document.querySelector(selector);
+            if(!el) return;
             el.innerText = '';
             let i = 0;
             const timer = setInterval(() => {
@@ -471,7 +454,7 @@
                 } else {
                     clearInterval(timer);
                 }
-            }, 30);
+            }, 25);
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -479,11 +462,11 @@
                 targets: '.premium-card',
                 translateY: [40, 0],
                 opacity: [0, 1],
-                duration: 1500,
+                duration: 1200,
                 easing: 'easeOutExpo'
             });
             auditSystem();
         });
     </script>
 </body>
-    </html>
+</html>
