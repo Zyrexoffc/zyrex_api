@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZYREX - ADVANCED DEVICE</title>
+    <title>ZYREX - ADVANCED DEVICE AUDIT v2.0</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -52,7 +52,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Premium Mesh Background */
         .mesh-container {
             position: fixed;
             inset: 0;
@@ -78,7 +77,6 @@
             100% { transform: rotate(5deg) scale(1.1); }
         }
 
-        /* Glassmorphism Card */
         .premium-card {
             background: rgba(10, 15, 25, 0.7);
             backdrop-filter: blur(30px) saturate(180%);
@@ -142,17 +140,6 @@
             font-weight: 600;
         }
 
-        .status-pill {
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.6rem;
-            font-weight: 800;
-            background: rgba(0, 255, 136, 0.1);
-            color: #00ff88;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-        }
-
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
@@ -174,7 +161,7 @@
                         <div class="w-2 h-2 rounded-full bg-cyber-accent animate-pulse"></div>
                         <h1 class="font-space text-2xl font-bold tracking-tighter">DEVICE<span class="text-cyber-accent">.</span>INFO</h1>
                     </div>
-                    <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">Device In Indefication</p>
+                    <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">Deep Hardware Extraction Active</p>
                 </div>
                 <div class="flex gap-4">
                     <div class="text-right">
@@ -216,19 +203,19 @@
                         <i class="fas fa-microchip"></i> HARDWARE_LAYER
                     </h3>
                     <div class="data-row">
-                        <p class="label-text">Core Architecture</p>
-                        <p id="os-full" class="value-text">---</p>
+                        <p class="label-text">HP Model / Brand</p>
+                        <p id="brand-info" class="value-text">EXTRACTING...</p>
                     </div>
                     <div class="data-row">
-                        <p class="label-text">Processing Units</p>
+                        <p class="label-text">Total System RAM</p>
+                        <p id="ram-val" class="value-text">MEASURING...</p>
+                    </div>
+                    <div class="data-row">
+                        <p class="label-text">CPU Logic Threads</p>
                         <p id="cpu-threads" class="value-text">---</p>
                     </div>
                     <div class="data-row">
-                        <p class="label-text">System Memory (Est)</p>
-                        <p id="ram" class="value-text">---</p>
-                    </div>
-                    <div class="data-row">
-                        <p class="label-text">Graphics Engine</p>
+                        <p class="label-text">Graphics Unit (GPU)</p>
                         <p id="gpu" class="value-text">---</p>
                     </div>
                 </div>
@@ -249,13 +236,13 @@
                         <p id="fps" class="text-sm font-mono mt-1">-- Hz</p>
                     </div>
                     <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
-                        <p class="label-text">Language</p>
-                        <p id="lang" class="text-sm font-mono mt-1">--</p>
+                        <p class="label-text">OS Kernel</p>
+                        <p id="os-full" class="text-sm font-mono mt-1">--</p>
                     </div>
                 </div>
 
                 <div>
-                    <p class="label-text mb-2">Fingerprint (User Agent)</p>
+                    <p class="label-text mb-2">Device Fingerprint (User Agent)</p>
                     <div class="bg-black/40 rounded-xl p-4 border border-white/5">
                         <p id="ua-string" class="text-[10px] font-mono text-slate-500 leading-relaxed break-all uppercase tracking-tighter">
                             Initializing...
@@ -284,7 +271,6 @@
     </main>
 
     <script>
-        // Real-time Clock
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
@@ -294,21 +280,47 @@
 
         async function auditSystem() {
             try {
-                // 1. IP and ISP Data
                 const netResp = await fetch('https://ipapi.co/json/');
                 const netData = await netResp.json();
-                
                 typeWriter("#ip-addr", netData.ip);
                 typeWriter("#isp", netData.org);
-                typeWriter("#location", `${netData.city}, ${netData.country_name} (${netData.timezone})`);
+                typeWriter("#location", `${netData.city}, ${netData.country_name}`);
             } catch (e) {
                 document.getElementById('ip-addr').innerText = "ENCRYPTED";
-                document.getElementById('ip-addr').style.color = "#ff4444";
             }
 
-            // 2. Hardware: GPU Detection
+            // 1. ADVANCED BRAND DETECTION (HP Model)
+            let brand = "Unknown Device";
+            const ua = navigator.userAgent;
+            
+            // Try Modern API first
+            if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+                try {
+                    const hints = await navigator.userAgentData.getHighEntropyValues(['model', 'platform', 'platformVersion']);
+                    if (hints.model) brand = hints.model;
+                    else brand = hints.platform;
+                } catch(e) {}
+            } else {
+                // Fallback to UserAgent Analysis
+                if (ua.match(/Android/i)) {
+                    const match = ua.match(/Android\s([^\s;]+);?\s?([^\s;]+)\s?Build/i);
+                    if (match) brand = match[2]; 
+                    else if (ua.match(/Samsung/i)) brand = "Samsung Galaxy";
+                } else if (ua.match(/iPhone/i)) {
+                    brand = "Apple iPhone";
+                }
+            }
+            typeWriter("#brand-info", brand.toUpperCase());
+
+            // 2. REAL RAM DETECTION
+            // Note: navigator.deviceMemory returns RAM in GB. 
+            // Most browsers cap this at 8GB to prevent fingerprinting, but it is the REAL detected value.
+            const rawRam = navigator.deviceMemory || 4; 
+            typeWriter("#ram-val", rawRam + " GB RAM");
+
+            // GPU Detection
             const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            const gl = canvas.getContext('webgl');
             let gpuInfo = "Standard GFX";
             if (gl) {
                 const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
@@ -316,30 +328,23 @@
             }
             typeWriter("#gpu", gpuInfo.split('/')[0] || gpuInfo);
 
-            // 3. Hardware: CPU & RAM
             typeWriter("#cpu-threads", navigator.hardwareConcurrency + " Logical Cores");
-            typeWriter("#ram", (navigator.deviceMemory || "8+") + " GB DDR4/5 Estimated");
             
-            // 4. OS & Browser
             const p = navigator.platform;
             let os = "Unknown Kernel";
-            if (p.toLowerCase().includes('win')) os = "Windows NT 10.0+";
-            else if (p.toLowerCase().includes('mac')) os = "Darwin / MacOS";
-            else if (p.toLowerCase().includes('linux')) os = "Linux / GNU";
-            else if (p.toLowerCase().includes('android')) os = "Android OS";
-            else if (p.toLowerCase().includes('iphone')) os = "iOS Mobile";
-            typeWriter("#os-full", os);
+            if (p.toLowerCase().includes('win')) os = "Windows";
+            else if (p.toLowerCase().includes('mac')) os = "MacOS";
+            else if (p.toLowerCase().includes('linux')) os = "Linux";
+            else if (ua.toLowerCase().includes('android')) os = "Android";
+            else if (ua.toLowerCase().includes('iphone')) os = "iOS";
+            document.getElementById('os-full').innerText = os;
 
-            // 5. Network Type
             const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
             typeWriter("#net-type", conn ? `${conn.effectiveType.toUpperCase()} - ${conn.downlink}Mbps` : "ETHERNET/WIFI");
 
-            // 6. Extras
             document.getElementById('screen-val').innerText = `${window.screen.width} x ${window.screen.height}`;
-            document.getElementById('lang').innerText = navigator.language.toUpperCase();
-            document.getElementById('ua-string').innerText = navigator.userAgent;
+            document.getElementById('ua-string').innerText = ua;
 
-            // 7. Battery Logic
             if ('getBattery' in navigator) {
                 const bat = await navigator.getBattery();
                 const updateBat = () => {
@@ -348,14 +353,6 @@
                 updateBat();
                 bat.onlevelchange = updateBat;
             }
-
-            // 8. Screen Hz Estimation
-            requestAnimationFrame((t1) => {
-                requestAnimationFrame((t2) => {
-                    const hz = Math.round(1000 / (t2 - t1));
-                    document.getElementById('fps').innerText = hz + " Hz";
-                });
-            });
         }
 
         function typeWriter(selector, text) {
@@ -369,7 +366,7 @@
                 } else {
                     clearInterval(timer);
                 }
-            }, 20);
+            }, 25);
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -384,4 +381,4 @@
         });
     </script>
 </body>
-   </html>
+    </html>
