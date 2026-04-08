@@ -102,7 +102,6 @@
             100% { top: 100%; opacity: 0; }
         }
 
-        /* Phone Mockup Styling */
         .device-mockup {
             width: 160px;
             height: 300px;
@@ -245,6 +244,10 @@
                             <p id="isp" class="value-text">---</p>
                         </div>
                         <div class="data-row">
+                            <p class="label-text">Connection / Speed</p>
+                            <p id="net-speed" class="value-text">DETECTING...</p>
+                        </div>
+                        <div class="data-row">
                             <p class="label-text">Geographic Node</p>
                             <p id="location" class="value-text">LOCATING...</p>
                         </div>
@@ -261,6 +264,10 @@
                         <div class="data-row">
                             <p class="label-text">Total System RAM</p>
                             <p id="ram-val" class="value-text">MEASURING...</p>
+                        </div>
+                        <div class="data-row">
+                            <p class="label-text">Graphics / GPU</p>
+                            <p id="gpu-val" class="value-text">ANALYZING...</p>
                         </div>
                         <div class="data-row">
                             <p class="label-text">Refresh Rate</p>
@@ -349,7 +356,6 @@
             let os = "Linux";
 
             if (ua.match(/iPhone|iPad|iPod/i)) {
-                // Ekstrak versi iOS
                 let iosVersion = ua.match(/OS (\d+)_(\d+)_?(\d+)?/);
                 let ver = iosVersion ? `iOS ${iosVersion[1]}.${iosVersion[2]}` : "iOS Device";
                 systemDisplay = ver;
@@ -357,7 +363,6 @@
                 frame.classList.add('ios');
                 logo.className = "fab fa-apple text-3xl mb-2 opacity-70";
             } else if (ua.match(/Android/i)) {
-                // Ekstrak versi Android
                 let androidVersion = ua.match(/Android\s([0-9\.]+)/);
                 let ver = androidVersion ? `Android ${androidVersion[1]}` : "Android Device";
                 systemDisplay = ver;
@@ -378,15 +383,41 @@
             const rawRam = navigator.deviceMemory || 8; 
             typeWriter("#ram-val", rawRam + " GB RAM");
 
+            // GPU Detection (PowerVR, Adreno, Mali, etc)
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                if (gl) {
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                    // Bersihkan string renderer (biasanya mengandung "ANGLE..." atau "Direct3D...")
+                    let gpuName = renderer.split(',')[0].replace(/ANGLE \(|Direct3D11 vs_5_0 ps_5_0\)/g, '').trim();
+                    typeWriter("#gpu-val", gpuName);
+                } else {
+                    typeWriter("#gpu-val", "SOFTWARE_RENDERER");
+                }
+            } catch (e) {
+                typeWriter("#gpu-val", "UNKNOWN GPU");
+            }
+
             // Hardware Threads
             document.getElementById('cpu-threads').innerText = (navigator.hardwareConcurrency || "---") + " Cores";
 
-            // Network Icon Logic
+            // Network Info (4G/5G/Wifi & Mbps)
             const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
             const netIcon = document.getElementById('mockup-net-icon');
             if(conn) {
-                if(conn.type === 'wifi') netIcon.className = "fas fa-wifi";
-                else netIcon.className = "fas fa-signal";
+                let type = conn.effectiveType ? conn.effectiveType.toUpperCase() : "WIFI";
+                if(conn.type === 'wifi') {
+                    netIcon.className = "fas fa-wifi";
+                    type = "WIFI";
+                } else {
+                    netIcon.className = "fas fa-signal";
+                }
+                const speed = conn.downlink ? `${conn.downlink} MBPS` : "--- MBPS";
+                typeWriter("#net-speed", `${type} • ${speed}`);
+            } else {
+                typeWriter("#net-speed", "WIFI • UNSTABLE");
             }
 
             // Battery Logic
