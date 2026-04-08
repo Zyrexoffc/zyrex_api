@@ -173,6 +173,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            transition: filter 0.5s ease;
         }
 
         .verify-checkbox {
@@ -184,6 +185,10 @@
             position: relative;
             z-index: 10001; 
             background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
 
         #puzzle-modal {
@@ -223,7 +228,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s;
+            z-index: 5;
         }
 
         .puzzle-track {
@@ -248,7 +253,6 @@
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
             z-index: 2;
-            transition: border-radius 0.3s, transform 0.3s;
         }
 
         #puzzle-slot {
@@ -259,7 +263,6 @@
             top: 50px;
             border-radius: 8px;
             border: 2px dashed var(--primary);
-            transition: border-radius 0.3s;
         }
 
         #main-content { display: none; }
@@ -280,15 +283,15 @@
             <div class="bg-black/40 border border-white/5 p-4 rounded-xl flex items-center justify-between mb-4">
                 <div class="flex items-center gap-4">
                     <div id="check-btn" class="verify-checkbox">
-                        <i id="check-icon" class="fas fa-check text-white text-sm hidden"></i>
+                        <i id="check-icon" class="fas fa-check text-white text-[10px] opacity-0 scale-50"></i>
                     </div>
-                    <span class="text-sm font-medium">I am a human</span>
+                    <span class="text-sm font-medium">Verify you are human</span>
                 </div>
                 <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" class="w-8 opacity-50 grayscale" alt="re">
             </div>
             
             <div id="verify-status" class="text-[10px] text-slate-500 uppercase tracking-widest">
-                Waiting for interaction...
+                Please click the box to continue
             </div>
         </div>
     </div>
@@ -302,7 +305,7 @@
             <div id="puzzle-slot"></div>
             <div id="puzzle-piece"></div>
         </div>
-        <p class="text-[10px] text-slate-400">Drag the slider to fit the puzzle piece.</p>
+        <p class="text-[10px] text-slate-400">Slide the puzzle piece to verify identity.</p>
         <div class="slider-container">
             <div id="slider-bar">
                 <i class="fas fa-arrow-right text-white text-xs"></i>
@@ -388,7 +391,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // --- VERIFICATION STATE ---
             let successfulPuzzles = 0;
             const requiredPuzzles = 3;
             let targetX = 0;
@@ -402,12 +404,27 @@
             const piece = document.querySelector("#puzzle-piece");
             const slot = document.querySelector("#puzzle-slot");
             const pCountLabel = document.querySelector("#p-count");
+            const verifyStatus = document.querySelector("#verify-status");
 
-            // 1. Click Checkbox
+            // 1. Click Checkbox with Animation
             checkBtn.onclick = () => {
-                checkBtn.style.background = "#6366f1";
-                checkIcon.classList.remove("hidden");
-                document.querySelector("#verify-status").innerText = "Loading Challenges...";
+                // Checkmark animation
+                anime({
+                    targets: checkBtn,
+                    backgroundColor: '#6366f1',
+                    borderColor: '#6366f1',
+                    duration: 400,
+                    easing: 'easeOutQuad'
+                });
+                anime({
+                    targets: checkIcon,
+                    opacity: 1,
+                    scale: 1,
+                    duration: 600,
+                    easing: 'easeOutElastic(1, .8)'
+                });
+
+                verifyStatus.innerText = "Processing security layer...";
                 
                 setTimeout(() => {
                     verifyLayer.style.filter = "blur(10px)";
@@ -416,33 +433,27 @@
                 }, 800);
             };
 
-            // 2. Puzzle Logic with Random Shapes & Themes
             function generatePuzzle() {
-                // Randomize Slot position
                 targetX = Math.floor(Math.random() * 150) + 100; 
                 slot.style.left = targetX + "px";
                 
-                // Reset Piece and Slider
                 piece.style.left = "0px";
                 slider.style.left = "0px";
                 slider.style.background = "#6366f1";
 
-                // RANDOMIZE SHAPES
                 const shapes = [
-                    { radius: "8px", rotate: "0deg", scale: "1" },      // Square
-                    { radius: "50%", rotate: "0deg", scale: "1" },      // Circle
-                    { radius: "12px 2px 12px 2px", rotate: "45deg", scale: "0.8" }, // Diamond-ish
-                    { radius: "20px 0px 20px 0px", rotate: "-15deg", scale: "1" }  // Modern leaf
+                    { radius: "8px", rotate: "0deg", scale: "1" },      
+                    { radius: "50%", rotate: "0deg", scale: "1" },      
+                    { radius: "12px 2px 12px 2px", rotate: "45deg", scale: "0.8" }, 
+                    { radius: "20px 0px 20px 0px", rotate: "-15deg", scale: "1" }  
                 ];
                 const selectedShape = shapes[Math.floor(Math.random() * shapes.length)];
                 
-                // Apply shape to piece and slot
                 piece.style.borderRadius = selectedShape.radius;
                 slot.style.borderRadius = selectedShape.radius;
                 piece.style.transform = `rotate(${selectedShape.rotate}) scale(${selectedShape.scale})`;
                 slot.style.transform = `rotate(${selectedShape.rotate}) scale(${selectedShape.scale})`;
 
-                // Random background colors
                 const colors = ['#374151', '#1e293b', '#312e81', '#4c1d95', '#0f172a'];
                 const accentColors = ['#a855f7', '#6366f1', '#ec4899', '#06b6d4'];
                 
@@ -460,13 +471,14 @@
                 generatePuzzle();
             };
 
-            // 3. Slider Interaction
             let isDragging = false;
             let startX = 0;
 
             const onStart = (e) => {
                 isDragging = true;
                 startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+                slider.style.transition = "none";
+                piece.style.transition = "none";
             };
 
             const onMove = (e) => {
@@ -488,12 +500,11 @@
                 const currentPos = parseInt(piece.style.left);
                 const diff = Math.abs(currentPos - targetX);
 
-                if (diff < 10) { // Tolerance slightly increased for variety
+                if (diff < 8) { 
                     successfulPuzzles++;
                     pCountLabel.innerText = successfulPuzzles;
                     slider.style.background = "#10b981"; 
 
-                    // Success animation for piece
                     anime({
                         targets: piece,
                         scale: [1, 1.2, 1],
@@ -507,37 +518,36 @@
                         setTimeout(generatePuzzle, 800);
                     }
                 } else {
-                    // FAIL: Smooth Reset & Shake
+                    // FAIL ANIMATION: Tetap di tengah tapi getar
                     slider.style.background = "#ef4444";
                     
-                    // Shake modal
+                    // Shake modal (Tetap di posisi tengah canvas)
                     anime({
                         targets: '#puzzle-modal',
-                        translateX: [0, -15, 15, -15, 15, 0],
-                        duration: 500,
+                        translateX: [
+                            { value: '-50%', duration: 0 }, // Tetap menjaga transform dasar -50%
+                            { value: 'calc(-50% - 10px)', duration: 50 },
+                            { value: 'calc(-50% + 10px)', duration: 50 },
+                            { value: 'calc(-50% - 10px)', duration: 50 },
+                            { value: 'calc(-50% + 10px)', duration: 50 },
+                            { value: '-50%', duration: 50 }
+                        ],
                         easing: 'easeInOutSine'
                     });
 
-                    // Shake piece
+                    // Shake piece and slider then reset
                     anime({
-                        targets: piece,
-                        translateX: [0, -5, 5, -5, 5, 0],
-                        duration: 300,
-                        easing: 'easeInOutSine',
+                        targets: [slider, piece],
+                        left: [
+                            { value: currentPos, duration: 0 },
+                            { value: currentPos - 5, duration: 50 },
+                            { value: currentPos + 5, duration: 50 },
+                            { value: 0, duration: 600, delay: 200, easing: 'easeOutElastic(1, .6)' }
+                        ],
                         complete: () => {
-                             // Smooth return to zero
-                            anime({
-                                targets: [slider, piece],
-                                left: 0,
-                                duration: 600,
-                                easing: 'easeOutElastic(1, .6)'
-                            });
+                            slider.style.background = "#6366f1";
                         }
                     });
-                    
-                    setTimeout(() => {
-                        slider.style.background = "#6366f1";
-                    }, 1000);
                 }
             };
 
@@ -551,6 +561,8 @@
 
             function grantAccess() {
                 puzzleModal.style.display = "none";
+                verifyStatus.innerText = "Human verification successful!";
+                
                 anime({
                     targets: verifyLayer,
                     opacity: 0,
@@ -564,7 +576,6 @@
                 });
             }
 
-            // --- MAIN ANIMATIONS ---
             function initMainAnimations() {
                 const card = document.querySelector(".glass-card");
                 anime({
@@ -592,10 +603,9 @@
                 });
             }
 
-            // Status pill animation
-            const statusBox = document.querySelector("#status-indicator");
             setInterval(() => {
-                if(mainContent.style.display !== "block") return;
+                const statusBox = document.querySelector("#status-indicator");
+                if(!statusBox || mainContent.style.display !== "block") return;
                 const rand = Math.random();
                 if(rand > 0.95) {
                     statusBox.innerHTML = `● DISTURBANCE`;
@@ -613,7 +623,6 @@
                 }
             }, 5000);
 
-            // Ripple effect
             document.querySelectorAll(".btn-cyber").forEach(btn => {
                 btn.addEventListener("click", function(e) {
                     let rect = e.currentTarget.getBoundingClientRect();
@@ -629,6 +638,7 @@
                     ripple.style.borderRadius = "50%";
                     ripple.style.transform = "translate(-50%, -50%)";
                     ripple.style.transition = "width 0.5s, height 0.5s, opacity 0.5s";
+                    ripple.style.pointerEvents = "none";
                     this.appendChild(ripple);
                     setTimeout(() => {
                         ripple.style.width = "300px";
@@ -641,4 +651,4 @@
         });
     </script>
 </body>
- </html>
+</html>
