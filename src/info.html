@@ -1,91 +1,387 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZYREX - Device Identity</title>
+    <title>ZYREX - ADVANCED DEVICE AUDIT</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        space: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#02040a',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            accent: '#00f2ff',
+                            secondary: '#7000ff',
+                            success: '#00ff88'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body { background: #050810; color: #fff; font-family: 'monospace'; }
-        .scan-line { width: 100%; height: 2px; background: rgba(99, 102, 241, 0.5); position: absolute; animation: scan 3s infinite; z-index: 10; }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        .info-label { color: #6366f1; font-weight: bold; text-transform: uppercase; font-size: 0.7rem; }
-        .info-value { color: #4ade80; font-size: 1rem; }
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg-dark: #02040a;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Premium Mesh Background */
+        .mesh-container {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .mesh-gradient {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            top: -10%;
+            left: -10%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 242, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(112, 0, 255, 0.15) 0%, transparent 40%);
+            filter: blur(80px);
+            animation: meshRotate 20s infinite alternate;
+        }
+
+        @keyframes meshRotate {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(5deg) scale(1.1); }
+        }
+
+        /* Glassmorphism Card */
+        .premium-card {
+            background: rgba(10, 15, 25, 0.7);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            position: relative;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 32px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent, rgba(112,0,255,0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .scan-anim {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            box-shadow: 0 0 15px var(--primary);
+            z-index: 20;
+            animation: scanLoop 3s ease-in-out infinite;
+        }
+
+        @keyframes scanLoop {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .data-row {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px 0;
+            transition: all 0.3s ease;
+        }
+
+        .data-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+            padding-left: 8px;
+        }
+
+        .label-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+        }
+
+        .value-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .status-pill {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="scan-line"></div>
-    
-    <div class="max-w-md w-full bg-slate-900/50 border border-indigo-500/30 rounded-2xl p-6 backdrop-blur-xl relative overflow-hidden">
-        <h2 class="text-center text-indigo-400 font-bold tracking-[0.3em] mb-6 uppercase">Device Information</h2>
-        
-        <div class="space-y-4">
-            <div class="border-b border-white/5 pb-2">
-                <p class="info-label">IP Address</p>
-                <p id="ip-addr" class="info-value italic italic">Detecting...</p>
-            </div>
-            <div class="border-b border-white/5 pb-2">
-                <p class="info-label">Region / City</p>
-                <p id="location" class="info-value">Locating...</p>
+<body>
+
+    <div class="mesh-container">
+        <div class="mesh-gradient"></div>
+    </div>
+
+    <main class="w-full max-w-2xl px-4 py-10 relative">
+        <div class="premium-card p-6 md:p-10">
+            <div class="scan-anim"></div>
+
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-cyber-accent animate-pulse"></div>
+                        <h1 class="font-space text-2xl font-bold tracking-tighter">ZYREX<span class="text-cyber-accent">.</span>AUDIT</h1>
+                    </div>
+                    <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">Kernel Identification Level 10</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-right">
+                        <p class="text-[10px] text-slate-500 uppercase">System Time</p>
+                        <p id="clock" class="font-mono text-sm font-bold">00:00:00</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyber-accent/20 to-cyber-secondary/20 border border-white/10 flex items-center justify-center">
+                        <i class="fas fa-shield-halved text-cyber-accent"></i>
+                    </div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div class="border-b border-white/5 pb-2">
-                    <p class="info-label">Browser</p>
-                    <p id="browser" class="info-value text-xs font-mono">-</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
+                
+                <div class="space-y-2">
+                    <h3 class="text-[10px] font-bold text-cyber-secondary mb-4 flex items-center gap-2">
+                        <i class="fas fa-globe"></i> NETWORK_LAYER
+                    </h3>
+                    <div class="data-row">
+                        <p class="label-text">Public IP</p>
+                        <p id="ip-addr" class="value-text">SCANNING...</p>
+                    </div>
+                    <div class="data-row">
+                        <p class="label-text">Provider / ISP</p>
+                        <p id="isp" class="value-text">---</p>
+                    </div>
+                    <div class="data-row">
+                        <p class="label-text">Connection Type</p>
+                        <p id="net-type" class="value-text">---</p>
+                    </div>
+                    <div class="data-row">
+                        <p class="label-text">Geographic Node</p>
+                        <p id="location" class="value-text">LOCATING...</p>
+                    </div>
                 </div>
-                <div class="border-b border-white/5 pb-2">
-                    <p class="info-label">Battery</p>
-                    <p id="battery" class="info-value">-</p>
+
+                <div class="space-y-2 mt-8 md:mt-0">
+                    <h3 class="text-[10px] font-bold text-cyber-secondary mb-4 flex items-center gap-2">
+                        <i class="fas fa-microchip"></i> HARDWARE_LAYER
+                    </h3>
+                    <div class="data-row">
+                        <p class="label-text">Core Architecture</p>
+                        <p id="os-full" class="value-text">---</p>
+                    </div>
+                    <div class="data-row">
+                        <p class="label-text">Processing Units</p>
+                        <p id="cpu-threads" class="value-text">---</p>
+                    </div>
+                    <div class="data-row">
+                        <p class="label-text">System Memory (Est)</p>
+                        <p id="ram" class="value-text">---</p>
+                    </div>
+                    <div class="data-row">
+                        <p class="label-text">Graphics Engine</p>
+                        <p id="gpu" class="value-text">---</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="border-b border-white/5 pb-2">
-                <p class="info-label">Hardware Signature</p>
-                <p id="platform" class="info-value text-xs">-</p>
+            <div class="mt-10 pt-6 border-t border-white/5 space-y-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <p class="label-text">Battery</p>
+                        <p id="bat-val" class="text-sm font-mono mt-1">--%</p>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <p class="label-text">Resolution</p>
+                        <p id="screen-val" class="text-sm font-mono mt-1">0x0</p>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <p class="label-text">Refresh Rate</p>
+                        <p id="fps" class="text-sm font-mono mt-1">-- Hz</p>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <p class="label-text">Language</p>
+                        <p id="lang" class="text-sm font-mono mt-1">--</p>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="label-text mb-2">Fingerprint (User Agent)</p>
+                    <div class="bg-black/40 rounded-xl p-4 border border-white/5">
+                        <p id="ua-string" class="text-[10px] font-mono text-slate-500 leading-relaxed break-all uppercase tracking-tighter">
+                            Initializing...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 flex flex-col md:flex-row gap-4">
+                <button onclick="location.reload()" class="flex-1 py-4 bg-cyber-accent/10 hover:bg-cyber-accent/20 border border-cyber-accent/30 rounded-2xl transition-all group">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-cyber-accent">
+                        <i class="fas fa-sync-alt mr-2 group-hover:rotate-180 transition-transform duration-500"></i> Re-Scan Identity
+                    </span>
+                </button>
+                <button onclick="window.history.back()" class="flex-1 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
+                        Terminate Session
+                    </span>
+                </button>
             </div>
         </div>
 
-        <button onclick="window.history.back()" class="mt-8 w-full py-3 bg-indigo-600/20 border border-indigo-500/50 rounded-xl text-xs hover:bg-indigo-600/40 transition-all uppercase tracking-widest">
-            Return to Core
-        </button>
-    </div>
+        <p class="text-center mt-8 text-[10px] text-slate-600 font-mono tracking-[0.5em] uppercase">
+            &copy; 2026 ZYREX_CORP // PRIVATE_ENCRYPTION_ACTIVE
+        </p>
+    </main>
 
     <script>
-        async function getDeviceInfo() {
-            // 1. Get IP and Location (Using Public API ipapi.co)
+        // Real-time Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        async function auditSystem() {
             try {
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-                document.getElementById('ip-addr').innerText = data.ip;
-                document.getElementById('location').innerText = `${data.city}, ${data.region}`;
-            } catch (err) {
-                document.getElementById('ip-addr').innerText = "Blocked by AdBlock";
+                // 1. IP and ISP Data
+                const netResp = await fetch('https://ipapi.co/json/');
+                const netData = await netResp.json();
+                
+                typeWriter("#ip-addr", netData.ip);
+                typeWriter("#isp", netData.org);
+                typeWriter("#location", `${netData.city}, ${netData.country_name} (${netData.timezone})`);
+            } catch (e) {
+                document.getElementById('ip-addr').innerText = "ENCRYPTED";
+                document.getElementById('ip-addr').style.color = "#ff4444";
             }
 
-            // 2. Browser & Platform Info
-            document.getElementById('browser').innerText = navigator.userAgent.split(' ').slice(-1);
-            document.getElementById('platform').innerText = navigator.platform + " / " + navigator.vendor;
+            // 2. Hardware: GPU Detection
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            let gpuInfo = "Standard GFX";
+            if (gl) {
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                gpuInfo = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Software Render";
+            }
+            typeWriter("#gpu", gpuInfo.split('/')[0] || gpuInfo);
 
-            // 3. Battery Info
+            // 3. Hardware: CPU & RAM
+            typeWriter("#cpu-threads", navigator.hardwareConcurrency + " Logical Cores");
+            typeWriter("#ram", (navigator.deviceMemory || "8+") + " GB DDR4/5 Estimated");
+            
+            // 4. OS & Browser
+            const p = navigator.platform;
+            let os = "Unknown Kernel";
+            if (p.toLowerCase().includes('win')) os = "Windows NT 10.0+";
+            else if (p.toLowerCase().includes('mac')) os = "Darwin / MacOS";
+            else if (p.toLowerCase().includes('linux')) os = "Linux / GNU";
+            else if (p.toLowerCase().includes('android')) os = "Android OS";
+            else if (p.toLowerCase().includes('iphone')) os = "iOS Mobile";
+            typeWriter("#os-full", os);
+
+            // 5. Network Type
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            typeWriter("#net-type", conn ? `${conn.effectiveType.toUpperCase()} - ${conn.downlink}Mbps` : "ETHERNET/WIFI");
+
+            // 6. Extras
+            document.getElementById('screen-val').innerText = `${window.screen.width} x ${window.screen.height}`;
+            document.getElementById('lang').innerText = navigator.language.toUpperCase();
+            document.getElementById('ua-string').innerText = navigator.userAgent;
+
+            // 7. Battery Logic
             if ('getBattery' in navigator) {
-                navigator.getBattery().then(function(battery) {
-                    function updateBattery() {
-                        const level = Math.round(battery.level * 100) + "%";
-                        const charging = battery.charging ? " (Charging)" : "";
-                        document.getElementById('battery').innerText = level + charging;
-                    }
-                    updateBattery();
-                    battery.addEventListener('levelchange', updateBattery);
-                    battery.addEventListener('chargingchange', updateBattery);
-                });
-            } else {
-                document.getElementById('battery').innerText = "Not Supported";
+                const bat = await navigator.getBattery();
+                const updateBat = () => {
+                    document.getElementById('bat-val').innerText = `${Math.round(bat.level * 100)}% ${bat.charging ? '[⚡]' : ''}`;
+                };
+                updateBat();
+                bat.onlevelchange = updateBat;
             }
+
+            // 8. Screen Hz Estimation
+            requestAnimationFrame((t1) => {
+                requestAnimationFrame((t2) => {
+                    const hz = Math.round(1000 / (t2 - t1));
+                    document.getElementById('fps').innerText = hz + " Hz";
+                });
+            });
         }
 
-        window.onload = getDeviceInfo;
+        function typeWriter(selector, text) {
+            const el = document.querySelector(selector);
+            el.innerText = '';
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    el.append(text.charAt(i));
+                    i++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, 20);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            anime({
+                targets: '.premium-card',
+                translateY: [40, 0],
+                opacity: [0, 1],
+                duration: 1500,
+                easing: 'easeOutExpo'
+            });
+            auditSystem();
+        });
     </script>
 </body>
-</html>
+   </html>
