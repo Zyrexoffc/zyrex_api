@@ -182,7 +182,7 @@
             border-radius: 6px;
             cursor: pointer;
             position: relative;
-            z-index: 10001; /* High z-index */
+            z-index: 10001; 
             background: rgba(255,255,255,0.05);
         }
 
@@ -248,6 +248,7 @@
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
             z-index: 2;
+            transition: border-radius 0.3s, transform 0.3s;
         }
 
         #puzzle-slot {
@@ -258,6 +259,7 @@
             top: 50px;
             border-radius: 8px;
             border: 2px dashed var(--primary);
+            transition: border-radius 0.3s;
         }
 
         #main-content { display: none; }
@@ -293,7 +295,7 @@
 
     <div id="puzzle-modal">
         <div class="flex justify-between items-center mb-4">
-            <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">Security Puzzle (<span id="p-count">1</span>/3)</span>
+            <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">Security Puzzle (<span id="p-count">0</span>/3)</span>
             <button id="refresh-puzzle" class="text-slate-500 hover:text-white transition-colors"><i class="fas fa-sync-alt text-xs"></i></button>
         </div>
         <div class="puzzle-track" id="p-bg">
@@ -414,10 +416,10 @@
                 }, 800);
             };
 
-            // 2. Puzzle Logic
+            // 2. Puzzle Logic with Random Shapes & Themes
             function generatePuzzle() {
                 // Randomize Slot position
-                targetX = Math.floor(Math.random() * 150) + 100; // between 100-250
+                targetX = Math.floor(Math.random() * 150) + 100; 
                 slot.style.left = targetX + "px";
                 
                 // Reset Piece and Slider
@@ -425,12 +427,38 @@
                 slider.style.left = "0px";
                 slider.style.background = "#6366f1";
 
-                // Random background color simulation
-                const colors = ['#374151', '#1e293b', '#312e81', '#4c1d95'];
+                // RANDOMIZE SHAPES
+                const shapes = [
+                    { radius: "8px", rotate: "0deg", scale: "1" },      // Square
+                    { radius: "50%", rotate: "0deg", scale: "1" },      // Circle
+                    { radius: "12px 2px 12px 2px", rotate: "45deg", scale: "0.8" }, // Diamond-ish
+                    { radius: "20px 0px 20px 0px", rotate: "-15deg", scale: "1" }  // Modern leaf
+                ];
+                const selectedShape = shapes[Math.floor(Math.random() * shapes.length)];
+                
+                // Apply shape to piece and slot
+                piece.style.borderRadius = selectedShape.radius;
+                slot.style.borderRadius = selectedShape.radius;
+                piece.style.transform = `rotate(${selectedShape.rotate}) scale(${selectedShape.scale})`;
+                slot.style.transform = `rotate(${selectedShape.rotate}) scale(${selectedShape.scale})`;
+
+                // Random background colors
+                const colors = ['#374151', '#1e293b', '#312e81', '#4c1d95', '#0f172a'];
+                const accentColors = ['#a855f7', '#6366f1', '#ec4899', '#06b6d4'];
+                
                 document.querySelector("#p-bg").style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.background = accentColors[Math.floor(Math.random() * accentColors.length)];
             }
 
-            document.querySelector("#refresh-puzzle").onclick = generatePuzzle;
+            document.querySelector("#refresh-puzzle").onclick = () => {
+                anime({
+                    targets: '#refresh-puzzle i',
+                    rotate: '+=360',
+                    duration: 500,
+                    easing: 'easeInOutQuad'
+                });
+                generatePuzzle();
+            };
 
             // 3. Slider Interaction
             let isDragging = false;
@@ -447,7 +475,7 @@
                 let delta = currentX - startX;
                 
                 if (delta < 0) delta = 0;
-                if (delta > 270) delta = 270; // container width minus slider width
+                if (delta > 270) delta = 270; 
 
                 slider.style.left = delta + "px";
                 piece.style.left = delta + "px";
@@ -460,10 +488,18 @@
                 const currentPos = parseInt(piece.style.left);
                 const diff = Math.abs(currentPos - targetX);
 
-                if (diff < 8) { // Tolerance 8px
+                if (diff < 10) { // Tolerance slightly increased for variety
                     successfulPuzzles++;
                     pCountLabel.innerText = successfulPuzzles;
-                    slider.style.background = "#10b981"; // Success Green
+                    slider.style.background = "#10b981"; 
+
+                    // Success animation for piece
+                    anime({
+                        targets: piece,
+                        scale: [1, 1.2, 1],
+                        duration: 400,
+                        easing: 'easeOutQuad'
+                    });
 
                     if (successfulPuzzles >= requiredPuzzles) {
                         setTimeout(grantAccess, 500);
@@ -471,15 +507,37 @@
                         setTimeout(generatePuzzle, 800);
                     }
                 } else {
-                    // Fail: shake and reset
+                    // FAIL: Smooth Reset & Shake
                     slider.style.background = "#ef4444";
+                    
+                    // Shake modal
                     anime({
                         targets: '#puzzle-modal',
-                        translateX: [0, -10, 10, -10, 10, 0],
-                        duration: 400,
-                        easing: 'linear'
+                        translateX: [0, -15, 15, -15, 15, 0],
+                        duration: 500,
+                        easing: 'easeInOutSine'
                     });
-                    setTimeout(generatePuzzle, 800);
+
+                    // Shake piece
+                    anime({
+                        targets: piece,
+                        translateX: [0, -5, 5, -5, 5, 0],
+                        duration: 300,
+                        easing: 'easeInOutSine',
+                        complete: () => {
+                             // Smooth return to zero
+                            anime({
+                                targets: [slider, piece],
+                                left: 0,
+                                duration: 600,
+                                easing: 'easeOutElastic(1, .6)'
+                            });
+                        }
+                    });
+                    
+                    setTimeout(() => {
+                        slider.style.background = "#6366f1";
+                    }, 1000);
                 }
             };
 
@@ -506,7 +564,7 @@
                 });
             }
 
-            // --- RE-IMPORTING YOUR ORIGINAL ANIMATIONS ---
+            // --- MAIN ANIMATIONS ---
             function initMainAnimations() {
                 const card = document.querySelector(".glass-card");
                 anime({
@@ -534,7 +592,7 @@
                 });
             }
 
-            // Original status pill animation
+            // Status pill animation
             const statusBox = document.querySelector("#status-indicator");
             setInterval(() => {
                 if(mainContent.style.display !== "block") return;
@@ -555,10 +613,10 @@
                 }
             }, 5000);
 
-            // Original ripple effect
+            // Ripple effect
             document.querySelectorAll(".btn-cyber").forEach(btn => {
                 btn.addEventListener("click", function(e) {
-                    let rect = e.target.getBoundingClientRect();
+                    let rect = e.currentTarget.getBoundingClientRect();
                     let x = e.clientX - rect.left;
                     let y = e.clientY - rect.top;
                     let ripple = document.createElement("span");
@@ -583,4 +641,4 @@
         });
     </script>
 </body>
-</html>
+ </html>
