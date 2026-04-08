@@ -255,7 +255,7 @@
                             <i class="fas fa-microchip"></i> HARDWARE_LAYER
                         </h3>
                         <div class="data-row">
-                            <p class="label-text">HP Model / Brand</p>
+                            <p class="label-text">System / Version</p>
                             <p id="brand-info" class="value-text">EXTRACTING...</p>
                         </div>
                         <div class="data-row">
@@ -341,43 +341,37 @@
                 document.getElementById('ip-addr').innerText = "ENCRYPTED";
             }
 
-            // Brand & OS Detection
+            // OS & Version Detection
             const ua = navigator.userAgent;
             const frame = document.getElementById('phone-frame');
             const logo = document.getElementById('brand-logo');
-            let brand = "Unknown";
+            let systemDisplay = "Unknown Device";
             let os = "Linux";
 
             if (ua.match(/iPhone|iPad|iPod/i)) {
-                brand = "Apple iPhone";
+                // Ekstrak versi iOS
+                let iosVersion = ua.match(/OS (\d+)_(\d+)_?(\d+)?/);
+                let ver = iosVersion ? `iOS ${iosVersion[1]}.${iosVersion[2]}` : "iOS Device";
+                systemDisplay = ver;
                 os = "iOS";
                 frame.classList.add('ios');
                 logo.className = "fab fa-apple text-3xl mb-2 opacity-70";
             } else if (ua.match(/Android/i)) {
+                // Ekstrak versi Android
+                let androidVersion = ua.match(/Android\s([0-9\.]+)/);
+                let ver = androidVersion ? `Android ${androidVersion[1]}` : "Android Device";
+                systemDisplay = ver;
                 os = "Android";
                 frame.classList.add('android');
                 logo.className = "fab fa-android text-3xl mb-2 opacity-70";
-                
-                // Detailed Brand Detection logic based on UA strings
-                if (ua.match(/Samsung/i)) brand = "Samsung";
-                else if (ua.match(/Xiaomi|Redmi|POCO/i)) brand = "Xiaomi / Poco";
-                else if (ua.match(/Oppo/i)) brand = "Oppo";
-                else if (ua.match(/Vivo/i)) brand = "Vivo";
-                else if (ua.match(/Realme/i)) brand = "Realme";
-                else if (ua.match(/Infinix/i)) brand = "Infinix";
-                else if (ua.match(/Huawei/i)) brand = "Huawei";
-                else if (ua.match(/Pixel/i)) brand = "Google Pixel";
-                else if (ua.match(/Sony/i)) brand = "Sony Xperia";
-                else if (ua.match(/Asus|ROG/i)) brand = "Asus";
-                else brand = "Android Device";
             } else {
-                brand = "PC / Desktop";
+                systemDisplay = "PC / Desktop";
                 os = ua.includes('Windows') ? "Windows" : "MacOS";
                 logo.className = "fas fa-laptop text-3xl mb-2 opacity-70";
             }
 
-            typeWriter("#brand-info", brand.toUpperCase());
-            document.getElementById('mockup-brand-name').innerText = brand.toUpperCase();
+            typeWriter("#brand-info", systemDisplay.toUpperCase());
+            document.getElementById('mockup-brand-name').innerText = systemDisplay.toUpperCase();
             document.getElementById('os-full').innerText = os;
 
             // RAM
@@ -461,4 +455,4 @@
         });
     </script>
 </body>
-                            </html>
+    </html>
