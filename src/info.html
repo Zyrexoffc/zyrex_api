@@ -176,6 +176,16 @@
             color: var(--primary);
             font-weight: 600;
         }
+
+        .net-type-badge {
+            font-size: 7px;
+            background: var(--primary);
+            color: #000;
+            padding: 0 2px;
+            border-radius: 2px;
+            font-weight: 800;
+            margin-right: 2px;
+        }
     </style>
 </head>
 <body>
@@ -214,6 +224,7 @@
                             <div class="mockup-status-bar">
                                 <span id="mockup-time">00:00</span>
                                 <div class="flex gap-1 items-center">
+                                    <span id="mockup-net-type" class="net-type-badge hidden">4G</span>
                                     <i id="mockup-net-icon" class="fas fa-wifi"></i>
                                     <span id="mockup-bat-text">--%</span>
                                     <i id="mockup-bat-icon" class="fas fa-battery-half"></i>
@@ -355,6 +366,28 @@
         setInterval(updateClock, 1000);
         updateClock();
 
+        async function updateBattery() {
+            try {
+                const battery = await navigator.getBattery();
+                const updateLogic = () => {
+                    const level = Math.round(battery.level * 100);
+                    document.getElementById('mockup-bat-text').innerText = level + '%';
+                    
+                    let icon = 'fa-battery-half';
+                    if (battery.charging) icon = 'fa-battery-bolt';
+                    else if (level > 85) icon = 'fa-battery-full';
+                    else if (level < 20) icon = 'fa-battery-quarter';
+                    
+                    document.getElementById('mockup-bat-icon').className = `fas ${icon} ${battery.charging ? 'text-cyber-success' : ''}`;
+                };
+                updateLogic();
+                battery.addEventListener('levelchange', updateLogic);
+                battery.addEventListener('chargingchange', updateLogic);
+            } catch (e) {
+                document.getElementById('mockup-bat-text').innerText = '85%';
+            }
+        }
+
         async function auditSystem() {
             // Precise IP & Location Details
             try {
@@ -377,7 +410,7 @@
                 document.getElementById('city').innerText = "FAILED TO LOCATE";
             }
 
-            // OS & Hardware
+            // OS & Hardware Detection
             const ua = navigator.userAgent;
             const frame = document.getElementById('phone-frame');
             const logo = document.getElementById('brand-logo');
@@ -418,11 +451,24 @@
                 typeWriter("#gpu-val", "GENERIC_GPU");
             }
 
-            // Connection
+            // Connection Logic for Mockup
             const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            const netIcon = document.getElementById('mockup-net-icon');
+            const netBadge = document.getElementById('mockup-net-type');
+
             if(conn) {
+                const type = conn.effectiveType || 'wifi';
                 const speed = conn.downlink ? `${conn.downlink} MBPS` : "STABLE";
-                typeWriter("#net-speed", `${(conn.effectiveType || 'WIFI').toUpperCase()} • ${speed}`);
+                typeWriter("#net-speed", `${type.toUpperCase()} • ${speed}`);
+
+                if(type.includes('4g') || type.includes('cellular')) {
+                    netIcon.className = "fas fa-signal";
+                    netBadge.innerText = "4G";
+                    netBadge.classList.remove('hidden');
+                } else {
+                    netIcon.className = "fas fa-wifi";
+                    netBadge.classList.add('hidden');
+                }
             }
 
             // Hz Detection
@@ -466,7 +512,8 @@
                 easing: 'easeOutExpo'
             });
             auditSystem();
+            updateBattery();
         });
     </script>
 </body>
-</html>
+    </html>
