@@ -44,6 +44,10 @@
                 radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
             color: #fff;
             overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .mesh-bg {
@@ -52,6 +56,7 @@
             z-index: -1;
             opacity: 0.5;
             filter: blur(80px);
+            pointer-events: none;
         }
 
         .mesh-ball {
@@ -87,6 +92,7 @@
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
+            pointer-events: none;
         }
 
         .hologram-box {
@@ -173,7 +179,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            transition: filter 0.5s ease;
+            transition: filter 0.5s ease, opacity 1s ease;
         }
 
         .verify-checkbox {
@@ -265,11 +271,11 @@
             border: 2px dashed var(--primary);
         }
 
-        #main-content { display: none; }
+        #main-content { display: none; width: 100%; }
     </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center p-6">
+<body>
 
     <div id="verification-layer">
         <div class="mesh-bg">
@@ -313,7 +319,7 @@
         </div>
     </div>
 
-    <div id="main-content" class="w-full max-w-xl">
+    <div id="main-content" class="w-full max-w-xl mx-auto p-6">
         <div class="mesh-bg">
             <div class="mesh-ball" style="width: 400px; height: 400px; top: -100px; left: -100px;"></div>
             <div class="mesh-ball" style="width: 300px; height: 300px; bottom: 10%; right: 10%; animation-delay: -5s;"></div>
@@ -325,7 +331,7 @@
                     <div class="flex gap-1.5">
                         <div class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
                         <div class="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10_rgba(34,197,94,0.5)]"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
                     </div>
                     <div id="status-indicator" class="status-pill">
                         <span class="relative flex h-2 w-2">
@@ -364,6 +370,9 @@
                         </a>
                         <a href="Stat.html" class="btn-cyber btn-cyber-outline col-span-2 md:col-span-1">
                             <i class="fas fa-chart-line text-sm"></i> Analytics
+                        </a>
+                        <a href="info.html" class="btn-cyber btn-cyber-primary col-span-2">
+                            <i class="fas fa-info-circle text-sm"></i> System Info
                         </a>
                         
                         <div class="flex gap-4 col-span-2 mt-2">
@@ -406,9 +415,7 @@
             const pCountLabel = document.querySelector("#p-count");
             const verifyStatus = document.querySelector("#verify-status");
 
-            // 1. Click Checkbox with Animation
             checkBtn.onclick = () => {
-                // Checkmark animation
                 anime({
                     targets: checkBtn,
                     backgroundColor: '#6366f1',
@@ -518,14 +525,12 @@
                         setTimeout(generatePuzzle, 800);
                     }
                 } else {
-                    // FAIL ANIMATION: Tetap di tengah tapi getar
                     slider.style.background = "#ef4444";
                     
-                    // Shake modal (Tetap di posisi tengah canvas)
                     anime({
                         targets: '#puzzle-modal',
                         translateX: [
-                            { value: '-50%', duration: 0 }, // Tetap menjaga transform dasar -50%
+                            { value: '-50%', duration: 0 },
                             { value: 'calc(-50% - 10px)', duration: 50 },
                             { value: 'calc(-50% + 10px)', duration: 50 },
                             { value: 'calc(-50% - 10px)', duration: 50 },
@@ -535,7 +540,6 @@
                         easing: 'easeInOutSine'
                     });
 
-                    // Shake piece and slider then reset
                     anime({
                         targets: [slider, piece],
                         left: [
@@ -555,8 +559,8 @@
             window.addEventListener('mousemove', onMove);
             window.addEventListener('mouseup', onEnd);
 
-            slider.addEventListener('touchstart', onStart);
-            window.addEventListener('touchmove', onMove);
+            slider.addEventListener('touchstart', onStart, {passive: false});
+            window.addEventListener('touchmove', onMove, {passive: false});
             window.addEventListener('touchend', onEnd);
 
             function grantAccess() {
@@ -577,7 +581,7 @@
             }
 
             function initMainAnimations() {
-                const card = document.querySelector(".glass-card");
+                const card = document.querySelector("#main-content .glass-card");
                 anime({
                     targets: card,
                     opacity: [0, 1],
@@ -611,6 +615,7 @@
                     statusBox.innerHTML = `● DISTURBANCE`;
                     statusBox.style.color = "#f87171";
                     statusBox.style.background = "rgba(248,113,113,0.1)";
+                    statusBox.style.borderColor = "rgba(248,113,113,0.2)";
                 } else {
                     statusBox.innerHTML = `
                         <span class="relative flex h-2 w-2">
@@ -620,6 +625,7 @@
                         System Active`;
                     statusBox.style.color = "#4ade80";
                     statusBox.style.background = "rgba(34,197,94,0.1)";
+                    statusBox.style.borderColor = "rgba(34,197,94,0.2)";
                 }
             }, 5000);
 
@@ -651,4 +657,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
