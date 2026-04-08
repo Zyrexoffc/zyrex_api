@@ -179,122 +179,229 @@
             filter: drop-shadow(0 0 8px var(--glow));
         }
 
+        /* VERIFICATION OVERLAY STYLES */
+        #verification-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .captcha-box {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .verify-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .verify-checkbox.checked {
+            background: var(--primary);
+        }
+
+        .verify-checkbox.checked i {
+            display: block !important;
+        }
+
+        #main-content {
+            display: none;
+        }
+
     </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center p-6">
 
-    <div class="mesh-bg">
-        <div class="mesh-ball" style="width: 400px; height: 400px; top: -100px; left: -100px;"></div>
-        <div class="mesh-ball" style="width: 300px; height: 300px; bottom: 10%; right: 10%; animation-delay: -5s;"></div>
+    <div id="verification-layer">
+        <div class="mesh-bg">
+            <div class="mesh-ball" style="width: 400px; height: 400px; top: -100px; left: -100px;"></div>
+        </div>
+        <div class="captcha-box glass-card">
+            <h2 class="font-space text-xl font-bold mb-2">Security Check</h2>
+            <p class="text-slate-400 text-xs mb-6 tracking-wider">Verifying your connection to ZYREX.API</p>
+            
+            <div class="bg-black/40 border border-white/5 p-4 rounded-xl flex items-center justify-between mb-4">
+                <div class="flex items-center gap-4">
+                    <div id="check-btn" class="verify-checkbox">
+                        <i class="fas fa-check text-white text-sm hidden"></i>
+                    </div>
+                    <span class="text-sm font-medium">I am a human</span>
+                </div>
+                <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" class="w-8 opacity-50 grayscale" alt="re">
+            </div>
+            
+            <div id="verify-status" class="text-[10px] text-slate-500 uppercase tracking-widest">
+                Waiting for interaction...
+            </div>
+        </div>
     </div>
 
-    <div class="max-w-xl w-full py-12">
-        <div class="glass-card p-1"> <div class="px-8 pt-6 flex justify-between items-center">
-                <div class="flex gap-1.5">
-                    <div class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
-                    <div class="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
-                    <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
-                </div>
-                <div id="status-indicator" class="status-pill">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </span>
-                    System Active
-                </div>
-            </div>
+    <div id="main-content" class="w-full max-w-xl">
+        <div class="mesh-bg">
+            <div class="mesh-ball" style="width: 400px; height: 400px; top: -100px; left: -100px;"></div>
+            <div class="mesh-ball" style="width: 300px; height: 300px; bottom: 10%; right: 10%; animation-delay: -5s;"></div>
+        </div>
 
-            <div class="p-8 text-center">
-                <div id="welcome-text" class="font-space text-sm font-bold tracking-[0.3em] text-indigo-400 mb-6 uppercase">
-                    Initializing System...
-                </div>
-
-                <div class="hologram-box mb-8 float">
-                    <img src="https://files.catbox.moe/185i1y.jpg" class="w-full h-56 object-cover transform scale-105 hover:scale-110 transition-transform duration-700">
-                    <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] font-bold tracking-widest uppercase">
-                        Rest Api v1.0
+        <div class="max-w-xl w-full py-12">
+            <div class="glass-card p-1"> 
+                <div class="px-8 pt-6 flex justify-between items-center">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10_rgba(34,197,94,0.5)]"></div>
+                    </div>
+                    <div id="status-indicator" class="status-pill">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        System Active
                     </div>
                 </div>
 
-                <h1 class="font-space text-4xl md:text-5xl font-bold mb-4 glow-text tracking-tighter">
-                    ZYREX<span class="text-indigo-500">.</span>API
-                </h1>
+                <div class="p-8 text-center">
+                    <div id="welcome-text" class="font-space text-sm font-bold tracking-[0.3em] text-indigo-400 mb-6 uppercase">
+                        Initializing System...
+                    </div>
 
-                <p class="text-slate-400 text-sm leading-relaxed mb-10 font-light px-4">
-                    The next-gen REST API infrastructure. Engineered for <span class="text-white font-semibold">speed</span>, 
-                    designed for <span class="text-white font-semibold">stability</span>, and built for the 
-                    <span class="text-indigo-400 font-semibold underline decoration-indigo-500/30 underline-offset-4">future of development</span>.
-                </p>
+                    <div class="hologram-box mb-8 float">
+                        <img src="https://files.catbox.moe/185i1y.jpg" class="w-full h-56 object-cover transform scale-105 hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] font-bold tracking-widest uppercase">
+                            Rest Api v1.0
+                        </div>
+                    </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <a href="docs.html" class="btn-cyber btn-cyber-primary col-span-2 md:col-span-1">
-                        <i class="fas fa-terminal text-sm"></i> Explore Docs
-                    </a>
-                    <a href="Stat.html" class="btn-cyber btn-cyber-outline col-span-2 md:col-span-1">
-                        <i class="fas fa-chart-line text-sm"></i> Analytics
-                    </a>
-                    
-                    <div class="flex gap-4 col-span-2 mt-2">
-                        <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
-                            <i class="fab fa-whatsapp text-green-400 text-xl group-hover:scale-125 transition-transform"></i>
+                    <h1 class="font-space text-4xl md:text-5xl font-bold mb-4 glow-text tracking-tighter">
+                        ZYREX<span class="text-indigo-500">.</span>API
+                    </h1>
+
+                    <p class="text-slate-400 text-sm leading-relaxed mb-10 font-light px-4">
+                        The next-gen REST API infrastructure. Engineered for <span class="text-white font-semibold">speed</span>, 
+                        designed for <span class="text-white font-semibold">stability</span>, and built for the 
+                        <span class="text-indigo-400 font-semibold underline decoration-indigo-500/30 underline-offset-4">future of development</span>.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="docs.html" class="btn-cyber btn-cyber-primary col-span-2 md:col-span-1">
+                            <i class="fas fa-terminal text-sm"></i> Explore Docs
                         </a>
-                        <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
-                            <i class="fas fa-share-nodes text-indigo-400 text-xl group-hover:scale-125 transition-transform"></i>
+                        <a href="Stat.html" class="btn-cyber btn-cyber-outline col-span-2 md:col-span-1">
+                            <i class="fas fa-chart-line text-sm"></i> Analytics
                         </a>
-                        <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
-                            <i class="fab fa-github text-white text-xl group-hover:scale-125 transition-transform"></i>
-                        </a>
+                        
+                        <div class="flex gap-4 col-span-2 mt-2">
+                            <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
+                                <i class="fab fa-whatsapp text-green-400 text-xl group-hover:scale-125 transition-transform"></i>
+                            </a>
+                            <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
+                                <i class="fas fa-share-nodes text-indigo-400 text-xl group-hover:scale-125 transition-transform"></i>
+                            </a>
+                            <a href="#" class="btn-cyber btn-cyber-outline flex-1 group">
+                                <i class="fab fa-github text-white text-xl group-hover:scale-125 transition-transform"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="pb-6 text-center">
-                <p class="text-[9px] uppercase tracking-[0.5em] text-slate-600 font-bold">
-                    &copy; 2026 ZYREX API • NO COPYRIGHT 
-                </p>
+                <div class="pb-6 text-center">
+                    <p class="text-[9px] uppercase tracking-[0.5em] text-slate-600 font-bold">
+                        &copy; 2026 ZYREX API • NO COPYRIGHT 
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Fade-in main card
-            const card = document.querySelector(".glass-card");
-            anime({
-                targets: card,
-                opacity: [0, 1],
-                translateY: [50, 0],
-                easing: 'easeOutExpo',
-                duration: 1500,
-                delay: 300
+            
+            // --- VERIFICATION LOGIC ---
+            const checkBtn = document.querySelector("#check-btn");
+            const verifyStatus = document.querySelector("#verify-status");
+            const verifyLayer = document.querySelector("#verification-layer");
+            const mainContent = document.querySelector("#main-content");
+
+            checkBtn.addEventListener("click", () => {
+                checkBtn.classList.add("checked");
+                checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-white text-sm"></i>';
+                verifyStatus.innerText = "Verifying Browser...";
+                verifyStatus.style.color = "#6366f1";
+
+                setTimeout(() => {
+                    checkBtn.innerHTML = '<i class="fas fa-check text-white text-sm"></i>';
+                    verifyStatus.innerText = "Success! Entering...";
+                    verifyStatus.style.color = "#4ade80";
+
+                    anime({
+                        targets: verifyLayer,
+                        opacity: 0,
+                        duration: 800,
+                        easing: 'easeInOutQuad',
+                        complete: () => {
+                            verifyLayer.style.display = "none";
+                            mainContent.style.display = "block";
+                            initMainAnimations();
+                        }
+                    });
+                }, 1500);
             });
 
-            // Welcome Text Animation
-            const welcomeTag = document.querySelector("#welcome-text");
-            const text = "WELCOME TO REST API";
-            welcomeTag.innerHTML = text.split("").map(c => `<span>${c === " " ? "&nbsp;" : c}</span>`).join("");
+            // --- MAIN CONTENT ANIMATIONS ---
+            function initMainAnimations() {
+                const card = document.querySelector(".glass-card");
+                anime({
+                    targets: card,
+                    opacity: [0, 1],
+                    translateY: [50, 0],
+                    easing: 'easeOutExpo',
+                    duration: 1500,
+                    delay: 100
+                });
 
-            anime({
-                targets: '#welcome-text span',
-                translateY: [10, 0],
-                opacity: [0, 1],
-                delay: anime.stagger(100),
-                loop: true,
-                direction: 'alternate',
-                easing: 'easeInOutQuad',
-                duration: 2000
-            });
+                const welcomeTag = document.querySelector("#welcome-text");
+                const text = "WELCOME TO REST API";
+                welcomeTag.innerHTML = text.split("").map(c => `<span>${c === " " ? "&nbsp;" : c}</span>`).join("");
+
+                anime({
+                    targets: '#welcome-text span',
+                    translateY: [10, 0],
+                    opacity: [0, 1],
+                    delay: anime.stagger(100),
+                    loop: true,
+                    direction: 'alternate',
+                    easing: 'easeInOutQuad',
+                    duration: 2000
+                });
+            }
 
             // Random Status Fluctuation
             const statusBox = document.querySelector("#status-indicator");
             setInterval(() => {
                 const rand = Math.random();
-                if(rand > 0.95) {
+                if(rand > 0.95 && mainContent.style.display === "block") {
                     statusBox.innerHTML = `● DISTURBANCE`;
                     statusBox.style.color = "#f87171";
                     statusBox.style.background = "rgba(248,113,113,0.1)";
-                } else {
+                } else if (mainContent.style.display === "block") {
                     statusBox.innerHTML = `
                         <span class="relative flex h-2 w-2">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -309,8 +416,9 @@
             // Ripple click effect
             document.querySelectorAll(".btn-cyber").forEach(btn => {
                 btn.addEventListener("click", function(e) {
-                    let x = e.clientX - e.target.offsetLeft;
-                    let y = e.clientY - e.target.offsetTop;
+                    let rect = e.target.getBoundingClientRect();
+                    let x = e.clientX - rect.left;
+                    let y = e.clientY - rect.top;
                     let ripple = document.createElement("span");
                     ripple.style.position = "absolute";
                     ripple.style.left = x + "px";
@@ -335,4 +443,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
