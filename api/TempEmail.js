@@ -1,7 +1,7 @@
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 /**
- * Fungsi untuk generate nama acak global berbasis kombinasi suku kata yang natural
+ * Fungsi untuk generate nama acak global berbasis kombinasi suku kata
  */
 function generateGlobalRandomName() {
   const konsonan = 'bcdfghjklmnpqrstvwxyz';
