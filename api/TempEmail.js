@@ -36,8 +36,7 @@ async function handleTempMail() {
   // 2. Buat username nama orang acak global
   const username = generateGlobalRandomName();
   
-  // 3. Daftarkan/validasi ke server 1secmail dengan mencoba memanggil inbox-nya 
-  // (Ini trik wajib agar server mengenali akun custom kita saat menerima email masuk nanti)
+  // 3. Jalankan pancingan ke server agar inbox-nya langsung aktif dan siap pakai
   await fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${username}&domain=${domainAcak}`)
     .catch(() => {});
 
@@ -49,19 +48,22 @@ async function handleTempMail() {
 
 module.exports = {
   name: "TempMail",
-  desc: "Membuat email sementara dengan nama acak global terverifikasi dan aman dari bug inbox kosong",
+  desc: "Membuat email sementara dengan nama acak global secara instan",
   category: "Tools",
-  path: "/tools/tempmail?apikey=", 
+  path: "/tools/tempmail?apikey=", // Cukup panggil apikey saja, tanpa parameter email
 
   async run(req, res) {
     const { apikey } = req.query;
 
+    // Validasi Apikey bawaan sistem
     if (!apikey || !global.apikey.includes(apikey)) {
       return res.json({ status: false, error: "Apikey invalid" });
     }
 
     try {
+      // Langsung jalankan fungsi tanpa oper parameter email dari request
       const result = await handleTempMail();
+      
       res.json({
         status: true,
         result: result
