@@ -1,75 +1,75 @@
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 /**
- * Fungsi untuk mengambil atau membuat email baru dan mengecek inbox
- * Menggunakan API 1secmail (Gratis & Stabil)
+ * Fungsi untuk generate nama acak global berbasis kombinasi suku kata yang natural
  */
-async function handleTempMail(email = null) {
-  // Jika tidak ada email, generate email baru
-  if (!email) {
-    const res = await fetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1')
-      .then(r => r.json())
-      .catch(err => ({ error: err.message }));
-    
-    if (Array.isArray(res) && res.length > 0) {
-      return { email: res[0], action: "generate" };
+function generateGlobalRandomName() {
+  const konsonan = 'bcdfghjklmnpqrstvwxyz';
+  const vokal = 'aeiou';
+  
+  // Pilih panjang suku kata secara acak (antara 2 sampai 3 suku kata, misal: ro-bi atau a-ri-at)
+  const jumlahSukuKata = Math.random() > 0.4 ? 2 : 3;
+  let nama = '';
+
+  for (let i = 0; i < jumlahSukuKata; i++) {
+    // Pola standard suku kata: Konsonan + Vokal
+    const kAcak = konsonan[Math.floor(Math.random() * konsonan.length)];
+    const vAcak = vokal[Math.floor(Math.random() * vokal.length)];
+    nama += kAcak + vAcak;
+  }
+
+  // Kadang-kadang tambahkan satu konsonan mati di paling akhir agar lebih variatif (misal: budi -> budin)
+  if (Math.random() > 0.5) {
+    const kMati = konsonan[Math.floor(Math.random() * konsonan.length)];
+    // Hindari huruf mati ganda yang aneh di akhir seperti 'q' atau 'x'
+    if (!['q', 'x', 'w', 'v', 'j'].includes(kMati)) {
+      nama += kMati;
     }
-    return { error: "Gagal membuat email baru" };
   }
 
-  // Jika ada email, belah menjadi username dan domain
-  const [login, domain] = email.split('@');
-  if (!login || !domain) {
-    return { error: "Format email tidak valid" };
-  }
+  // Tambahkan tepat 2 digit angka acak di belakang (10 - 99)
+  const angkaAcak = Math.floor(10 + Math.random() * 90);
+  
+  return `${nama}${angkaAcak}`;
+}
 
-  // Ambil daftar pesan di inbox
-  const messages = await fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${login}&domain=${domain}`)
+/**
+ * Fungsi Utama TempMail
+ */
+async function handleTempMail() {
+  // Ambil list domain aktif dari 1secmail
+  const domains = await fetch('https://www.1secmail.com/api/v1/?action=getMessagesList')
     .then(r => r.json())
-    .catch(err => []);
+    .catch(() => ['1secmail.com', '1secmail.org', '1secmail.net']);
 
-  // Jika inbox kosong, langsung kembalikan array kosong
-  if (!Array.isArray(messages) || messages.length === 0) {
-    return { email, messages: [] };
-  }
+  const domainAcak = domains[Math.floor(Math.random() * domains.length)];
+  
+  // Ambil username hasil generate acak global
+  const username = generateGlobalRandomName();
+  const emailResult = `${username}@${domainAcak}`;
 
-  // Ambil detail konten isi pesan untuk setiap email yang masuk (karena list bawaannya cuma subjek & pengirim)
-  const detailedMessages = await Promise.all(
-    messages.map(async (msg) => {
-      const detail = await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${msg.id}`)
-        .then(r => r.json())
-        .catch(() => null);
-      return detail || msg;
-    })
-  );
-
-  return {
-    email,
-    messages: detailedMessages
+  return { 
+    email: emailResult, 
+    action: "generate" 
   };
 }
 
 module.exports = {
   name: "TempMail",
-  desc: "Membuat email sementara atau mengecek inbox pesan masuk",
+  desc: "Membuat email sementara dengan nama acak global tanpa batas dan 2 digit angka",
   category: "Tools",
-  path: "/tools/tempmail?apikey=&email=", // Kosongkan email untuk generate baru, isi email untuk cek inbox
+  path: "/tools/tempmail?apikey=", 
 
   async run(req, res) {
-    const { email, apikey } = req.query;
+    const { apikey } = req.query;
 
-    // Validasi Apikey sesuai struktur kodemu
+    // Validasi Apikey
     if (!apikey || !global.apikey.includes(apikey)) {
       return res.json({ status: false, error: "Apikey invalid" });
     }
 
     try {
-      // Jalankan fungsi temp mail
-      const result = await handleTempMail(email);
-
-      if (result.error) {
-        return res.json({ status: false, error: result.error });
-      }
+      const result = await handleTempMail();
 
       res.json({
         status: true,
