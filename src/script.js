@@ -9,6 +9,7 @@ const categoryIcons = {
     'Search': 'search',
     'Stalker': 'visibility',
     'Tools': 'build',
+    'temp': 'Temp', 
     'Orderkuota': 'paid',
     'AI Tools': 'psychology',
     'Fun': 'sentiment_satisfied'
