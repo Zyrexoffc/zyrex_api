@@ -42,8 +42,8 @@ async function getSMSInbox(numberPath) {
 module.exports = {
   name: "CheckSMS",
   desc: "Mengecek isi pesan SMS dan kode OTP yang masuk ke nomor sementara",
-  category: "temp",
-  path: "/temp/check-sms?apikey=&path=", // Masukkan path nomor dari fitur get-numbers
+  category: "Tools",
+  path: "/tools/check-sms?apikey=&path=", // Masukkan path nomor dari fitur get-numbers
 
   async run(req, res) {
     const { apikey, path } = req.query;
