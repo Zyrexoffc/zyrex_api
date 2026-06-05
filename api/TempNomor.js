@@ -3,61 +3,53 @@ const cheerio = require('cheerio');
 
 const BASE_URL = 'https://anonymsms.com';
 
-async function getSMSInbox(numberPath) {
+async function getActiveNumbers() {
   try {
-    const targetUrl = numberPath.startsWith('http') ? numberPath : `${BASE_URL}${numberPath}`;
-    
-    const { data } = await axios.get(targetUrl, {
+    const { data } = await axios.get(BASE_URL, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       }
     });
-
+    
     const $ = cheerio.load(data);
-    const messages = [];
+    const results = [];
 
-    $('.messages-list-item, tr').each((index, element) => {
-      const sender = $(element).find('.sender, td:nth-child(1)').text().trim();
-      const content = $(element).find('.msg-body, td:nth-child(2)').text().trim();
-      const time = $(element).find('.time, td:nth-child(3)').text().trim();
+    $('.card-num').each((index, element) => {
+      const country = $(element).find('.country-name').text().trim() || 'Global';
+      const number = $(element).find('.num-text').text().trim().replace(/\s+/g, '');
+      const slug = $(element).find('a').attr('href');
 
-      if (sender && content) {
-        messages.push({
-          from: sender,
-          message: content,
-          received_at: time
+      if (number && slug) {
+        results.push({
+          country,
+          number,
+          raw_number: number.replace(/[^0-9]/g, ''),
+          path: slug // Nilai ini yang akan dikirim ke endpoint check-sms
         });
       }
     });
 
-    return {
-      total_messages: messages.length,
-      messages: messages
-    };
+    return { total: results.length, numbers: results };
   } catch (err) {
-    return { error: "Gagal memuat inbox nomor tersebut: " + err.message };
+    return { error: "Gagal mengambil daftar nomor aktif: " + err.message };
   }
 }
 
 module.exports = {
-  name: "CheckSMS",
-  desc: "Mengecek isi pesan SMS dan kode OTP yang masuk ke nomor sementara",
+  name: "GetNumbers",
+  desc: "Mengambil daftar nomor HP sementara dari berbagai negara yang siap pakai",
   category: "Tools",
-  path: "/tools/check-sms?apikey=&path=", // Masukkan path nomor dari fitur get-numbers
+  path: "/tools/get-numbers?apikey=", // Hanya butuh apikey
 
   async run(req, res) {
-    const { apikey, path } = req.query;
+    const { apikey } = req.query;
 
     if (!apikey || !global.apikey.includes(apikey)) {
       return res.json({ status: false, error: "Apikey invalid" });
     }
 
-    if (!path) {
-      return res.json({ status: false, error: "Parameter 'path' wajib diisi untuk mengecek pesan" });
-    }
-
     try {
-      const result = await getSMSInbox(path);
+      const result = await getActiveNumbers();
       if (result.error) return res.json({ status: false, error: result.error });
 
       res.json({
