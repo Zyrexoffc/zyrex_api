@@ -1,211 +1,81 @@
 const fetch = global.fetch;
 const { URLSearchParams } = require("url");
 const crypto = require("crypto");
-const QRCode = require("qrcode");
-const { ImageUploadService } = require("node-upload-images");
+const FormData = require("form-data");
 
-class OrderKuota {
-  static API_URL = "https://app.orderkuota.com/api/v2";
-  static API_URL_ORDER = "https://app.orderkuota.com/api/v2/order";
-  static HOST = "app.orderkuota.com";
-  static USER_AGENT = "okhttp/4.12.0";
-  static APP_VERSION_NAME = "25.09.18";
-  static APP_VERSION_CODE = "250918";
-  static APP_REG_ID =
-    "cdzXkBynRECkAODZEHwkeV:APA91bHRyLlgNSlpVrC4Yv3xBgRRaePSaCYruHnNwrEK8_pX3kzitxzi0CxIDFc2oztCwcw7-zPgwE-6v_-rJCJdTX8qE_ADiSnWHNeZ5O7_BIlgS_1N8tw";
-  static PHONE_MODEL = "23124RA7EO";
-  static PHONE_UUID = "cdzXkBynRECkAODZEHwkeV";
-  static PHONE_ANDROID_VERSION = "15";
+/* =================================================================
+   CORE CONFIGURATION & CONSTANTS (SINKRONISASI TOTAL DENGAN PHP)
+==================================================================== */
+const API_URL = "https://app.orderkuota.com/api/v2";
+const HOST = "app.orderkuota.com";
+const USER_AGENT = "okhttp/4.12.0";
+const KONCI_RAHASIA = "orderkuota_mobile_app_2024";
 
-  constructor(username = null, authToken = null) {
-    this.username = username;
-    this.authToken = authToken;
-  }
+const APP_VERSION_NAME = "26.01.15";
+const APP_VERSION_CODE = "260115";
+const PHONE_MODEL = "SM-G973F";
+const PHONE_ANDROID_VERSION = "15";
 
-  /* =========================
-     LOGIN / OTP
-  ========================== */
+/* =================================================================
+   INTERNAL HELPER FUNCTIONS (SISTEM GENERATOR & CRYPTO)
+==================================================================== */
 
-  async loginRequest(username, password) {
-    const payload = new URLSearchParams({
-      username,
-      password,
-      request_time: Date.now(),
-      app_reg_id: OrderKuota.APP_REG_ID,
-      phone_android_version: OrderKuota.PHONE_ANDROID_VERSION,
-      app_version_code: OrderKuota.APP_VERSION_CODE,
-      phone_uuid: OrderKuota.PHONE_UUID,
-    });
+/**
+ * Menggenerasi Device Fingerprint dinamis (UUID & FCM Token) setiap kali endpoint dieksekusi
+ */
+function generateDeviceFingerprint() {
+  const rawUuid = crypto.randomBytes(16).toString("hex");
+  const phoneUuid = [
+    rawUuid.substring(0, 8),
+    rawUuid.substring(8, 12),
+    rawUuid.substring(12, 16),
+    rawUuid.substring(16, 20),
+    rawUuid.substring(20, 32)
+  ].join("-");
 
-    return await this.request(
-      "POST",
-      `${OrderKuota.API_URL}/login`,
-      payload
-    );
-  }
+  const fcmHash = crypto.createHash("sha256").update(crypto.randomBytes(16)).digest("hex");
+  const appRegId = `${phoneUuid}:APA91b${fcmHash.substring(0, 100)}`;
 
-  async getAuthToken(username, otp) {
-    const payload = new URLSearchParams({
-      username,
-      password: otp,
-      request_time: Date.now(),
-      app_reg_id: OrderKuota.APP_REG_ID,
-      phone_android_version: OrderKuota.PHONE_ANDROID_VERSION,
-      app_version_code: OrderKuota.APP_VERSION_CODE,
-      phone_uuid: OrderKuota.PHONE_UUID,
-    });
+  return { phoneUuid, appRegId };
+}
 
-    return await this.request(
-      "POST",
-      `${OrderKuota.API_URL}/login`,
-      payload
-    );
-  }
+/**
+ * Membuat Signature HMAC SHA256 untuk validasi mutasi pusat
+ */
+function generateSignature(params, timestamp) {
+  const sortedKeys = Object.keys(params).sort();
+  const sortedParams = {};
+  sortedKeys.forEach(key => {
+    sortedParams[key] = params[key];
+  });
 
-  /**
-   * 🔥 WRAPPER BARU (TANPA HAPUS APA PUN)
-   * Sekali panggil → langsung trigger OTP
-   */
-  async requestOtp(username, password) {
-    const response = await this.loginRequest(username, password);
+  const base = new URLSearchParams(sortedParams).toString() + `&timestamp=${timestamp}&secret=${KONCI_RAHASIA}`;
+  return crypto.createHmac("sha256", KONCI_RAHASIA).update(base).digest("hex");
+}
 
-    if (!response || response.success === false) {
-      return {
-        success: false,
-        message: "Gagal request OTP",
-        response,
-      };
-    }
+/**
+ * Standarisasi Request Engine Outbound Fetch
+ */
+async function sendRequest(method, url, body = null, extraHeaders = {}) {
+  const headers = {
+    Host: HOST,
+    "User-Agent": USER_AGENT,
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Accept-Encoding": "gzip",
+    ...extraHeaders
+  };
 
-    return {
-      success: true,
-      message: "OTP berhasil dikirim",
-      results: response.results,
-    };
-  }
+  const res = await fetch(url, {
+    method,
+    headers,
+    body: body ? body.toString() : null
+  });
 
-  /* =========================
-     QRIS
-  ========================== */
-
-  async getTransactionQris(type = "", userId = null) {
-    if (!userId && this.authToken) {
-      userId = String(this.authToken).split(":")[0];
-    }
-
-    const payload = new URLSearchParams({
-      request_time: Date.now(),
-      app_reg_id: OrderKuota.APP_REG_ID,
-      phone_android_version: OrderKuota.PHONE_ANDROID_VERSION,
-      app_version_code: OrderKuota.APP_VERSION_CODE,
-      phone_uuid: OrderKuota.PHONE_UUID,
-      auth_username: this.username,
-      auth_token: this.authToken,
-      "requests[qris_history][jumlah]": "",
-      "requests[qris_history][jenis]": type,
-      "requests[qris_history][page]": "1",
-      "requests[qris_history][dari_tanggal]": "",
-      "requests[qris_history][ke_tanggal]": "",
-      "requests[qris_history][keterangan]": "",
-      "requests[0]": "account",
-      app_version_name: OrderKuota.APP_VERSION_NAME,
-      ui_mode: "light",
-      phone_model: OrderKuota.PHONE_MODEL,
-    });
-
-    const endpoint = userId
-      ? `${OrderKuota.API_URL}/qris/mutasi/${userId}`
-      : `${OrderKuota.API_URL}/get`;
-
-    return await this.request("POST", endpoint, payload);
-  }
-
-  async generateQr(amount = "") {
-    const payload = new URLSearchParams({
-      request_time: Date.now(),
-      app_reg_id: OrderKuota.APP_REG_ID,
-      phone_android_version: OrderKuota.PHONE_ANDROID_VERSION,
-      app_version_code: OrderKuota.APP_VERSION_CODE,
-      phone_uuid: OrderKuota.PHONE_UUID,
-      auth_username: this.username,
-      auth_token: this.authToken,
-      "requests[qris_merchant_terms][jumlah]": String(amount),
-      "requests[0]": "qris_merchant_terms",
-      app_version_name: OrderKuota.APP_VERSION_NAME,
-      phone_model: OrderKuota.PHONE_MODEL,
-    });
-
-    const response = await this.request(
-      "POST",
-      `${OrderKuota.API_URL}/get`,
-      payload
-    );
-
-    if (
-      response &&
-      response.success &&
-      response.qris_merchant_terms &&
-      response.qris_merchant_terms.results != null
-    ) {
-      return response.qris_merchant_terms.results;
-    }
-
-    return response;
-  }
-
-  async withdrawalQris(amount = "") {
-    const payload = new URLSearchParams({
-      request_time: Date.now(),
-      app_reg_id: OrderKuota.APP_REG_ID,
-      phone_android_version: OrderKuota.PHONE_ANDROID_VERSION,
-      app_version_code: OrderKuota.APP_VERSION_CODE,
-      phone_uuid: OrderKuota.PHONE_UUID,
-      auth_username: this.username,
-      auth_token: this.authToken,
-      "requests[qris_withdraw][amount]": String(amount),
-      "requests[0]": "account",
-      app_version_name: OrderKuota.APP_VERSION_NAME,
-      ui_mode: "light",
-      phone_model: OrderKuota.PHONE_MODEL,
-    });
-
-    return await this.request(
-      "POST",
-      `${OrderKuota.API_URL}/get`,
-      payload
-    );
-  }
-
-  /* =========================
-     CORE REQUEST
-  ========================== */
-
-  buildHeaders() {
-    return {
-      Host: OrderKuota.HOST,
-      "User-Agent": OrderKuota.USER_AGENT,
-      "Content-Type": "application/x-www-form-urlencoded",
-      "accept-encoding": "gzip",
-    };
-  }
-
-  async request(method, url, body = null) {
-    try {
-      const res = await fetch(url, {
-        method,
-        headers: this.buildHeaders(),
-        body: body ? body.toString() : null,
-      });
-
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        return await res.json();
-      }
-
-      return await res.text();
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
+  const textData = await res.text();
+  try {
+    return JSON.parse(textData);
+  } catch {
+    return textData;
   }
 }
 
@@ -222,19 +92,21 @@ function convertCRC16(str) {
 }
 
 function generateTransactionId() {
-  return `SKYZOPEDIA-${crypto.randomBytes(2).toString("hex").toUpperCase()}`;
+  return `SKY-${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
 }
 
 function generateExpirationTime() {
-  const expirationTime = new Date();
-  expirationTime.setMinutes(expirationTime.getMinutes() + 30);
-  return expirationTime;
-}
-
-async function elxyzFile(buffer) {
-  const service = new ImageUploadService("pixhost.to");
-  const { directLink } = await service.uploadFromBinary(buffer, "skyzo.png");
-  return directLink;
+  const exp = new Date();
+  exp.setMinutes(exp.getMinutes() + 30);
+  
+  const YYYY = exp.getFullYear();
+  const MM = String(exp.getMonth() + 1).padStart(2, '0');
+  const DD = String(exp.getDate()).padStart(2, '0');
+  const hh = String(exp.getHours()).padStart(2, '0');
+  const mm = String(exp.getMinutes()).padStart(2, '0');
+  const ss = String(exp.getSeconds()).padStart(2, '0');
+  
+  return `${YYYY}-${MM}-${DD} ${hh}:${mm}:${ss}`;
 }
 
 function extractQrisData(maybe) {
@@ -249,34 +121,116 @@ function extractQrisData(maybe) {
   return null;
 }
 
+/* =================================================================
+   IMAGE HOSTING MULTI-PROVIDER ENGINE (FALLBACK SYSTEM)
+==================================================================== */
+
+async function uploadToPixhost(buffer) {
+  const form = new FormData();
+  form.append("content_type", "0");
+  form.append("img", buffer, { filename: "qris.png", contentType: "image/png" });
+
+  const res = await fetch("https://api.pixhost.to/images", {
+    method: "POST",
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "X-Requested-With": "XMLHttpRequest",
+      ...form.getHeaders()
+    },
+    body: form
+  });
+
+  const data = await res.json();
+  if (!data || !data.show_url) throw new Error("Pixhost response tidak valid");
+
+  const pageRes = await fetch(data.show_url, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" } });
+  const html = await pageRes.text();
+  const match = html.match(/<img[^>]+class="image-img"[^>]+src="([^"]+)"/i);
+  
+  if (match && match[1]) {
+    let directUrl = match[1];
+    if (directUrl.startsWith("//")) return "https:" + directUrl;
+    if (directUrl.startsWith("/")) return "https://pixhost.to" + directUrl;
+    return directUrl;
+  }
+  throw new Error("Gagal ekstraksi direct URL Pixhost");
+}
+
+async function uploadToUploadCC(buffer) {
+  const form = new FormData();
+  form.append("uploaded_file[]", buffer, { filename: "qris.png", contentType: "image/png" });
+
+  const res = await fetch("https://upload.cc/image_upload", {
+    method: "POST",
+    headers: {
+      "Referer": "https://upload.cc",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      ...form.getHeaders()
+    },
+    body: form
+  });
+
+  const data = await res.json();
+  if (data && data.code === 100 && data.success_image && data.success_image[0]) {
+    return "https://upload.cc/" + data.success_image[0].url.replace(/^\//, "");
+  }
+  throw new Error("UploadCC response gagal");
+}
+
+async function uploadToCatbox(buffer) {
+  const form = new FormData();
+  form.append("reqtype", "fileupload");
+  form.append("fileToUpload", buffer, { filename: "qris.png", contentType: "image/png" });
+
+  const res = await fetch("https://catbox.moe/user/api.php", {
+    method: "POST",
+    headers: form.getHeaders(),
+    body: form
+  });
+
+  const url = await res.text();
+  if (url && url.trim().startsWith("http")) return url.trim();
+  throw new Error("Catbox upload gagal");
+}
+
+async function uploadImageAutoFallback(buffer) {
+  try { return await uploadToPixhost(buffer); } catch (e) { console.log(`[Fallback] Pixhost error: ${e.message}. Mencoba UploadCC...`); }
+  try { return await uploadToUploadCC(buffer); } catch (e) { console.log(`[Fallback] UploadCC error: ${e.message}. Mencoba Catbox...`); }
+  try { return await uploadToCatbox(buffer); } catch (e) { throw new Error("Semua provider hosting image gagal."); }
+}
+
 async function createQRIS(amount, codeqr) {
-  if (!codeqr || typeof codeqr !== "string") throw new Error("Invalid qris_data");
-  if (String(codeqr).length < 10) throw new Error("qris_data too short");
+  if (!codeqr || typeof codeqr !== "string" || codeqr.length < 10) throw new Error("Data string QRIS pusat tidak valid.");
 
-  let qrisData = String(codeqr);
-  if (qrisData.length >= 4) qrisData = qrisData.slice(0, -4);
-
+  let qrisData = codeqr.slice(0, -4);
   const step1 = qrisData.replace("010211", "010212");
   const step2 = step1.split("5802ID");
 
   amount = String(amount);
-  let uang = "54" + ("0" + amount.length).slice(-2) + amount;
-  uang += "5802ID";
-
+  let uang = "54" + ("0" + amount.length).slice(-2) + amount + "5802ID";
   const final = step2.length >= 2 ? (step2[0] + uang + step2.slice(1).join("5802ID")) : (step1 + uang);
   const result = final + convertCRC16(final);
 
-  const buffer = await QRCode.toBuffer(result);
-  const uploadedFile = await elxyzFile(buffer);
+  // Render QR via External Server API sesuai fungsi PHP createQRIS
+  const qrServerUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=25&data=${encodeURIComponent(result)}`;
+  const qrFetch = await fetch(qrServerUrl);
+  const arrayBuffer = await qrFetch.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const uploadedUrl = await uploadImageAutoFallback(buffer);
 
   return {
     idtransaksi: generateTransactionId(),
     jumlah: amount,
     expired: generateExpirationTime(),
-    imageqris: { url: uploadedFile },
-    qris_string: result,
+    imageqris: { url: uploadedUrl },
+    qr_string: result,
   };
 }
+
+/* =================================================================
+   REST API ROUTER EXPORTS (NO-CLASS SEKUENSIAL & STRUKTUR LU)
+==================================================================== */
 
 module.exports = [
   {
@@ -284,34 +238,39 @@ module.exports = [
     desc: "Get OTP Orderkuota",
     category: "Orderkuota",
     path: "/orderkuota/getotp?apikey=&username=&password=",
-  async run(req, res) {
-    const { apikey, username, password } = req.query;
+    async run(req, res) {
+      const { apikey, username, password } = req.query;
 
-    if (!global.apikey?.includes(apikey))
-      return res.json({ status: false, error: "Apikey invalid" });
+      const validApiKeys = ["skyy7", "Lyyncode", "Time160110", "luxzz02", "KhafaCode"];
+      if (!validApiKeys.includes(apikey)) return res.status(400).json({ status: false, message: "API Key tidak valid." });
 
-    if (!username)
-      return res.json({ status: false, error: "Missing username" });
+      if (!username || !password) {
+        return res.status(400).json({ status: false, message: "Parameter 'username' dan 'password' wajib diisi." });
+      }
 
-    if (!password)
-      return res.json({ status: false, error: "Missing password" });
+      try {
+        const device = generateDeviceFingerprint();
+        const payload = new URLSearchParams({
+          username,
+          password,
+          request_time: String(Date.now()),
+          app_reg_id: device.appRegId,
+          phone_android_version: PHONE_ANDROID_VERSION,
+          app_version_code: APP_VERSION_CODE,
+          phone_uuid: device.phoneUuid,
+        });
 
-    try {
-      const ok = new OrderKuota();
-      const otp = await ok.requestOtp(username, password);
+        const response = await sendRequest("POST", `${API_URL}/login`, payload);
 
-      res.json({
-        status: otp.success,
-        message: otp.message,
-        result: otp.results || otp.response,
-      });
-    } catch (err) {
-      res.status(500).json({
-        status: false,
-        error: err.message,
-      });
-    }
-  },
+        res.json({
+          status: true,
+          action: "getotp",
+          result: response
+        });
+      } catch (err) {
+        res.status(400).json({ status: false, message: err.message });
+      }
+    },
   },
   {
     name: "Get Token (tahap 2)",
@@ -320,54 +279,35 @@ module.exports = [
     path: "/orderkuota/gettoken?apikey=&username=&otp=",
     async run(req, res) {
       const { apikey, username, otp } = req.query;
-      if (!global.apikey?.includes(apikey)) return res.json({ status: false, error: "Apikey invalid" });
-      if (!username) return res.json({ status: false, error: "Missing username" });
-      if (!otp) return res.json({ status: false, error: "Missing otp" });
-      try {
-        const ok = new OrderKuota();
-        const login = await ok.getAuthToken(username, otp);
-        res.json({ status: true, result: login.results });
-      } catch (err) {
-        res.status(500).json({ status: false, error: err.message });
+      
+      const validApiKeys = ["skyy7", "Lyyncode", "Time160110", "luxzz02", "KhafaCode"];
+      if (!validApiKeys.includes(apikey)) return res.status(400).json({ status: false, message: "API Key tidak valid." });
+      
+      if (!username || !otp) {
+        return res.status(400).json({ status: false, message: "Parameter 'username' dan 'otp' wajib diisi." });
       }
-    },
-  },
-  {
-    name: "Cek Mutasi QRIS",
-    desc: "Cek Mutasi Qris Orderkuota",
-    category: "Orderkuota",
-    path: "/orderkuota/mutasiqr?apikey=&username=&token=",
-    async run(req, res) {
-      const { apikey, username, token } = req.query;
-      if (!global.apikey?.includes(apikey)) return res.json({ status: false, error: "Apikey invalid" });
-      if (!username) return res.json({ status: false, error: "Missing username" });
-      if (!token) return res.json({ status: false, error: "Missing token" });
+      
       try {
-        const ok = new OrderKuota(username, token);
-        let login = await ok.getTransactionQris();
-        login = login?.qris_history?.results ?? login;
-        res.json({ status: true, result: login });
+        const device = generateDeviceFingerprint();
+        const payload = new URLSearchParams({
+          username,
+          password: otp,
+          request_time: String(Date.now()),
+          app_reg_id: device.appRegId,
+          phone_android_version: PHONE_ANDROID_VERSION,
+          app_version_code: APP_VERSION_CODE,
+          phone_uuid: device.phoneUuid,
+        });
+
+        const response = await sendRequest("POST", `${API_URL}/login`, payload);
+
+        res.json({ 
+          status: true, 
+          action: "gettoken",
+          result: response 
+        });
       } catch (err) {
-        res.status(500).json({ status: false, error: err.message });
-      }
-    },
-  },
-  {
-    name: "Cek Profile",
-    desc: "Cek Profile Orderkuota",
-    category: "Orderkuota",
-    path: "/orderkuota/profile?apikey=&username=&token=",
-    async run(req, res) {
-      const { apikey, username, token } = req.query;
-      if (!global.apikey?.includes(apikey)) return res.json({ status: false, error: "Apikey invalid" });
-      if (!username) return res.json({ status: false, error: "Missing username" });
-      if (!token) return res.json({ status: false, error: "Missing token" });
-      try {
-        const ok = new OrderKuota(username, token);
-        const login = await ok.getTransactionQris();
-        res.json({ status: true, result: login });
-      } catch (err) {
-        res.status(500).json({ status: false, error: err.message });
+        res.status(400).json({ status: false, message: err.message });
       }
     },
   },
@@ -379,55 +319,116 @@ module.exports = [
     async run(req, res) {
       const { apikey, username, token, amount } = req.query;
 
-      if (!global.apikey?.includes(apikey)) return res.json({ status: false, error: "Apikey invalid" });
-      if (!username) return res.json({ status: false, error: "Missing username" });
-      if (!token) return res.json({ status: false, error: "Missing token" });
-      if (amount == null || String(amount).trim() === "") return res.json({ status: false, error: "Missing amount" });
-
+      const validApiKeys = ["skyy7", "Lyyncode", "Time160110", "luxzz02", "KhafaCode"];
+      if (!validApiKeys.includes(apikey)) return res.status(400).json({ status: false, message: "API Key tidak valid." });
+      
+      if (!username || !token) return res.status(400).json({ status: false, message: "Parameter 'username' dan 'token' wajib diisi." });
+      
       const amt = Number(String(amount).trim());
-      if (!Number.isFinite(amt) || amt <= 0) return res.status(400).json({ status: false, error: "Invalid amount" });
+      if (isNaN(amt) || amt <= 0) return res.status(400).json({ status: false, message: "Nominal 'amount' harus > 0" });
 
       try {
-        const ok = new OrderKuota(username, token);
-        const qrcodeResp = await ok.generateQr(String(amt));
-        const qrisData = extractQrisData(qrcodeResp);
+        const device = generateDeviceFingerprint();
+        const payload = new URLSearchParams({
+          request_time: String(Date.now()),
+          app_reg_id: device.appRegId,
+          phone_android_version: PHONE_ANDROID_VERSION,
+          app_version_code: APP_VERSION_CODE,
+          phone_uuid: device.phoneUuid,
+          auth_username: username,
+          auth_token: token,
+          "requests[qris_merchant_terms][jumlah]": String(amt),
+          "requests[0]": "qris_merchant_terms",
+          app_version_name: APP_VERSION_NAME,
+          phone_model: PHONE_MODEL,
+        });
+
+        const qrResponse = await sendRequest("POST", `${API_URL}/get`, payload);
+        const qrisData = extractQrisData(qrResponse);
 
         if (!qrisData) {
-          return res.status(400).json({ status: false, error: "QRIS generation failed", raw: qrcodeResp });
+          throw new Error(`Gagal QRIS: ${typeof qrResponse === 'object' ? JSON.stringify(qrResponse) : 'No qris_data'}`);
         }
 
-        const buffer = await createQRIS(String(amt), qrisData);
+        const qrisResult = await createQRIS(String(amt), qrisData);
 
-        res.status(200).json({
+        res.json({
           status: true,
-          result: buffer,
+          action: "createpayment",
+          result: {
+            trxid: qrisResult.idtransaksi,
+            nominal: qrisResult.jumlah,
+            expired: qrisResult.expired,
+            qris_image: qrisResult.imageqris.url,
+            qris_string: qrisResult.qr_string,
+          }
         });
       } catch (error) {
-        res.status(500).json({ status: false, error: error.message });
+        res.status(400).json({ status: false, message: error.message });
       }
     },
   },
   {
-    name: "Withdraw QRIS",
-    desc: "Tarik saldo QRIS Orderkuota",
+    name: "Cek Mutasi QRIS",
+    desc: "Cek Mutasi Qris Orderkuota",
     category: "Orderkuota",
-    path: "/orderkuota/wdqr?apikey=&username=&token=&amount=",
+    path: "/orderkuota/mutasiqr?apikey=&username=&token=",
     async run(req, res) {
-      const { apikey, username, token, amount } = req.query;
-      if (!global.apikey?.includes(apikey)) return res.json({ status: false, error: "Apikey invalid" });
-      if (!username) return res.json({ status: false, error: "Missing username" });
-      if (!token) return res.json({ status: false, error: "Missing token" });
-      if (amount == null || String(amount).trim() === "") return res.json({ status: false, error: "Missing amount" });
-
-      const amt = Number(String(amount).trim());
-      if (!Number.isFinite(amt) || amt <= 0) return res.status(400).json({ status: false, error: "Invalid amount" });
-
+      const { apikey, username, token } = req.query;
+      
+      const validApiKeys = ["skyy7", "Lyyncode", "Time160110", "luxzz02", "KhafaCode"];
+      if (!validApiKeys.includes(apikey)) return res.status(400).json({ status: false, message: "API Key tidak valid." });
+      if (!username || !token) return res.status(400).json({ status: false, message: "Parameter 'username' dan 'token' wajib diisi." });
+      
       try {
-        const ok = new OrderKuota(username, token);
-        const wd = await ok.withdrawalQris(String(amt));
-        res.json({ status: true, result: wd });
-      } catch (error) {
-        res.status(500).json({ status: false, error: error.message });
+        const resellerId = String(token).split(":")[0];
+        const requestTime = Date.now();
+        const device = generateDeviceFingerprint();
+
+        const paramsForSign = {
+          auth_username: username,
+          auth_token: token,
+          phone_uuid: device.phoneUuid,
+          request_time: String(requestTime),
+        };
+
+        const signature = generateSignature(paramsForSign, requestTime);
+
+        const payload = new URLSearchParams({
+          app_reg_id: device.appRegId,
+          phone_uuid: device.phoneUuid,
+          phone_model: PHONE_MODEL,
+          "requests[qris_history][keterangan]": "",
+          "requests[qris_history][jumlah]": "",
+          "requests[qris_history][jenis]": "1",
+          request_time: String(requestTime),
+          phone_android_version: PHONE_ANDROID_VERSION,
+          app_version_code: APP_VERSION_CODE,
+          auth_username: username,
+          "requests[qris_history][page]": "1",
+          auth_token: token,
+          app_version_name: APP_VERSION_NAME,
+          ui_mode: "light",
+          "requests[qris_history][dari_tanggal]": "",
+          "requests[0]": "account",
+          "requests[qris_history][ke_tanggal]": "",
+        });
+
+        const extraHeaders = {
+          "signature": signature,
+          "timestamp": String(requestTime),
+        };
+
+        const endpoint = `${API_URL}/qris/mutasi/${resellerId}`;
+        const mutasi = await sendRequest("POST", endpoint, payload, extraHeaders);
+
+        res.json({ 
+          status: true, 
+          action: "mutasiqr",
+          result: mutasi.qris_history || mutasi 
+        });
+      } catch (err) {
+        res.status(400).json({ status: false, message: err.message });
       }
     },
   },
